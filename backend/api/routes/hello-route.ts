@@ -4,7 +4,7 @@ const router = express.Router(); //making a router
 
 router
   .route("/") // `/api/hello`
-  .get((req, res) => res.send("Testing if pushing auto deploys"));
+  .get((req, res) => res.send("Testing again"));
 
 router //just an example .route appends whats in it to relative route. So if we mounted hello-route file to /hello this would be /hello/:Id
   .route("/:Id");
