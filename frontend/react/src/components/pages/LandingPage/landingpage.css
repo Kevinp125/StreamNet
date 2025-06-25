@@ -23,9 +23,22 @@
   color: white;
 }
 
+.left-info img{
+  height:400px;
+  width: 500px;
+}
+
 .login-aside{
   flex:1;
   height: 100%;
   background-color: var(--light-purple);
+  display: flex;
+  flex-direction: column;
+  justify-content:center;
+  align-items: center;
+}
 
+.login-aside h2{
+  font-size: 1.75rem;
+  color: white;
 }
