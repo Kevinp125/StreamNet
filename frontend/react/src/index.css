@@ -52,4 +52,7 @@ h1, h2, h3, h4, h5, h6 {
 */
 #root, #__next {
   isolation: isolate;
+  --dark-purple: #161122;
+  --ligth-purple: #604b95;
+  --electric-indigo: #5f29e9;
 }
