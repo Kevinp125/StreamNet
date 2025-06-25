@@ -7,14 +7,20 @@
 .left-info{
   flex:2;
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
 }
 
 .left-info h1{
   font-size: 6rem;
   color: white;
   text-wrap: wrap;
+}
 
+.left-info p{
+  font-size: 2rem;
+  color: white;
 }
 
 .login-aside{

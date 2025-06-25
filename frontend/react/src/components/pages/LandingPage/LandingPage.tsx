@@ -9,6 +9,7 @@ export default function LandingPage() {
     <section className = "landing-section">
       <div className = "left-info">
         <h1>StreamNet</h1>
+        <p>Connecting streamers <br/> one collab at a time</p>
       </div>
 
       <aside className = "login-aside">
