@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import ContentContainer from "../../ContentContainer/ContentContainer";
 import './landingpage.css'
 
 
@@ -15,6 +14,7 @@ export default function LandingPage() {
 
       <aside className = "login-aside">
         <h2>Login / Signup </h2>
+
       </aside>
 
     </section>
