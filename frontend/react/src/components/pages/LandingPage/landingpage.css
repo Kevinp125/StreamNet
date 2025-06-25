@@ -5,18 +5,21 @@
 }
 
 .left-info{
-  flex:8;
+  flex:2;
+  display: flex;
+  justify-content: center;
 }
 
-.line-separator{
-  width: 4px;
-  height: 100%;
-  background-color: var(--light-purple);
-
+.left-info h1{
+  font-size: 6rem;
+  color: white;
+  text-wrap: wrap;
 
 }
 
 .login-aside{
-  flex:1
+  flex:1;
+  height: 100%;
+  background-color: var(--light-purple);
 
 }
