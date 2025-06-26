@@ -14,6 +14,10 @@ async function handleTwitchSignIn() {
   const { data, error } = await supabase.auth.signInWithOAuth({
     //signInWithOAuth sends user to twitch. Twitch asks "do you want to allow this app to get your info through our login". If they say yes twitch redirects back to my website with a code
     provider: "twitch",
+    options: {
+      redirectTo: import.meta.env.VITE_REDIRECT_URL, //this will redirect user to dashboard page after login / signup
+    },
+
   });
 }
 
