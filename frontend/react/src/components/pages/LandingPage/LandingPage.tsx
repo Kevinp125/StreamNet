@@ -1,4 +1,3 @@
-import styled from "styled-components";
 // import "./landingpage.css";
 
 export default function LandingPage() {
