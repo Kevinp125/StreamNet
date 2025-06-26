@@ -1,5 +1,21 @@
 import { Twitch } from "lucide-react";
 import { Button } from "../../ui/button";
+import { supabase } from "@/supabaseclient";
+
+// User clicks "Continue with Twitch"
+
+// Supabase → Twitch (login screen)
+
+// Twitch → Supabase auth/v1/callback (to exchange the code)
+
+// Supabase → your site (via your redirectTo value)
+
+async function handleTwitchSignIn() {
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    //signInWithOAuth sends user to twitch. Twitch asks "do you want to allow this app to get your info through our login". If they say yes twitch redirects back to my website with a code
+    provider: "twitch",
+  });
+}
 
 export default function LandingPage() {
   return (
@@ -15,7 +31,10 @@ export default function LandingPage() {
 
       <aside className="bg-light-purple flex h-full flex-1 flex-col items-center justify-center gap-20">
         <h2 className="text-2xl text-white">Login / Signup</h2>
-        <Button className="text-twitch-purple hover: h-12 w-sm cursor-pointer">
+        <Button
+          onClick={handleTwitchSignIn}
+          className="text-twitch-purple hover: h-12 w-sm cursor-pointer"
+        >
           <Twitch /> Continue with Twitch
         </Button>
       </aside>
