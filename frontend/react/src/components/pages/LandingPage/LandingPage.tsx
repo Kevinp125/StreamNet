@@ -1,4 +1,5 @@
-// import "./landingpage.css";
+import { Button } from "@/components/ui/button";
+import { Twitch } from "lucide-react";
 
 export default function LandingPage() {
   return (
@@ -12,8 +13,11 @@ export default function LandingPage() {
         </p>
       </div>
 
-      <aside className="bg-light-purple flex h-full flex-1 flex-col items-center justify-center">
+      <aside className="bg-light-purple flex h-full flex-1 flex-col items-center justify-center gap-20">
         <h2 className="text-2xl text-white">Login / Signup</h2>
+        <Button className="text-twitch-purple h-12 w-sm">
+          <Twitch /> Continue with Twitch
+        </Button>
       </aside>
     </section>
   );
