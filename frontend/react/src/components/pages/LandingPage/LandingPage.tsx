@@ -12,7 +12,7 @@ export default function LandingPage() {
         </p>
       </div>
 
-      <aside className="flex-1 h-full bg-purple-300 flex flex-col justify-center items-center">
+      <aside className="flex-1 h-full bg-light-purple flex flex-col justify-center items-center">
         <h2 className="text-2xl text-white">Login / Signup</h2>
       </aside>
     </section>

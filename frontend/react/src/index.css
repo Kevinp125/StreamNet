@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
-:root {
-  --dark-purple: #161122;
-  --light-purple: #604b95;
-  --electric-indigo: #5f29e9;
+@theme{
+  --color-dark-purple: #161122; 
+  --color-light-purple: #604b95;
+  --color-electric-indigo: #5f29e9;
 }
 
 /* 1. Use a more-intuitive box-sizing model */
@@ -30,7 +30,7 @@ body {
   line-height: 1.5;
   /* 5. Improve text rendering */
   -webkit-font-smoothing: antialiased;
-  background-color: var(--dark-purple);
+  background-color: var(--color-dark-purple);
   font-family: "Orbitron", sans-serif;
 }
 
