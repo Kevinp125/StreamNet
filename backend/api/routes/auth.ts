@@ -3,7 +3,7 @@ const router = express.Router(); //making a router
 //here you could import a controller (what actuall queries database)
 
 router
-  .route("/") // `/api/hello`
+  .route("/") // `/api/auth`
   .get((req, res) => res.send("Testing again"));
 
 router //just an example .route appends whats in it to relative route. So if we mounted hello-route file to /hello this would be /hello/:Id

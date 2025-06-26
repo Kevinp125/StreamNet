@@ -10,4 +10,5 @@ app.use("/api", routes); // all routes mounted here so they auto have /api in fr
 app.get("/", (req, res) => {
   res.json("In home api route");
 });
+
 export default app;
