@@ -6,16 +6,14 @@ import DiscoverPage from "./components/pages/DiscoverPage/DiscoverPage";
 import SavedConnectionsPage from "./components/pages/SavedConnectionsPage/SavedConnectionsPage";
 import EventsPage from "./components/pages/EventsPage/EventsPage";
 function App() {
-
-
   return (
     <>
       <Routes>
-        <Route path = "/" element = {<LandingPage/>}/>
-        <Route path = "/dashboard" element ={<DashboardPage/>}/>
-        <Route path = "/discover" element ={<DiscoverPage/>}/>
-        <Route path = "/connections" element ={<SavedConnectionsPage/>}/>
-        <Route path = "/events" element ={<EventsPage/>}/>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/discover" element={<DiscoverPage />} />
+        <Route path="/connections" element={<SavedConnectionsPage />} />
+        <Route path="/events" element={<EventsPage />} />
       </Routes>
     </>
   );

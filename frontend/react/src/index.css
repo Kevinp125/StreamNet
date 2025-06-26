@@ -3,11 +3,11 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@theme{
-  --color-dark-purple: #161122; 
+@theme {
+  --color-dark-purple: #161122;
   --color-light-purple: #604b95;
   --color-electric-indigo: #5f29e9;
-  --color-twitch-purple: #8956FB;
+  --color-twitch-purple: #8956fb;
 }
 
 /* 1. Use a more-intuitive box-sizing model */

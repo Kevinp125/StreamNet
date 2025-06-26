@@ -15,7 +15,7 @@ export default function LandingPage() {
 
       <aside className="bg-light-purple flex h-full flex-1 flex-col items-center justify-center gap-20">
         <h2 className="text-2xl text-white">Login / Signup</h2>
-        <Button className="text-twitch-purple h-12 w-sm">
+        <Button className="text-twitch-purple hover: h-12 w-sm cursor-pointer">
           <Twitch /> Continue with Twitch
         </Button>
       </aside>
