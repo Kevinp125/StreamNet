@@ -12,9 +12,9 @@ import {
 
 export default function Layout() {
   return (
-    <>
-      <NavigationMenu className = "w-full max-w-none bg-light-purple p-4">
-        <NavigationMenuList className = "justify-between w-full">
+    <div className = "w-full">
+      <NavigationMenu className = "w-full max-w-none bg-light-purple p-4 [&>div]:w-full"> {/*Here I had to do something cheesy. So when I inspected element radix UI wrapped below MenuList in extra div that wasnt allowin it to take full space so justify-between wouldnt work. With [&>div]:w-full syntax I can choose this element > direct child whihc is a div and apply w-full  */}
+        <NavigationMenuList className = "!justify-between w-full">
 
           <NavigationMenuItem>
             <NavigationMenuLink>
@@ -43,6 +43,6 @@ export default function Layout() {
         </NavigationMenuList>
       </NavigationMenu>
       <Outlet />
-    </>
+    </div>
   );
 }
