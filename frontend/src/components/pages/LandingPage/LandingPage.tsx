@@ -11,14 +11,27 @@ import { supabase } from "@/supabaseclient";
 // Supabase → your site (via your redirectTo value)
 
 async function handleTwitchSignIn() {
-  const {} = await supabase.auth.signInWithOAuth({
-    //signInWithOAuth sends user to twitch. Twitch asks "do you want to allow this app to get your info through our login". If they say yes twitch redirects back to my website with a code
-    provider: "twitch",
-    options: {
-      redirectTo: import.meta.env.VITE_REDIRECT_URL, //this will redirect user to dashboard page after login / signup
-    },
+  try {
+    const { error } = await supabase.auth.signInWithOAuth({
+      //signInWithOAuth sends user to twitch. Twitch asks "do you want to allow this app to get your info through our login". If they say yes twitch redirects back to my website with a code
+      provider: "twitch",
+      options: {
+        redirectTo: import.meta.env.VITE_REDIRECT_URL, //this will redirect user to Additional Setup Page where users need to add more info if it is a new account
+      },
+    });
 
-  });
+    if (error) {
+      console.error("Twitch OAuth error:", error.message); // Handling Supabase/OAuth errors
+      alert("Login failed. Please try again."); // Showing user-friendly message
+      return;
+    }
+
+    //TODO: if it was successful by this point user gets redirected automatically in some future you can add a loading state here. You might have to sine its project requirement.
+  } catch (err) {
+    //this will catch any unexpected JS errors outside of the supabase auth signIn errors
+    console.error("Unexpected error during Twitch login:", err);
+    alert("Something went wrong. Please check your connection and try again.");
+  }
 }
 
 export default function LandingPage() {
