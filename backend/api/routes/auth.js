@@ -18,6 +18,11 @@ router
     if (error || !user) return res.status(401).send("Invalid token");
 
     console.log(user);
+
+    return res.status(200).json({
+      message: "User authenticated",
+      user: user,
+    });
   });
 
 module.exports = router;
