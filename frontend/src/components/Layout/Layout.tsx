@@ -13,18 +13,33 @@ import {
 export default function Layout() {
   return (
     <>
-      <NavigationMenu>
-        <NavigationMenuList>
+      <NavigationMenu className = "w-full max-w-none bg-light-purple p-4">
+        <NavigationMenuList className = "justify-between w-full">
+
           <NavigationMenuItem>
-            <NavigationMenuTrigger>
-              Item One
-            </NavigationMenuTrigger>
-            <NavigationMenuContent>
-              <NavigationMenuLink>
-                Link
-              </NavigationMenuLink>
-            </NavigationMenuContent>
+            <NavigationMenuLink>
+              Dashboard
+            </NavigationMenuLink>
           </NavigationMenuItem>
+
+          <NavigationMenuItem>
+            <NavigationMenuLink>
+              Discover
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+
+          <NavigationMenuItem>
+            <NavigationMenuLink>
+              Saved Connections
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+
+          <NavigationMenuItem>
+            <NavigationMenuLink>
+              Collaboration
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+
         </NavigationMenuList>
       </NavigationMenu>
       <Outlet />
