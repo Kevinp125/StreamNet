@@ -1,5 +1,3 @@
-export default function DashboardPage(){
-  return(
-    <p>In Dashboard page</p>
-  )
+export default function DashboardPage() {
+  return <p className="text-white">In Dash</p>;
 }
