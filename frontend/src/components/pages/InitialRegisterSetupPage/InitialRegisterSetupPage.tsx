@@ -20,7 +20,19 @@ export default function InitialRegisterSetupPage() {
             },
           },
         );
-      } catch {}
+
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+
+        // TODO: const data = await res.json(); // user info from backend
+        // TODO: Check if user has completed setup
+        // TODO: If setup complete → navigate('/dashboard')
+        // TODO: If setup incomplete → navigate('/setup') or show setup form
+      } catch (err) {
+        console.error("Auth check failed:", err);
+        //TODO: Redirect to login page
+      }
     }
     checkUserProfile();
   }, []);
