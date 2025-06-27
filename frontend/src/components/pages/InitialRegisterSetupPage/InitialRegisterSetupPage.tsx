@@ -40,8 +40,6 @@ export default function InitialRegisterSetupPage() {
       }
     }
     checkUserProfile();
-
-    
   }, []);
 
   return <p className="text-white">Extra Setup</p>;
