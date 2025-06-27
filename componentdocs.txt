@@ -1,0 +1,3 @@
+Hello this is a document with a link to all the components I used from shadcn. Please feel free to navigate to the links if you want more info on a certain component.
+
+Button component: https://ui.shadcn.com/docs/components/button
