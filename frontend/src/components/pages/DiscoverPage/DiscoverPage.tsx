@@ -1,6 +1,6 @@
 export default function DiscoverPage(){
   return(
-    <p>In discover page</p>
+    <p className = "text-white">In discover page</p>
   )
 
 }

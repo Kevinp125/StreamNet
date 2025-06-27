@@ -1,5 +1,5 @@
 export default function EventsPage(){
   return(
-    <p>In events page</p>
+    <p className = "text-white">In events page</p>
   )
 }
