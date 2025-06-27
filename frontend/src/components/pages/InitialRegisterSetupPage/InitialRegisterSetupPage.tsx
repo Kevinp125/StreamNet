@@ -3,6 +3,7 @@ import { useEffect } from "react";
 
 const sessionResult = await supabase.auth.getSession();
 const token = sessionResult.data?.session?.access_token;
+console.log(token);
 
 export default function InitialRegisterSetupPage() {
   {
