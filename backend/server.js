@@ -12,7 +12,7 @@ app.use("/api", routes); // all routes mounted here so they auto have /api in fr
 
 const PORT = process.env.PORT || 3000;
 
-app.get("/", (res, req) => {
+app.get("/", (req, res) => {
   return res.status(200).send("hello");
 })
 
