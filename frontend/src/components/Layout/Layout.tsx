@@ -2,13 +2,9 @@ import { Outlet } from "react-router-dom"; //using outlet so that whatever page 
 import { useNavigate, useLocation } from "react-router-dom";
 import {
   NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuIndicator,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
-  NavigationMenuViewport,
 } from "@/components/ui/navigation-menu";
 
 
