@@ -11,7 +11,7 @@ import { supabase } from "@/supabaseclient";
 // Supabase → your site (via your redirectTo value)
 
 async function handleTwitchSignIn() {
-  const { data, error } = await supabase.auth.signInWithOAuth({
+  const {} = await supabase.auth.signInWithOAuth({
     //signInWithOAuth sends user to twitch. Twitch asks "do you want to allow this app to get your info through our login". If they say yes twitch redirects back to my website with a code
     provider: "twitch",
     options: {
