@@ -16,7 +16,7 @@ async function handleTwitchSignIn() {
       //signInWithOAuth sends user to twitch. Twitch asks "do you want to allow this app to get your info through our login". If they say yes twitch redirects back to my website with a code
       provider: "twitch",
       options: {
-        redirectTo: import.meta.env.VITE_REDIRECT_URL, //this will redirect user to Additional Setup Page where users need to add more info if it is a new account
+        redirectTo: `${window.location.origin}/extra-setup`, //this will redirect user to page that makes fetch request to fill out remaining info from user and put it in profiles tables
       },
     });
 
