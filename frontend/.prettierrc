@@ -1,6 +1,10 @@
 {
   "plugins": ["prettier-plugin-tailwindcss"],
   "tailwindFunctions": ["clsx", "cn", "cva"],
-  "printWidth": 50,
-  "singleQuote": false
+  "printWidth": 90,
+  "singleQuote": false,
+  "quoteProps": "as-needed",
+  "trailingComma": "es5",
+  "bracketSpacing": true,
+  "bracketSameLine": true
 }
