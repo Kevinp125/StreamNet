@@ -1,5 +1,5 @@
 export default function SavedConnectionsPage(){
   return(
-    <p>In Saved Connections</p>
+    <p className = "text-white">In Saved Connections</p>
   )
 }
