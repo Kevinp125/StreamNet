@@ -1,4 +1,4 @@
-const { supabase } = require("../../services/supabaseclient");
+const { supabase } = require("../services/supabaseclient");
 
 //function just gets the token from the authorization header by splitting string
 function getToken(req) {
