@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "@/Context/AuthProvider";
+import ExtraInfoForm from "@/components/ExtraInfoForm";
 
 //this page is like a traffic director. We are going to check if there is a profile in our database already. If there is then user can skip setup step. If there isnt user needs to do the setup.
 export default function InitialRegisterSetupPage() {
   const navigate = useNavigate();
   const { session, user } = useAuthContext(); //this will grab the session and user from AuthContext since this is a protected page they will exist guaranteed
-  const [CheckingIfNewUser, setCheckingIfNewUser] = useState(true); //this by default is going to be true because we need to check if the user who just logged in is a new user or returning user
+  const [checkingIfNewUser, setCheckingIfNewUser] = useState(true); //this by default is going to be true because we need to check if the user who just logged in is a new user or returning user
 
   useEffect(() => {
     async function checkUserProfile() {
@@ -42,5 +43,19 @@ export default function InitialRegisterSetupPage() {
     checkUserProfile(); //call this function as soon as page loads
   }, []);
 
-  return <p className="text-white">Extra Setup</p>;
+
+  if(checkingIfNewUser){ //if we are still checking whether or not user has profile display this message
+    return <div className="text-white">Checking your profile...</div>;
+  }
+
+  //otherwise if we are done checking if they have a profile and they havent been redirected to dashboard by this point this is where we display form where user needs to submit extra info...
+  return(
+
+  <div className = "flex flex-row justify-center items-center h-screen">
+    <ExtraInfoForm />
+  </div>
+
+
+  )
+
 }
