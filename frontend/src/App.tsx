@@ -5,24 +5,30 @@ import DashboardPage from "./components/pages/DashboardPage/DashboardPage";
 import DiscoverPage from "./components/pages/DiscoverPage/DiscoverPage";
 import SavedConnectionsPage from "./components/pages/SavedConnectionsPage/SavedConnectionsPage";
 import EventsPage from "./components/pages/EventsPage/EventsPage";
-import InitialRegisterSetupPage from "./components/pages/InitialRegisterSetupPage/InitialRegisterSetupPage";
+import CheckIfNewProfilePage from "./components/pages/InitialRegisterSetupPage/CheckIfNewProfilePage";
 import Layout from "./components/Layout/Layout";
+import { AuthProvider } from "./Context/AuthProvider";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 
 function App() {
   return (
     <>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/extra-setup" element={<InitialRegisterSetupPage />} />
+      <AuthProvider> {/*Allows all components to have the session and user context */}
+        <Routes>
 
-        <Route element = {<Layout/>}>
-          <Route path="/discover" element={<DiscoverPage />} />
-          <Route path="/connections" element={<SavedConnectionsPage />} />
-          <Route path="/events" element={<EventsPage />} />
-        </Route>
+          <Route path="/" element={<LandingPage />} /> {/*This is only unprotected route since it is the landing page */}
+          
+          <Route path="/dashboard" element={<ProtectedRoute> <DashboardPage /> </ProtectedRoute>} />
+          <Route path="/extra-setup" element={<ProtectedRoute> <CheckIfNewProfilePage /> </ProtectedRoute>} />
 
-      </Routes>
+          <Route element = {<Layout/>}> {/*Below pages are wrapped in layout element cause they have navbar */}
+            <Route path="/discover" element={<ProtectedRoute> <DiscoverPage /> </ProtectedRoute>} />
+            <Route path="/connections" element={<ProtectedRoute> <SavedConnectionsPage /> </ProtectedRoute>} />
+            <Route path="/events" element={<ProtectedRoute> <EventsPage /> </ProtectedRoute>} />
+          </Route>
+
+        </Routes>  
+      </AuthProvider>
     </>
   );
 }

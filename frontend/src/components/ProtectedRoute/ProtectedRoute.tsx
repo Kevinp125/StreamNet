@@ -6,7 +6,12 @@ import { useAuthContext } from "@/Context/AuthProvider";
 import { Navigate } from "react-router-dom";
 
 export default function ProtectedRoute({ children }: any) {
-  const { user } = useAuthContext();
+  const { user, loading } = useAuthContext();
+
+  //in order to give time to AuthProvider to get user and session information make sure we display loading state first. Once this is switched to false we can return the page
+  if (loading) {
+    return <div className="text-white">Loading...</div>;
+  }
 
   if (!user) {
     // user is not authenticated
