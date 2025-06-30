@@ -1,5 +1,5 @@
 const express = require("express");
-const { supabase } = require("../../supabaseclient");
+const { supabase } = require("../../services/supabaseclient");
 const router = express.Router(); //making a router
 //here you could import a controller (what actuall queries database)
 
