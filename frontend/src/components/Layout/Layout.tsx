@@ -12,8 +12,6 @@ import {
 export default function Layout() {
   const location = useLocation(); //using location to figure out what path we are currently on to highlight it to user
   const navigate = useNavigate();
-
-  console.log("hello");
   
   return (
     <div className='w-full'>
