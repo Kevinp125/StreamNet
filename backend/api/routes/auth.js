@@ -4,7 +4,7 @@ const router = express.Router(); //making a router
 //here you could import a controller (what actuall queries database)
 
 router
-  .route("/check-user") // `/api/auth`
+  .route("/check-user-exists") // `/api/auth`
   .get(async (req, res) => {
     const token = req.headers.authorization.split(" ")[1]; //splits string at the space and grabs the second part which is the actual token
 
