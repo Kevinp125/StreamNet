@@ -1,6 +1,7 @@
 import { Twitch } from "lucide-react";
+// Button component from shadcn: https://ui.shadcn.com/docs/components/button
 import { Button } from "../../ui/button";
-import { supabase } from "lib/supabaseclient";
+import { supabase } from "@/lib/supabaseclient";
 
 // User clicks "Continue with Twitch"
 

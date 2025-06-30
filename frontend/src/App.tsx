@@ -5,7 +5,7 @@ import DashboardPage from "./components/pages/DashboardPage/DashboardPage";
 import DiscoverPage from "./components/pages/DiscoverPage/DiscoverPage";
 import SavedConnectionsPage from "./components/pages/SavedConnectionsPage/SavedConnectionsPage";
 import EventsPage from "./components/pages/EventsPage/EventsPage";
-import CheckIfNewProfilePage from "./components/pages/InitialRegisterSetupPage/CheckIfNewProfilePage";
+import CheckIfNewProfilePage from "./components/pages/CheckIfNewProfilePage/CheckIfNewProfilePage";
 import Layout from "./components/Layout/Layout";
 import { AuthProvider } from "./Context/AuthProvider";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
