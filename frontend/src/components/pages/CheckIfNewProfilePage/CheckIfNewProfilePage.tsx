@@ -19,7 +19,7 @@ export default function InitialRegisterSetupPage() {
             headers: {
               Authorization: `Bearer ${session!.access_token}`,
             },
-          }
+          },
         );
 
         if (!res.ok) {
@@ -36,7 +36,7 @@ export default function InitialRegisterSetupPage() {
           setCheckingIfNewUser(false); //we dot this by setting this to false because we have concluded our search once this is false loading state wont be returned and form will
         }
       } catch (err) {
-        console.error("Failed to check is a user exits in profile already", err);
+        console.error("Failed to check if a user exists in profile already", err);
       }
     }
 
@@ -45,12 +45,12 @@ export default function InitialRegisterSetupPage() {
 
   if (checkingIfNewUser) {
     //if we are still checking whether or not user has profile display this message
-    return <div className="text-white">Checking your profile...</div>;
+    return <div className='text-white'>Checking your profile...</div>;
   }
 
   //otherwise if we are done checking if they have a profile and they havent been redirected to dashboard by this point this is where we display form where user needs to submit extra info...
   return (
-    <div className="flex h-screen flex-row items-center justify-center">
+    <div className='flex h-screen flex-row items-center justify-center'>
       <ExtraInfoForm />
     </div>
   );
