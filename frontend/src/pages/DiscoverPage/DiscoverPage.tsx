@@ -1,6 +1,8 @@
+import StreamerGrid from "@/components/StreamerGrid/StreamerGrid"
+
 export default function DiscoverPage(){
   return(
-    <p className = "text-white">In discover page</p>
+    <StreamerGrid />
   )
 
 }
