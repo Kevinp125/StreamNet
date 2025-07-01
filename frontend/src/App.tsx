@@ -1,11 +1,11 @@
 import "./App.css";
-import {Routes, Route } from "react-router-dom";
-import LandingPage from "./components/pages/LandingPage/LandingPage";
-import DashboardPage from "./components/pages/DashboardPage/DashboardPage";
-import DiscoverPage from "./components/pages/DiscoverPage/DiscoverPage";
-import SavedConnectionsPage from "./components/pages/SavedConnectionsPage/SavedConnectionsPage";
-import EventsPage from "./components/pages/EventsPage/EventsPage";
-import CheckIfNewProfilePage from "./components/pages/CheckIfNewProfilePage/CheckIfNewProfilePage";
+import {Routes, Route } from "react-router-dom"
+import LandingPage from "./pages/LandingPage/LandingPage";
+import DashboardPage from "./pages/DashboardPage/DashboardPage";
+import DiscoverPage from "./pages/DiscoverPage/DiscoverPage";
+import SavedConnectionsPage from "./pages/SavedConnectionsPage/SavedConnectionsPage";
+import EventsPage from "./pages/EventsPage/EventsPage";
+import CheckIfNewProfilePage from "./pages/CheckIfNewProfilePage/CheckIfNewProfilePage";
 import Layout from "./components/Layout/Layout";
 import { AuthProvider } from "./Context/AuthProvider";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";

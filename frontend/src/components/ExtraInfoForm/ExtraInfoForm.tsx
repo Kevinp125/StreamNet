@@ -67,7 +67,7 @@ export default function ExtraInfoForm({ handleFormSubmit }: ExtraInfoFormProps) 
           <form onSubmit={handleSubmit} className='flex flex-col gap-6'>
             {/* Display Name */}
             <div className='flex flex-col gap-2'>
-              <Label htmlFor='display_name'>First Name</Label>
+              <Label htmlFor='first_name'>First Name</Label>
               <Input id='first_name' name='first_name' placeholder='Your first name' required />
             </div>
 
