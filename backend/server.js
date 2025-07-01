@@ -1,7 +1,7 @@
 const dotenv = require("dotenv");
-dotenv.config(); // Load environment variables from .env file
-const express = require("express"); //importing express library
-const cors = require("cors"); //allows for cross origin sharing. Since frontend is hosted on a port that isnt 3000 we need this enabled to express is able to send info back
+dotenv.config(); 
+const express = require("express"); 
+const cors = require("cors"); 
 const routes = require("./api/routes/index");
 
 const app = express(); //creating an instance of the express application

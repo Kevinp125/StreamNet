@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "@/Context/AuthProvider";
-import ExtraInfoForm from "@/components/ExtraInfoForm";
+import ExtraInfoForm from "@/components/ExtraInfoForm/ExtraInfoForm";
 
 //this page is like a traffic director. We are going to check if there is a profile in our database already. If there is then user can skip setup step. If there isnt user needs to do the setup.
 export default function InitialRegisterSetupPage() {
@@ -19,7 +19,7 @@ export default function InitialRegisterSetupPage() {
             headers: {
               Authorization: `Bearer ${session!.access_token}`,
             },
-          }
+          },
         );
 
         if (!res.ok) {
@@ -36,26 +36,22 @@ export default function InitialRegisterSetupPage() {
           setCheckingIfNewUser(false); //we dot this by setting this to false because we have concluded our search once this is false loading state wont be returned and form will
         }
       } catch (err) {
-        console.error("Failed to check is a user exits in profile already", err);
+        console.error("Failed to check if a user exists in profile already", err);
       }
     }
 
     checkUserProfile(); //call this function as soon as page loads
   }, []);
 
-
-  if(checkingIfNewUser){ //if we are still checking whether or not user has profile display this message
-    return <div className="text-white">Checking your profile...</div>;
+  if (checkingIfNewUser) {
+    //if we are still checking whether or not user has profile display this message
+    return <div className='text-white'>Checking your profile...</div>;
   }
 
   //otherwise if we are done checking if they have a profile and they havent been redirected to dashboard by this point this is where we display form where user needs to submit extra info...
-  return(
-
-  <div className = "flex flex-row justify-center items-center h-screen">
-    <ExtraInfoForm />
-  </div>
-
-
-  )
-
+  return (
+    <div className='flex h-screen flex-row items-center justify-center'>
+      <ExtraInfoForm />
+    </div>
+  );
 }

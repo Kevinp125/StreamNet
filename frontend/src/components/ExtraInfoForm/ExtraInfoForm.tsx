@@ -15,9 +15,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { Button } from "./ui/button";
-import { Label } from "./ui/label";
-import { Input } from "./ui/input";
+import { Button } from "../ui/button";
+import { Label } from "../ui/label";
+import { Input } from "../ui/input";
+
+//all shadcn component links
+//Input: https://ui.shadcn.com/docs/components/input
+//Label: https://ui.shadcn.com/docs/components/label
+//Select: https://ui.shadcn.com/docs/components/select
+//Button: https://ui.shadcn.com/docs/components/button
+//Card: https://ui.shadcn.com/docs/components/card
+
 
 export default function ExtraInfoForm() {
   function handleSubmit(event: React.FormEvent) {

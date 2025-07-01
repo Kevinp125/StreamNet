@@ -1,6 +1,6 @@
 import type { Session, User } from "@supabase/supabase-js";
 import { useContext, useState, useEffect, createContext } from "react";
-import { supabase } from "@/supabaseclient";
+import { supabase } from "@/lib/supabaseclient";
 
 //context type
 type AuthContextType = {
@@ -61,10 +61,10 @@ export function AuthProvider({ children }: any) {
     }, //supabase signout function just store in our signOut for better readability. Other components can acess everywhere
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>; //return the context as a provider wrapper with the given values 
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>; //return the context as a provider wrapper with the given values
 }
 
 //this a hook we are exporting that can be called in any component just makes our code cleaner. useContext returns an object with all the values set in context
-export function useAuthContext(){
+export function useAuthContext() {
   return useContext(AuthContext);
 }
