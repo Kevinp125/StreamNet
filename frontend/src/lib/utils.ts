@@ -26,6 +26,6 @@ export async function fetchStreamerCardInfo(accessToken: string) {
     return data.profile;
   } catch (err) {
     console.error(`Could not fetch user profile`, err);
-    throw new Error('Unable to fetch profile');
+    throw new Error("Unable to fetch profile");
   }
 }
