@@ -6,7 +6,7 @@ import { DASHBOARD_PATH } from "@/lib/paths";
 
 type ProfileFormData = {
   name: string;
-  dob: string;
+  date_of_birth: string;
   targetAudience: string;
   tags: string[];
 };
@@ -64,7 +64,7 @@ export default function InitialRegisterSetupPage() {
 
         if (data.profileExists) {
           //profile exists will be a custom field sent back by the api. Api will check if there is a profile row for the authenticated user if there is then go striaght to dash
-          navigate("/dashboard");
+          navigate(DASHBOARD_PATH);
         } else {
           //else means no profile exists yet so we have to show user the extra form to submit extra details
           setCheckingIfNewUser(false); //we dot this by setting this to false because we have concluded our search once this is false loading state wont be returned and form will
