@@ -28,27 +28,44 @@ export default function StreamerCard({profile = mockProfile}){
   };
 
   return(
-    <Card className = "w-[85%] h-full flex flex-col p-10 border-light-purple border-6">
+    <Card className = "w-[85%] h-full flex flex-col p-6 border-light-purple border-6">
       <CardHeader>
-        <CardTitle className = "flex flex-col items-center gap-6">
-          <h1 className = "text-xl">{profile.twitchUser}</h1>
+        <CardTitle className = "flex flex-col items-center gap-4">
+          <h1 className = "text-2xl">@{profile.twitchUser}</h1>
           <img 
             src={profile.profilePic} 
             alt="Profile" 
             className="w-36 h-36 rounded-full border-2 border-primary/20"
           />
 
-
-
+          <div>
+            <h2 className="text-xl font-bold">{profile.name}</h2>
+            <p className="text-sm text-muted-foreground">{profile.email}</p>
+          </div>
         </CardTitle>
-
-
-
       </CardHeader>
 
-      <CardContent>
+      <CardContent className="flex flex-col gap-3.5">
 
+        {/* TODO: Placeholder for fav clip will do that soon need to update database to include a clip url and figure out embed stuff */}
+        <div className="h-36 bg-muted rounded-lg flex items-center justify-center">
+          <div className="text-center text-muted-foreground">
+            <div className="text-4xl">🎬</div>
+            <p className="text-sm">Favorite Clip</p>
+            <p className="text-xs">Coming Soon</p>
+          </div>
+        </div>
 
+        <div>
+          <h3 className="font-semibold text-md flex items-center gap-2">
+            <span>📝</span>
+            About Me
+          </h3>
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            {profile.description}
+          </p>
+        </div>
+        
 
 
 
