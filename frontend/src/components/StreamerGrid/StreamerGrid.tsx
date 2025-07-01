@@ -137,7 +137,7 @@ const mockStreamers = [
 export default function StreamerGrid() {
   return (
     //making this grid responsive so on smallest screens only disply grird with one column as screen size goes up display more columns
-    <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5'>
+    <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 p-[5%]'>
       {mockStreamers.map(streamer => (
         //TODO: Create streamerCard component
         <DiscoverStreamerCard key={streamer.id} streamer={streamer} />

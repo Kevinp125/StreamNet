@@ -22,7 +22,27 @@ type DisoverStreamerCardProps = {
 export default function DiscoverStreamerCard({streamer}: DisoverStreamerCardProps){
 
   return(
-    <p className = "text-white">{streamer.name}</p>
+    <Card>
+      <CardHeader>
+
+
+
+      </CardHeader>
+      
+      <CardContent>
+
+
+
+      </CardContent>
+
+      <CardFooter>
+
+
+        
+      </CardFooter>
+
+
+    </Card>
 
 
   )
