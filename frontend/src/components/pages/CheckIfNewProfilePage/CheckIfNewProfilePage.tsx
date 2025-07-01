@@ -9,6 +9,16 @@ export default function InitialRegisterSetupPage() {
   const { session, user } = useAuthContext(); //this will grab the session and user from AuthContext since this is a protected page they will exist guaranteed
   const [checkingIfNewUser, setCheckingIfNewUser] = useState(true); //this by default is going to be true because we need to check if the user who just logged in is a new user or returning user
 
+  function handleFormSubmit(data){
+
+
+
+
+  }
+
+
+
+
   useEffect(() => {
     async function checkUserProfile() {
       //function will check if the user who jsut logged in has a profile setup in our database
@@ -51,7 +61,7 @@ export default function InitialRegisterSetupPage() {
   //otherwise if we are done checking if they have a profile and they havent been redirected to dashboard by this point this is where we display form where user needs to submit extra info...
   return (
     <div className='flex h-screen flex-row items-center justify-center'>
-      <ExtraInfoForm />
+      <ExtraInfoForm handleFormSubmit = {handleFormSubmit}/>
     </div>
   );
 }
