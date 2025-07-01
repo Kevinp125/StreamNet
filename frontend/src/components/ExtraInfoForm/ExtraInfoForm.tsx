@@ -1,11 +1,4 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 import {
   Select,
@@ -110,14 +103,12 @@ export default function ExtraInfoForm({ handleFormSubmit }: ExtraInfoFormProps) 
                 Separate tags with commas (e.g., gaming, comedy, music)
               </p>
             </div>
+
+            <Button type='submit' className='bg-electric-indigo cursor-pointer'>
+              Submit!
+            </Button>
           </form>
         </CardContent>
-
-        <CardFooter>
-          <Button type='submit' className='bg-electric-indigo cursor-pointer'>
-            Submit!
-          </Button>
-        </CardFooter>
       </Card>
     </>
   );
