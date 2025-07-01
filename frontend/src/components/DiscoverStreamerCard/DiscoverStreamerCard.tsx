@@ -1,3 +1,6 @@
+import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card';
+import { Badge } from '../ui/badge';
+
 type StreamerInfo = {
   id: string;
   name: string;
@@ -19,7 +22,7 @@ type DisoverStreamerCardProps = {
 export default function DiscoverStreamerCard({streamer}: DisoverStreamerCardProps){
 
   return(
-    <p>{streamer.name}</p>
+    <p className = "text-white">{streamer.name}</p>
 
 
   )
