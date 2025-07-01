@@ -54,7 +54,8 @@ export default function DashboardPage() {
   return (
     <div className='flex min-h-screen flex-row gap-1 p-14'>
       <div className='flex-1'>
-        <StreamerCard profile = {userProfile} />
+        {/*Dont render streamer card until the profile is available */}
+        {userProfile && <StreamerCard profile = {userProfile} />} 
       </div>
 
       <div className='flex flex-1 flex-col items-center gap-6'>
