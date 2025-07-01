@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { DISCOVER_PATH } from "@/lib/paths";
+import StreamerCard from "@/components/StreamerCard/StreamerCard";
 
 export default function DashboardPage() {
   const navigate = useNavigate();
@@ -8,10 +9,10 @@ export default function DashboardPage() {
   //keep in mind in future below discover streamers button wont be positioned absolutely but rather be in a flex box container that also contains prompt of day and recent activity
   return (
     
-    <div className = "flex flex-row gap-6 p-6">
+    <div className = "flex flex-row gap-1 p-14 min-h-screen">
 
       <div className = "flex-1">
-        {/*Streamer card component goes here */}
+        <StreamerCard />
       </div>
 
       <div className = "flex flex-col gap-6 flex-1 items-center">
