@@ -38,7 +38,7 @@ const mockStreamers = [
     name: "Imane Anys",
     date_of_birth: "1996-05-14",
     targetAudience: "all_ages",
-    tags: ["gaming", "variety", "community", "positivity"],
+    tags: ["gaming", "variety", "community", "positivity", "test"],
     created_at: new Date().toISOString(),
   },
   {
@@ -51,7 +51,7 @@ const mockStreamers = [
     name: "Michael Grzesiek",
     date_of_birth: "1994-06-02",
     targetAudience: "young_adults",
-    tags: ["fps", "csgo", "valorant", "gaming"],
+    tags: ["fps", "csgo", "valorant", "gaming", "hello"],
     created_at: new Date().toISOString(),
   },
   {
