@@ -42,6 +42,8 @@ export default function DiscoverPage() {
           <StreamerCard profile={selectedStreamer} onClose={handleCloseModal} isModal={true} />
         </div>
       )}
+
+      
     </>
   );
 }

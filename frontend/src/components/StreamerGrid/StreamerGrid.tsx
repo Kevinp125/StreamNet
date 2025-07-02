@@ -1,5 +1,9 @@
 import DiscoverStreamerCard from "../DiscoverStreamerCard/DIscoverStreamerCard";
 
+type StreamerGridProps = {
+
+  
+}
 //below is just hard coded streamers that are in database. Using this to display cards for now will get api endpoint to fetch from database later
 const mockStreamers = [
   {
@@ -144,6 +148,6 @@ export default function StreamerGrid() {
       ))}
     </div>
 
-    
+
   );
 }

@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "../ui/button";
 
 type UserProfile = {
   id: string;
@@ -15,11 +16,11 @@ type UserProfile = {
 
 type StreamerCardProps = {
   profile: UserProfile;
-  isModal: boolean;
+  isModal?: boolean;
   onClose: () => void;
 };
 
-export default function StreamerCard({ profile, onClose, isModal}: StreamerCardProps) {
+export default function StreamerCard({ profile, onClose, isModal }: StreamerCardProps) {
   const formatAudience = (audience: string) => {
     switch (audience) {
       case "kids":
@@ -41,6 +42,18 @@ export default function StreamerCard({ profile, onClose, isModal}: StreamerCardP
 
   return (
     <Card className='border-light-purple flex h-full w-[85%] flex-col border-6 p-6'>
+      {/*Below close modal will only pop up if isModal boolean is set to true */}
+      {isModal && (
+        <Button
+          variant='ghost'
+          size='sm'
+          onClick={onClose}
+          className='flex justify-end text-gray-500 hover:bg-transparent hover:text-gray-700'
+        >
+          X
+        </Button>
+      )}
+
       <CardHeader>
         <CardTitle className='flex flex-col items-center gap-4'>
           <h1 className='text-2xl'>@{profile.twitchUser}</h1>
