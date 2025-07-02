@@ -1,5 +1,6 @@
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
 import { Heart, X, Users } from "lucide-react";
 //library with a function that can calculate the difference in years from today and someones birthday
 import { differenceInYears } from "date-fns";
@@ -26,7 +27,7 @@ export default function DiscoverStreamerCard({ streamer }: DisoverStreamerCardPr
   const age = differenceInYears(new Date(), new Date(streamer.date_of_birth));
 
   return (
-    <Card className='w-full max-w-md transition-all duration-300 hover:scale-105'>
+    <Card className='w-full max-w-md transition-all duration-300 hover:scale-105 flex-col cursor-pointer gap-2'>
       <CardHeader>
         <div className='flex items-start justify-between'>
           <img
@@ -44,11 +45,11 @@ export default function DiscoverStreamerCard({ streamer }: DisoverStreamerCardPr
         </div>
       </CardHeader>
 
-      <CardContent>
-        <p className='line-clamp-2 pb-0.5 text-xs text-gray-600'>{streamer.description}</p>
+      <CardContent className = "flex-1 flex flex-col gap-4">
+        <p className='line-clamp-2 text-xs text-gray-600'>{streamer.description}</p>
 
         {/*This div keeps in the col but the inside is a row so that the audience and users tag are side by side */}
-        <div className='flex flex-row items-center gap-2 pb-2'>
+        <div className='flex flex-row items-center gap-2'>
           <Users className='h-4 w-4 text-gray-400' />
 
           <Badge variant='secondary'>
@@ -78,7 +79,18 @@ export default function DiscoverStreamerCard({ streamer }: DisoverStreamerCardPr
           )}
         </div>
       </CardContent>
-      <CardFooter></CardFooter>
+      <CardFooter className = "flex justify-between">
+          <Button variant = "ghost" className = "cursor-pointer" >
+            <Heart className = "w-3 h-3"/>
+            <span className = "text-sm">Connect</span>
+          </Button>
+
+          <Button variant = "ghost" className = "text-red-500 hover:text-red-500 cursor-pointer" >
+            <X className = "w-3 h-3"/>
+            <span className = "text-sm">Not Interested</span>
+          </Button>
+
+      </CardFooter>
     </Card>
   );
 }

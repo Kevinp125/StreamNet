@@ -6,7 +6,7 @@ const mockStreamers = [
     id: "11111111-1111-1111-1111-111111111111",
     email: "ninja@example.com",
     twitchUser: "ninja_fake",
-    profilePic: "https://static-cdn.jtvnw.net/jtv_user_pictures/ninja-profile_image-300x300.png",
+    profilePic: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png", // Pikachu
     description:
       "Professional gamer and streamer. I play Fortnite, Valorant, and other competitive games at the highest level.",
     name: "Tyler Johnson",
@@ -19,7 +19,7 @@ const mockStreamers = [
     id: "22222222-2222-2222-2222-222222222222",
     email: "xqc@example.com",
     twitchUser: "xqc_fake",
-    profilePic: "https://static-cdn.jtvnw.net/jtv_user_pictures/xqc-profile_image-300x300.png",
+    profilePic: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png", // Charizard
     description:
       "Variety streamer who loves reacting to videos and chatting with viewers. Come hang out!",
     name: "Felix Lengyel",
@@ -32,7 +32,7 @@ const mockStreamers = [
     id: "33333333-3333-3333-3333-333333333333",
     email: "pokimane@example.com",
     twitchUser: "pokimane_fake",
-    profilePic: "https://static-cdn.jtvnw.net/jtv_user_pictures/pokimane-profile_image-300x300.png",
+    profilePic: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/39.png", // Jigglypuff
     description:
       "Content creator who loves gaming, chatting, and creating a positive community for everyone!",
     name: "Imane Anys",
@@ -45,7 +45,7 @@ const mockStreamers = [
     id: "44444444-4444-4444-4444-444444444444",
     email: "shroud@example.com",
     twitchUser: "shroud_fake",
-    profilePic: "https://static-cdn.jtvnw.net/jtv_user_pictures/shroud-profile_image-300x300.png",
+    profilePic: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/9.png", // Blastoise
     description:
       "Former CS:GO pro turned variety streamer. I play FPS games and whatever looks fun!",
     name: "Michael Grzesiek",
@@ -58,7 +58,7 @@ const mockStreamers = [
     id: "55555555-5555-5555-5555-555555555555",
     email: "lirik@example.com",
     twitchUser: "lirik_fake",
-    profilePic: "https://static-cdn.jtvnw.net/jtv_user_pictures/lirik-profile_image-300x300.png",
+    profilePic: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/131.png", // Lapras
     description:
       "Variety gamer who tries out new indie games and hidden gems. Always looking for the next great game!",
     name: "Saqib Zahid",
@@ -71,7 +71,7 @@ const mockStreamers = [
     id: "66666666-6666-6666-6666-666666666666",
     email: "bobross@example.com",
     twitchUser: "digital_artist",
-    profilePic: "https://static-cdn.jtvnw.net/jtv_user_pictures/bobross-profile_image-300x300.png",
+    profilePic: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/113.png", // Chansey
     description:
       "Digital artist who streams the creative process. Watch me paint landscapes, characters, and fan art!",
     name: "Sarah Williams",
@@ -84,7 +84,7 @@ const mockStreamers = [
     id: "77777777-7777-7777-7777-777777777777",
     email: "horror_king@example.com",
     twitchUser: "horror_king",
-    profilePic: "https://static-cdn.jtvnw.net/jtv_user_pictures/horror-profile_image-300x300.png",
+    profilePic: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/94.png", // Gengar
     description:
       "Horror game enthusiast who plays the scariest games and somehow survives. Come get spooked with me!",
     name: "Marcus Johnson",
@@ -97,7 +97,7 @@ const mockStreamers = [
     id: "88888888-8888-8888-8888-888888888888",
     email: "speedrun_god@example.com",
     twitchUser: "speedrun_god",
-    profilePic: "https://static-cdn.jtvnw.net/jtv_user_pictures/speedrun-profile_image-300x300.png",
+    profilePic: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/151.png", // Mew
     description: "World record holder in several games. Watch me break games and set new records!",
     name: "Alex Chen",
     date_of_birth: "1993-07-20",
@@ -109,7 +109,7 @@ const mockStreamers = [
     id: "99999999-9999-9999-9999-999999999999",
     email: "chat_master@example.com",
     twitchUser: "chat_master",
-    profilePic: "https://static-cdn.jtvnw.net/jtv_user_pictures/chat-profile_image-300x300.png",
+    profilePic: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/150.png", // Mewtwo
     description:
       "I love talking to my community! We discuss everything from life advice to random shower thoughts.",
     name: "Jessica Martinez",
@@ -122,7 +122,7 @@ const mockStreamers = [
     id: "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
     email: "retro_gamer@example.com",
     twitchUser: "retro_gamer",
-    profilePic: "https://static-cdn.jtvnw.net/jtv_user_pictures/retro-profile_image-300x300.png",
+    profilePic: "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/143.png", // Snorlax
     description:
       "Bringing back the classics! I play retro games from the 80s, 90s, and early 2000s with nostalgic commentary.",
     name: "David Thompson",
