@@ -17,7 +17,7 @@ type UserProfile = {
 type StreamerCardProps = {
   profile: UserProfile;
   isModal?: boolean;
-  onClose: () => void;
+  onClose?: () => void;
 };
 
 export default function StreamerCard({ profile, onClose, isModal }: StreamerCardProps) {
