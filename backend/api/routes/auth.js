@@ -1,14 +1,10 @@
 const express = require("express");
-const { authenticateUser } = require("../../middleware/middleware");
+const { authenticateMiddleware } = require("../../middleware/authRequest");
 const router = express.Router(); //making a router
 
-router.route("/check-user-exists").get(authenticateUser, async (req, res) => {
-  //authenticateUser will do the token checking for us and attach User to the req body as well as supabase client
+router.route("/check-user-exists").get(authenticateMiddleware, async (req, res) => {
+  //authenticateMiddleware will do the token checking for us and attach User to the req body as well as supabase client
   try {
-    const { data: allProfiles, error: allError } = await req.supabase
-      .from("profiles")
-      .select("*");
-
     // Check if user has profile in database
     const { data: profile, error } = await req.supabase
       .from("profiles")
@@ -29,14 +25,14 @@ router.route("/check-user-exists").get(authenticateUser, async (req, res) => {
   }
 });
 
-router.route("/create-profile").post(authenticateUser, async (req, res) => {
+router.route("/create-profile").post(authenticateMiddleware, async (req, res) => {
   try {
     //first couple of things are all bookkeeping. Getting all the information
     //this is info that we get from profiles that are new that are sent in body after form submission
-    const { name, dob, targetAudience, tags } = req.body;
+    const { name, date_of_birth, targetAudience, tags } = req.body;
 
     //check if the required fields are populated in case somoeone tries to hit api from route
-    if (!name || !dob || !targetAudience || !tags) {
+    if (!name || !date_of_birth || !targetAudience || !tags) {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
@@ -52,7 +48,7 @@ router.route("/create-profile").post(authenticateUser, async (req, res) => {
         description: req.user.user_metadata?.custom_claims?.description,
         //everything above is info from twitch. Everything below is from form submission
         name,
-        dob,
+        date_of_birth,
         targetAudience,
         tags,
         created_at: new Date().toISOString(),
