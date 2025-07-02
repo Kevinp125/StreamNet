@@ -1,4 +1,4 @@
-import DiscoverStreamerCard from "../DiscoverStreamerCard/DIscoverStreamerCard";
+import DiscoverStreamerCard from "../DiscoverStreamerCard/DiscoverStreamerCard";
 
 type StreamerProfile = {
   id: string;
