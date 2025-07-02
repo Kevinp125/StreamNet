@@ -3,7 +3,7 @@ const { differenceInYears } = require("date-fns");
 //function returns the match score between the currentUser and a streamer based off values. The higher the score the better the match
 function calculateMatchScore(currentUser, streamerToCompare) {
   //to start off score can only go up.
-  const score = 0;
+  let score = 0;
 
   //converting the date of births of both the current user and streamer we are comparing with to years so we can check if they are close in age.
   const currentUserAge = differenceInYears(
@@ -33,12 +33,14 @@ function calculateMatchScore(currentUser, streamerToCompare) {
 
   //Now we need to check tags. We can add points depending on how many tags are shared between the user and the streamer we are checking
   //filter through current users tags and return tags that are in the streamerTocompare tags
-  sharedTags = currentUser.tags.filter( (tag) => {
+  const sharedTags = currentUser.tags.filter( (tag) => {
     return streamerToCompare.tags.includes(tag);
   })
 
   //for each tag that is in common add 3 points to the score. Hence the sharedTags * 3
-  score = sharedTags * 3;
+  score = sharedTags.length * 3;
 
   return score;
 }
+
+module.exports = { calculateMatchScore };
