@@ -1,7 +1,8 @@
 //using outlet so that whatever page user navigates to it gets autofilled to that
 import { Outlet } from "react-router-dom";
 import { useNavigate, useLocation } from "react-router-dom";
-//Navigation Menu component from shadcn: https://ui.shadcn.com/docs/components/navigation-menu
+import { DASHBOARD_PATH, DISCOVER_PATH, CONNECTIONS_PATH, EVENTS_PATH } from "@/lib/paths";
+
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -12,7 +13,7 @@ import {
 export default function Layout() {
   const location = useLocation(); //using location to figure out what path we are currently on to highlight it to user
   const navigate = useNavigate();
-  
+
   return (
     <div className='w-full'>
       <NavigationMenu className='bg-light-purple w-full max-w-none [&>div]:w-full'>
@@ -23,7 +24,7 @@ export default function Layout() {
             <NavigationMenuLink
               className={`cursor-pointer ${location.pathname === "/dashboard" ? "text-electric-indigo bg-accent hover:text-electric-indigo font-bold" : "hover:text-electric-indigo font-bold text-white transition-colors"}`}
               onClick={() => {
-                navigate("./dashboard");
+                navigate(DASHBOARD_PATH);
               }}
             >
               Dashboard
@@ -34,7 +35,7 @@ export default function Layout() {
             <NavigationMenuLink
               className={`cursor-pointer ${location.pathname === "/discover" ? "text-electric-indigo bg-accent hover:text-electric-indigo font-bold" : "hover:text-electric-indigo font-bold text-white transition-colors"}`}
               onClick={() => {
-                navigate("./discover");
+                navigate(DISCOVER_PATH);
               }}
             >
               Discover
@@ -45,7 +46,7 @@ export default function Layout() {
             <NavigationMenuLink
               className={`cursor-pointer ${location.pathname === "/connections" ? "text-electric-indigo bg-accent hover:text-electric-indigo font-bold" : "hover:text-electric-indigo font-bold text-white transition-colors"}`}
               onClick={() => {
-                navigate("./connections");
+                navigate(CONNECTIONS_PATH);
               }}
             >
               Saved Connections
@@ -56,7 +57,7 @@ export default function Layout() {
             <NavigationMenuLink
               className={`cursor-pointer ${location.pathname === "/events" ? "text-electric-indigo bg-accent hover:text-electric-indigo font-bold" : "hover:text-electric-indigo font-bold text-white transition-colors"}`}
               onClick={() => {
-                navigate("./events");
+                navigate(EVENTS_PATH);
               }}
             >
               Collaboration
