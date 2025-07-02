@@ -34,7 +34,7 @@ export default function DiscoverPage() {
 
   return (
     <>
-      <StreamerGrid />
+      <StreamerGrid handleStreamerClick = {handleStreamerClick}/>
 
       {/*Below is modal view we only want it to render if a card is clicked and we call the handleStreamerClick and it setSelectedStreamer to be a profile */}
       {selectedStreamer && (

@@ -41,14 +41,14 @@ export default function StreamerCard({ profile, onClose, isModal }: StreamerCard
   };
 
   return (
-    <Card className='border-light-purple flex h-full w-[85%] flex-col border-6 p-6'>
+    <Card className={isModal?'border-light-purple flex h-full w-[35%] flex-col border-6 p-6'   :'border-light-purple flex h-full w-[85%] flex-col border-6 p-6'}>
       {/*Below close modal will only pop up if isModal boolean is set to true */}
       {isModal && (
         <Button
           variant='ghost'
           size='sm'
           onClick={onClose}
-          className='flex justify-end text-gray-500 hover:bg-transparent hover:text-gray-700'
+          className='flex justify-end text-gray-500 hover:bg-transparent hover:text-red-600 cursor-pointer'
         >
           X
         </Button>
@@ -60,7 +60,7 @@ export default function StreamerCard({ profile, onClose, isModal }: StreamerCard
           <img
             src={profile.profilePic}
             alt='Profile'
-            className='border-primary/20 h-36 w-36 rounded-full border-2'
+            className='border-light-purple h-36 w-36 rounded-full border-2'
           />
 
           <div>
