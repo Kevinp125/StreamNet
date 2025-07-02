@@ -143,5 +143,7 @@ export default function StreamerGrid() {
         <DiscoverStreamerCard key={streamer.id} streamer={streamer} />
       ))}
     </div>
+
+    
   );
 }

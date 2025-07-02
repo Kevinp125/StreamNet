@@ -9,15 +9,17 @@ type UserProfile = {
   description: string;
   targetAudience: string;
   tags: string[];
-  dob: string;
+  date_of_birth: string;
   created_at: string;
 };
 
 type StreamerCardProps = {
   profile: UserProfile;
+  isModal: boolean;
+  onClose: () => void;
 };
 
-export default function StreamerCard({ profile }: StreamerCardProps) {
+export default function StreamerCard({ profile, onClose, isModal}: StreamerCardProps) {
   const formatAudience = (audience: string) => {
     switch (audience) {
       case "kids":
