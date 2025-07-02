@@ -1,6 +1,7 @@
 const express = require("express");
 const { authenticateMiddleware } = require("../../middleware/authRequest");
 const router = express.Router(); //making a router
+const {calculateMatchScore} = require("../../services/calculateMatchScore");
 
 router.route("/me").get(authenticateMiddleware, async (req, res) => {
   try {
@@ -47,7 +48,6 @@ router.route("/get-all").get(authenticateMiddleware, async (req, res) => {
     if(userErr){
       throw new Error('Error fetching the current user', userErr);
     }
-
     //fetch all profile rows
     const { data: streamers, streamersError } = await supabase
       .from("profiles")
@@ -61,10 +61,26 @@ router.route("/get-all").get(authenticateMiddleware, async (req, res) => {
       throw new Error('Error fetching the streamers', streamersError);
     }
 
-    return res.status(200).json(streamers);
+    //once we have fetched both the current User and the streamers in our database we need to map through the streamers and for each streamer calculate its match score with user and return the object with a new "score" field which we will use to sort order
+    const streamersWithMatchScores = streamers.map((streamer) => {
+      const matchScore = calculateMatchScore(currentUser, streamer);
+
+      return{
+        ...streamer,
+        score: matchScore
+      }
+    })
+
+    // Sort by final score. Remember how sort works if its positive then the second one should come before the first one.
+    streamersWithScores.sort((a, b) => b.score - a.score);
+
+    //return updated array that was sorted by highest matching first
+    res.status(200).json(streamersWithScores);
+
+    
   } catch (err) {
-    console.error("Error fetching all the streamers", err);
-    return res.status(500).json({ error: "Failed to fetch streamers" });
+    console.error("Error fetching either current user or streamers", err);
+    return res.status(500).json({ error: "Failed fetching either current user or streamers" });
   }
 });
 
