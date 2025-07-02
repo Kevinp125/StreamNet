@@ -27,11 +27,11 @@ export default function DiscoverStreamerCard({ streamer }: DisoverStreamerCardPr
   const age = differenceInYears(new Date(), new Date(streamer.date_of_birth));
 
   return (
-    <Card className='w-full max-w-md transition-all duration-300 hover:scale-105 flex-col cursor-pointer gap-2'>
+    <Card className='w-full max-w-md cursor-pointer flex-col gap-2 transition-all duration-300 hover:scale-105'>
       <CardHeader>
         <div className='flex items-start justify-between'>
           <img
-            className='h-13 w-13 rounded-full border-2 border-light-purple object-cover'
+            className='border-light-purple h-13 w-13 rounded-full border-2 object-cover'
             src={streamer.profilePic}
             alt={`${streamer.name}'s profile picture`}
           />
@@ -45,7 +45,7 @@ export default function DiscoverStreamerCard({ streamer }: DisoverStreamerCardPr
         </div>
       </CardHeader>
 
-      <CardContent className = "flex-1 flex flex-col gap-4">
+      <CardContent className='flex flex-1 flex-col gap-4'>
         <p className='line-clamp-2 text-xs text-gray-600'>{streamer.description}</p>
 
         {/*This div keeps in the col but the inside is a row so that the audience and users tag are side by side */}
@@ -79,17 +79,16 @@ export default function DiscoverStreamerCard({ streamer }: DisoverStreamerCardPr
           )}
         </div>
       </CardContent>
-      <CardFooter className = "flex justify-between">
-          <Button variant = "ghost" className = "cursor-pointer" >
-            <Heart className = "w-3 h-3"/>
-            <span className = "text-sm">Connect</span>
-          </Button>
+      <CardFooter className='flex justify-between'>
+        <Button variant='ghost' className='cursor-pointer'>
+          <Heart className='h-3 w-3' />
+          <span className='text-sm'>Connect</span>
+        </Button>
 
-          <Button variant = "ghost" className = "text-red-500 hover:text-red-500 cursor-pointer" >
-            <X className = "w-3 h-3"/>
-            <span className = "text-sm">Not Interested</span>
-          </Button>
-
+        <Button variant='ghost' className='cursor-pointer text-red-500 hover:text-red-500'>
+          <X className='h-3 w-3' />
+          <span className='text-sm'>Not Interested</span>
+        </Button>
       </CardFooter>
     </Card>
   );
