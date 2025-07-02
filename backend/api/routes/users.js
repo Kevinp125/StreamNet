@@ -24,22 +24,41 @@ router.route("/me").get(authenticateMiddleware, async (req, res) => {
   }
 });
 
+
+//this branch will get the streamers and the user that is logged in as well. 
+//We will go through each streamer and calculate their score based off audience match / tag matches
+//Then on the backend we will sort streamers based off score and return it as the response for the client to 
+//display
 router.route("/get-all").get(authenticateMiddleware, async (req, res) => {
+
+  
   try {
-    //putting client that we attached to request in a variable for ease of use
+    //putting client that we attached to request in a variable for ease of use. Same with userId
     const supabase = req.supabase;
+    const userId = req.user.id;
+
+    // Get current user
+    const { data: currentUser, userErr } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("id", userId)
+      .single();
+
+    if(userErr){
+      throw new Error('Error fetching the current user', userErr);
+    }
 
     //fetch all profile rows
-    const { data: streamers, error } = await supabase
+    const { data: streamers, streamersError } = await supabase
       .from("profiles")
       .select("*")
       //neq means select all profiles that arent equal to current user session id. We dont want oursevles showing up in recommendation
-      .neq("id", req.user.id)
+      .neq("id", userId)
       //ascending false allows us to get newly created streamers first
       .order("created_at", { ascending: false });
 
-    if (error) {
-      throw error;
+    if (streamersError) {
+      throw new Error('Error fetching the streamers', streamersError);
     }
 
     return res.status(200).json(streamers);
