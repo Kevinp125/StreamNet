@@ -31,5 +31,14 @@ function calculateMatchScore(currentUser, streamerToCompare) {
     score = score + 6;
   }
 
+  //Now we need to check tags. We can add points depending on how many tags are shared between the user and the streamer we are checking
+  //filter through current users tags and return tags that are in the streamerTocompare tags
+  sharedTags = currentUser.tags.filter( (tag) => {
+    return streamerToCompare.tags.includes(tag);
+  })
+
+  //for each tag that is in common add 3 points to the score. Hence the sharedTags * 3
+  score = sharedTags * 3;
+
   return score;
 }

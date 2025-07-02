@@ -71,11 +71,13 @@ router.route("/get-all").get(authenticateMiddleware, async (req, res) => {
       }
     })
 
+    console.log("Streamers before sorting by score", streamers);
     // Sort by final score. Remember how sort works if its positive then the second one should come before the first one.
-    streamersWithScores.sort((a, b) => b.score - a.score);
+    streamersWithMatchScores.sort((a, b) => b.score - a.score);
 
+    console.log("Streamers after sorting by score", streamersWithMatchScores);
     //return updated array that was sorted by highest matching first
-    res.status(200).json(streamersWithScores);
+    res.status(200).json(streamersWithMatchScores);
 
     
   } catch (err) {
