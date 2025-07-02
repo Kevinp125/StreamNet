@@ -28,7 +28,7 @@ function calculateMatchScore(currentUser, streamerToCompare) {
 
   //check targetAudience. This one is a BIG boost. If user and streamer we are comparing them with stream to same audience give them 3 points
   if (currentUser.targetAudience === streamerToCompare.targetAudience) {
-    score = score + 6;
+    score += 6;
   }
 
   //Now we need to check tags. We can add points depending on how many tags are shared between the user and the streamer we are checking
@@ -38,7 +38,7 @@ function calculateMatchScore(currentUser, streamerToCompare) {
   })
 
   //for each tag that is in common add 3 points to the score. Hence the sharedTags * 3
-  score = sharedTags.length * 3;
+  score += sharedTags.length * 3;
 
   return score;
 }
