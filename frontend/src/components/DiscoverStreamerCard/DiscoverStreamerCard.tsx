@@ -31,7 +31,7 @@ export default function DiscoverStreamerCard({ streamer }: DisoverStreamerCardPr
       <CardHeader>
         <div className='flex items-start justify-between'>
           <img
-            className='h-13 w-13 rounded-full border-2 border-gray-200 object-cover'
+            className='h-13 w-13 rounded-full border-2 border-light-purple object-cover'
             src={streamer.profilePic}
             alt={`${streamer.name}'s profile picture`}
           />
