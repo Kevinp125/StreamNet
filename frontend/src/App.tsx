@@ -1,14 +1,15 @@
 import "./App.css";
-import {Routes, Route } from "react-router-dom";
-import LandingPage from "./components/pages/LandingPage/LandingPage";
-import DashboardPage from "./components/pages/DashboardPage/DashboardPage";
-import DiscoverPage from "./components/pages/DiscoverPage/DiscoverPage";
-import SavedConnectionsPage from "./components/pages/SavedConnectionsPage/SavedConnectionsPage";
-import EventsPage from "./components/pages/EventsPage/EventsPage";
-import CheckIfNewProfilePage from "./components/pages/CheckIfNewProfilePage/CheckIfNewProfilePage";
+import {Routes, Route } from "react-router-dom"
+import LandingPage from "./pages/LandingPage/LandingPage";
+import DashboardPage from "./pages/DashboardPage/DashboardPage";
+import DiscoverPage from "./pages/DiscoverPage/DiscoverPage";
+import SavedConnectionsPage from "./pages/SavedConnectionsPage/SavedConnectionsPage";
+import EventsPage from "./pages/EventsPage/EventsPage";
+import CheckIfNewProfilePage from "./pages/CheckIfNewProfilePage/CheckIfNewProfilePage";
 import Layout from "./components/Layout/Layout";
 import { AuthProvider } from "./Context/AuthProvider";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
+import { DASHBOARD_PATH, LANDING_PATH, EXTRA_SETUP_PATH, DISCOVER_PATH, CONNECTIONS_PATH, EVENTS_PATH} from "@/lib/paths";
 
 function App() {
   return (
@@ -16,15 +17,15 @@ function App() {
       <AuthProvider> {/*Allows all components to have the session and user context */}
         <Routes>
 
-          <Route path="/" element={<LandingPage />} /> {/*This is only unprotected route since it is the landing page */}
+          <Route path={LANDING_PATH} element={<LandingPage />} /> {/*This is only unprotected route since it is the landing page */}
           
-          <Route path="/dashboard" element={<ProtectedRoute> <DashboardPage /> </ProtectedRoute>} />
-          <Route path="/extra-setup" element={<ProtectedRoute> <CheckIfNewProfilePage /> </ProtectedRoute>} />
+          <Route path={DASHBOARD_PATH} element={<ProtectedRoute> <DashboardPage /> </ProtectedRoute>} />
+          <Route path={EXTRA_SETUP_PATH} element={<ProtectedRoute> <CheckIfNewProfilePage /> </ProtectedRoute>} />
 
           <Route element = {<Layout/>}> {/*Below pages are wrapped in layout element cause they have navbar */}
-            <Route path="/discover" element={<ProtectedRoute> <DiscoverPage /> </ProtectedRoute>} />
-            <Route path="/connections" element={<ProtectedRoute> <SavedConnectionsPage /> </ProtectedRoute>} />
-            <Route path="/events" element={<ProtectedRoute> <EventsPage /> </ProtectedRoute>} />
+            <Route path={DISCOVER_PATH} element={<ProtectedRoute> <DiscoverPage /> </ProtectedRoute>} />
+            <Route path={CONNECTIONS_PATH} element={<ProtectedRoute> <SavedConnectionsPage /> </ProtectedRoute>} />
+            <Route path={EVENTS_PATH} element={<ProtectedRoute> <EventsPage /> </ProtectedRoute>} />
           </Route>
 
         </Routes>  
