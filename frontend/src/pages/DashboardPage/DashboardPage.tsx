@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { DISCOVER_PATH } from "@/lib/paths";
 import StreamerCard from "@/components/StreamerCard/StreamerCard";
-import { fetchStreamerCardInfo } from '@/lib/utils';
+import { fetchStreamerInfo } from '@/lib/utils';
 import { useAuthContext } from "@/Context/AuthProvider";
 
 export default function DashboardPage() {
@@ -27,7 +27,7 @@ export default function DashboardPage() {
         setLoading(true);
 
         //fetch the information through fetchStreamerCardInfo function which calls our api and it returns a profile object
-        const profile = await fetchStreamerCardInfo(session?.access_token);
+        const profile = await fetchStreamerInfo(session?.access_token);
         setUserProfile(profile)
       } catch (err) {
         console.error(`Failed to load profile, ${err}`);

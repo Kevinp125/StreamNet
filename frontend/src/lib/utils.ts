@@ -8,7 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 //function fetches the streamer card info from the /api/users/me api call
-export async function fetchStreamerCardInfo(accessToken: string) {
+export async function fetchStreamerInfo(accessToken: string) {
   try {
     const res = await fetch(`${API_BASE_URL}/api/users/me`, {
       method: "GET",
