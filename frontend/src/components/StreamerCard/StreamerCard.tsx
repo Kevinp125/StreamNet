@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "../ui/button";
-import type { StreamerProfile } from "@/Types/AppTypes";
+import type { StreamerProfile } from "@/types/AppTypes";
 
 type StreamerCardProps = {
   profile: StreamerProfile;

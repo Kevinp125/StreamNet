@@ -5,7 +5,7 @@ import { Heart, X, Users } from "lucide-react";
 //library with a function that can calculate the difference in years from today and someones birthday
 import { differenceInYears } from "date-fns";
 
-import type { StreamerProfile } from "@/Types/AppTypes";
+import type { StreamerProfile } from "@/types/AppTypes";
 
 type DisoverStreamerCardProps = {
   streamer: StreamerProfile;
