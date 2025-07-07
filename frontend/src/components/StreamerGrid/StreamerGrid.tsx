@@ -1,5 +1,22 @@
-import DiscoverStreamerCard from "../DiscoverStreamerCard/DIscoverStreamerCard";
+import DiscoverStreamerCard from "../DiscoverStreamerCard/DiscoverStreamerCard";
 
+type StreamerProfile = {
+  id: string;
+  name: string;
+  twitchUser: string;
+  email: string;
+  profilePic: string;
+  description: string;
+  targetAudience: string;
+  tags: string[];
+  date_of_birth: string;
+  created_at: string;
+};
+
+type StreamerGridProps = {
+  handleStreamerClick: (profile: StreamerProfile) => void;
+
+}
 //below is just hard coded streamers that are in database. Using this to display cards for now will get api endpoint to fetch from database later
 const mockStreamers = [
   {
@@ -134,14 +151,16 @@ const mockStreamers = [
 ];
 
 //TODO: In a future branch StreamerGrid will be called from Disover page and will be passes information fetched from database after algorithm..
-export default function StreamerGrid() {
+export default function StreamerGrid({handleStreamerClick}: StreamerGridProps) {
   return (
     //making this grid responsive so on smallest screens only disply grird with one column as screen size goes up display more columns
     <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 p-[5%]'>
       {mockStreamers.map(streamer => (
         //TODO: Create streamerCard component
-        <DiscoverStreamerCard key={streamer.id} streamer={streamer} />
+        <DiscoverStreamerCard key={streamer.id} streamer={streamer} handleStreamerClick = {handleStreamerClick}/>
       ))}
     </div>
+
+
   );
 }

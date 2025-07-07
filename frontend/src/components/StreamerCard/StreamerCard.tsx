@@ -1,4 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "../ui/button";
 
 type UserProfile = {
   id: string;
@@ -9,15 +10,17 @@ type UserProfile = {
   description: string;
   targetAudience: string;
   tags: string[];
-  dob: string;
+  date_of_birth: string;
   created_at: string;
 };
 
 type StreamerCardProps = {
   profile: UserProfile;
+  isModal?: boolean;
+  onClose: () => void;
 };
 
-export default function StreamerCard({ profile }: StreamerCardProps) {
+export default function StreamerCard({ profile, onClose, isModal }: StreamerCardProps) {
   const formatAudience = (audience: string) => {
     switch (audience) {
       case "kids":
@@ -38,14 +41,32 @@ export default function StreamerCard({ profile }: StreamerCardProps) {
   };
 
   return (
-    <Card className='border-light-purple flex h-full w-[85%] flex-col border-6 p-6'>
+    <Card
+      className={
+        isModal
+          ? "border-light-purple flex h-full w-[35%] flex-col border-6 p-6"
+          : "border-light-purple flex h-full w-[85%] flex-col border-6 p-6"
+      }
+    >
+      {/*Below close modal will only pop up if isModal boolean is set to true */}
+      {isModal && (
+        <Button
+          variant='ghost'
+          size='sm'
+          onClick={onClose}
+          className='flex cursor-pointer justify-end text-gray-500 hover:bg-transparent hover:text-red-600'
+        >
+          X
+        </Button>
+      )}
+
       <CardHeader>
         <CardTitle className='flex flex-col items-center gap-4'>
           <h1 className='text-2xl'>@{profile.twitchUser}</h1>
           <img
             src={profile.profilePic}
             alt='Profile'
-            className='border-primary/20 h-36 w-36 rounded-full border-2'
+            className='border-light-purple h-36 w-36 rounded-full border-2'
           />
 
           <div>

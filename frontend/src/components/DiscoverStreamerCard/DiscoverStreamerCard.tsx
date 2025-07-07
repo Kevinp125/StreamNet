@@ -20,14 +20,15 @@ type StreamerInfo = {
 
 type DisoverStreamerCardProps = {
   streamer: StreamerInfo;
+  handleStreamerClick: (profile: StreamerInfo) => void;
 };
 
-export default function DiscoverStreamerCard({ streamer }: DisoverStreamerCardProps) {
+export default function DiscoverStreamerCard({ streamer, handleStreamerClick }: DisoverStreamerCardProps) {
   //using the date-fns library function differenceInYears to calculate someones age based on todays date and date_of_birth
   const age = differenceInYears(new Date(), new Date(streamer.date_of_birth));
 
   return (
-    <Card className='w-full max-w-md cursor-pointer flex-col gap-2 transition-all duration-300 hover:scale-105'>
+    <Card onClick = {() => handleStreamerClick(streamer)} className='w-full max-w-md cursor-pointer flex-col gap-2 transition-all duration-300 hover:scale-105'>
       <CardHeader>
         <div className='flex items-start justify-between'>
           <img
