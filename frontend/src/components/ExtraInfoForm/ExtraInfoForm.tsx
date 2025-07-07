@@ -20,10 +20,10 @@ type ProfileFormData = {
 };
 
 type ExtraInfoFormProps = {
-  handleFormSubmit: (formData: ProfileFormData) => void;
+  onFormSubmit: (formData: ProfileFormData) => void;
 };
 
-export default function ExtraInfoForm({ handleFormSubmit }: ExtraInfoFormProps) {
+export default function ExtraInfoForm({ onFormSubmit }: ExtraInfoFormProps) {
 
   const AUDIENCES = [
     {id: 'kids', label: 'Kids (0-12)'},
@@ -53,7 +53,7 @@ export default function ExtraInfoForm({ handleFormSubmit }: ExtraInfoFormProps) 
       tags,
     };
 
-    handleFormSubmit(profileData);
+    onFormSubmit(profileData);
   }
   return (
     <>

@@ -85,7 +85,7 @@ export default function InitialRegisterSetupPage() {
   //otherwise if we are done checking if they have a profile and they havent been redirected to dashboard by this point this is where we display form where user needs to submit extra info...
   return (
     <div className='flex h-screen flex-row items-center justify-center'>
-      <ExtraInfoForm handleFormSubmit={handleFormSubmit} />
+      <ExtraInfoForm onFormSubmit={handleFormSubmit} />
     </div>
   );
 }
