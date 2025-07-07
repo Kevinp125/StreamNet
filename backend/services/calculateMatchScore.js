@@ -1,5 +1,10 @@
 const { differenceInYears } = require("date-fns");
 
+// Age difference thresholds (in years)
+const VERY_CLOSE_AGE_THRESHOLD = 2;
+const CLOSE_AGE_THRESHOLD = 5;
+const SOMEWHAT_CLOSE_AGE_THRESHOLD = 10;
+
 //function returns the match score between the currentUser and a streamer based off values. The higher the score the better the match
 function calculateMatchScore(currentUser, streamerToCompare) {
   //to start off score can only go up.
@@ -18,19 +23,20 @@ function calculateMatchScore(currentUser, streamerToCompare) {
   //get the age difference and depending on how far the gap is we assign more points if the gap is closer and less if further apart
   const ageDifference = Math.abs(currentUserAge - streamerAge);
 
-  if (ageDifference <= 2) {
+  if (ageDifference <= VERY_CLOSE_AGE_THRESHOLD) {
     score += 4;
-  } else if (ageDifference <= 5) {
+  } else if (ageDifference <= CLOSE_AGE_THRESHOLD) {
     score += 2;
-  } else if (ageDifference <= 10) {
+  } else if (ageDifference <= SOMEWHAT_CLOSE_AGE_THRESHOLD) {
     score++;
   }
 
-  //check targetAudience. This one is a BIG boost. If user and streamer we are comparing them with stream to same audience give them 3 points
+  //check targetAudience. This one is a BIG boost. If user and streamer we are comparing them with stream to same audience give them 6 points
   if (currentUser.targetAudience === streamerToCompare.targetAudience) {
     score += 6;
   }
 
+  //TODO: CASE INSENSITIVITY if user has tag "valorant" vs "Valorant" should still match
   //Now we need to check tags. We can add points depending on how many tags are shared between the user and the streamer we are checking
   //filter through current users tags and return tags that are in the streamerTocompare tags
   const sharedTags = currentUser.tags.filter( (tag) => {
