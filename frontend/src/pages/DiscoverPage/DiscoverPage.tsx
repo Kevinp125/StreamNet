@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import StreamerGrid from "@/components/StreamerGrid/StreamerGrid";
 import StreamerCard from "@/components/StreamerCard/StreamerCard";
 import { fetchRecommendedStreamers } from "@/lib/api_client";
+import { postStreamerConnection } from "@/lib/api_client";
 import { useAuthContext } from "@/Context/AuthProvider";
 import type { StreamerProfile } from "@/types/AppTypes";
 
@@ -26,8 +27,30 @@ export default function DiscoverPage() {
     setSelectedStreamer(null);
   }
 
-  function handleStreamerConnect(streamerToConnectId){
+  //this function gets called by streamercard when connect button is clicked. We passed it down so it can pass the streamerToConnectId up
+  async function handleStreamerConnect(streamerToConnectId: string) {
+    //useAuthContext takes care of this but if I dont include this check ts whines
+    if (!session?.access_token) return;
+    try {
+      const res = await postStreamerConnection(session?.access_token, streamerToConnectId);
 
+      if (!res.ok) {
+        throw new Error("Failed to fetch connect api");
+      }
+
+      const data = await res.json(); //parsing
+
+      //if success field is true it means we added a connection then filter out the connection we just added from our recommnededStreamers grid
+      if (data.success) {
+        setRecommendedStreamers(prev =>
+          prev.filter(streamer => streamer.id !== streamerToConnectId),
+        );
+      } else {
+        console.error("Connection fetch request failed");
+      }
+    } catch (err) {
+      console.error("Failed to connect:", err);
+    }
   }
 
   //Stretch maybe in future add a not interested and connect button inside modal but for now click will just be detailed view
@@ -49,7 +72,7 @@ export default function DiscoverPage() {
       <StreamerGrid
         handleStreamerClick={handleStreamerClick}
         recommendedStreamers={recommendedStreamers}
-        handleStreamerConnect = {handleStreamerConnect}
+        handleStreamerConnect={handleStreamerConnect}
       />
 
       {/*Below is modal view we only want it to render if a card is clicked and we call the handleStreamerClick and it setSelectedStreamer to be a profile */}
