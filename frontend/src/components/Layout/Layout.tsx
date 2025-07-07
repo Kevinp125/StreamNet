@@ -71,7 +71,7 @@ export default function Layout() {
           </NavigationMenuItem>
         </NavigationMenuList>
 
-        <Button >
+        <Button className ="position absolute right-6 cursor-pointer hover:scale-105 transition-transform duration-200" variant = "destructive" onClick = {signOut}>
           <LogOut/>
         </Button>
 
