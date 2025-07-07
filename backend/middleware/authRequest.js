@@ -15,7 +15,7 @@ function getToken(req) {
  * Middleware to authenticate users via Supabase JWT
  * Verifies the JWT token and attaches user info to req object so we dont have to continously do it on our actual api calls
  */
-const authenticateUser = async (req, res, next) => {
+const authenticateMiddleware = async (req, res, next) => {
   try {
     // Extract JWT from Authorization header
     const JWT = getToken(req);
@@ -56,4 +56,4 @@ const authenticateUser = async (req, res, next) => {
   }
 };
 
-module.exports = { authenticateUser };
+module.exports = { authenticateMiddleware };

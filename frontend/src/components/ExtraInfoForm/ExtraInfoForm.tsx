@@ -12,16 +12,9 @@ import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 
-//all shadcn component links
-//Input: https://ui.shadcn.com/docs/components/input
-//Label: https://ui.shadcn.com/docs/components/label
-//Select: https://ui.shadcn.com/docs/components/select
-//Button: https://ui.shadcn.com/docs/components/button
-//Card: https://ui.shadcn.com/docs/components/card
-
 type ProfileFormData = {
   name: string;
-  dob: string;
+  date_of_birth: string;
   targetAudience: string;
   tags: string[];
 };
@@ -37,7 +30,7 @@ export default function ExtraInfoForm({ handleFormSubmit }: ExtraInfoFormProps) 
     const form = event.target as HTMLFormElement; //getting the dom element that represents my form in browser.
     const formData = new FormData(form); //FormData is a browser api that gets all values from a form. Below we can access certain things since we labeled inputs with names
     const name = formData.get("first_name") as string;
-    const dob = formData.get("date_of_birth") as string;
+    const date_of_birth = formData.get("date_of_birth") as string;
     const targetAudience = formData.get("target_audience") as string;
     const tagsString = formData.get("tags") as string;
     const tags = tagsString ? tagsString.split(",").map(tag => tag.trim()) : []; //once we get tags split by comma and trim out the spaces for each tag
@@ -45,7 +38,7 @@ export default function ExtraInfoForm({ handleFormSubmit }: ExtraInfoFormProps) 
     // Create the data object that matches your FormData type
     const profileData = {
       name,
-      dob,
+      date_of_birth,
       targetAudience,
       tags,
     };
@@ -67,7 +60,7 @@ export default function ExtraInfoForm({ handleFormSubmit }: ExtraInfoFormProps) 
           <form onSubmit={handleSubmit} className='flex flex-col gap-6'>
             {/* Display Name */}
             <div className='flex flex-col gap-2'>
-              <Label htmlFor='display_name'>First Name</Label>
+              <Label htmlFor='first_name'>First Name</Label>
               <Input id='first_name' name='first_name' placeholder='Your first name' required />
             </div>
 
