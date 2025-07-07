@@ -78,12 +78,25 @@ export default function DiscoverStreamerCard({
         </div>
       </CardContent>
       <CardFooter className='flex justify-between'>
-        <Button onClick = {() => onStreamerConnectClick(streamer.id)} variant='ghost' className='cursor-pointer'>
+        <Button
+          onClick={e => {
+            e.stopPropagation();
+            onStreamerConnectClick(streamer.id);
+          }}
+          variant='ghost'
+          className='cursor-pointer'
+        >
           <Heart className='h-3 w-3' />
           <span className='text-sm'>Connect</span>
         </Button>
 
-        <Button variant='ghost' className='cursor-pointer text-red-500 hover:text-red-500'>
+        <Button
+          onClick={e => {
+            e.stopPropagation();
+          }}
+          variant='ghost'
+          className='cursor-pointer text-red-500 hover:text-red-500'
+        >
           <X className='h-3 w-3' />
           <span className='text-sm'>Not Interested</span>
         </Button>
