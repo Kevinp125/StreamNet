@@ -10,11 +10,13 @@ import type { StreamerProfile } from "@/types/AppTypes";
 type DisoverStreamerCardProps = {
   streamer: StreamerProfile;
   onStreamerClick: (profile: StreamerProfile) => void;
+  onStreamerConnectClick: (streamerToConnectId: string) => void;
 };
 
 export default function DiscoverStreamerCard({
   streamer,
   onStreamerClick,
+  onStreamerConnectClick,
 }: DisoverStreamerCardProps) {
   //using the date-fns library function differenceInYears to calculate someones age based on todays date and date_of_birth
   const age = differenceInYears(new Date(), new Date(streamer.date_of_birth));
@@ -76,7 +78,7 @@ export default function DiscoverStreamerCard({
         </div>
       </CardContent>
       <CardFooter className='flex justify-between'>
-        <Button variant='ghost' className='cursor-pointer'>
+        <Button onClick = {() => onStreamerConnectClick(streamer.id)} variant='ghost' className='cursor-pointer'>
           <Heart className='h-3 w-3' />
           <span className='text-sm'>Connect</span>
         </Button>

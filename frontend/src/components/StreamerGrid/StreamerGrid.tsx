@@ -3,12 +3,14 @@ import type { StreamerProfile } from "@/types/AppTypes";
 
 type StreamerGridProps = {
   handleStreamerClick: (profile: StreamerProfile) => void;
+  handleStreamerConnect: (streamerToConnectId: string) => void;
   recommendedStreamers: StreamerProfile[];
 };
 
 //TODO: In a future branch StreamerGrid will be called from Disover page and will be passes information fetched from database after algorithm..
 export default function StreamerGrid({
   handleStreamerClick,
+  handleStreamerConnect,
   recommendedStreamers,
 }: StreamerGridProps) {
   return (
@@ -20,6 +22,7 @@ export default function StreamerGrid({
           key={streamer.id}
           streamer={streamer}
           onStreamerClick={handleStreamerClick}
+          onStreamerConnectClick = {handleStreamerConnect}
         />
       ))}
     </div>

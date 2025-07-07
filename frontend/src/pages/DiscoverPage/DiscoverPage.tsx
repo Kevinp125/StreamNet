@@ -26,6 +26,10 @@ export default function DiscoverPage() {
     setSelectedStreamer(null);
   }
 
+  function handleStreamerConnect(streamerToConnectId){
+
+  }
+
   //Stretch maybe in future add a not interested and connect button inside modal but for now click will just be detailed view
   //and user has to click out to connect or be not interested.
 
@@ -45,6 +49,7 @@ export default function DiscoverPage() {
       <StreamerGrid
         handleStreamerClick={handleStreamerClick}
         recommendedStreamers={recommendedStreamers}
+        handleStreamerConnect = {handleStreamerConnect}
       />
 
       {/*Below is modal view we only want it to render if a card is clicked and we call the handleStreamerClick and it setSelectedStreamer to be a profile */}
