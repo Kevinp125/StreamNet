@@ -1,21 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "../ui/button";
-
-type UserProfile = {
-  id: string;
-  name: string;
-  twitchUser: string;
-  email: string;
-  profilePic: string;
-  description: string;
-  targetAudience: string;
-  tags: string[];
-  date_of_birth: string;
-  created_at: string;
-};
+import type { StreamerProfile } from "@/Types/AppTypes";
 
 type StreamerCardProps = {
-  profile: UserProfile;
+  profile: StreamerProfile;
   isModal?: boolean;
   onClose?: () => void;
 };

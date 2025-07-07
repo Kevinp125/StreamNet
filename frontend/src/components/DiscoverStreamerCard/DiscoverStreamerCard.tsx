@@ -5,30 +5,25 @@ import { Heart, X, Users } from "lucide-react";
 //library with a function that can calculate the difference in years from today and someones birthday
 import { differenceInYears } from "date-fns";
 
-type StreamerInfo = {
-  id: string;
-  name: string;
-  twitchUser: string;
-  email: string;
-  profilePic: string;
-  description: string;
-  targetAudience: string;
-  tags: string[];
-  date_of_birth: string;
-  created_at: string;
-};
+import type { StreamerProfile } from "@/Types/AppTypes";
 
 type DisoverStreamerCardProps = {
-  streamer: StreamerInfo;
-  handleStreamerClick: (profile: StreamerInfo) => void;
+  streamer: StreamerProfile;
+  handleStreamerClick: (profile: StreamerProfile) => void;
 };
 
-export default function DiscoverStreamerCard({ streamer, handleStreamerClick }: DisoverStreamerCardProps) {
+export default function DiscoverStreamerCard({
+  streamer,
+  handleStreamerClick,
+}: DisoverStreamerCardProps) {
   //using the date-fns library function differenceInYears to calculate someones age based on todays date and date_of_birth
   const age = differenceInYears(new Date(), new Date(streamer.date_of_birth));
 
   return (
-    <Card onClick = {() => handleStreamerClick(streamer)} className='w-full max-w-md cursor-pointer flex-col gap-2 transition-all duration-300 hover:scale-105'>
+    <Card
+      onClick={() => handleStreamerClick(streamer)}
+      className='w-full max-w-md cursor-pointer flex-col gap-2 transition-all duration-300 hover:scale-105'
+    >
       <CardHeader>
         <div className='flex items-start justify-between'>
           <img
