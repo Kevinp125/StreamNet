@@ -32,13 +32,7 @@ export default function DiscoverPage() {
     //useAuthContext takes care of this but if I dont include this check ts whines
     if (!session?.access_token) return;
     try {
-      const res = await postStreamerConnection(session?.access_token, streamerToConnectId);
-
-      if (!res.ok) {
-        throw new Error("Failed to fetch connect api");
-      }
-
-      const data = await res.json(); //parsing
+      const data = await postStreamerConnection(session?.access_token, streamerToConnectId);
 
       //if success field is true it means we added a connection then filter out the connection we just added from our recommnededStreamers grid
       if (data.success) {
