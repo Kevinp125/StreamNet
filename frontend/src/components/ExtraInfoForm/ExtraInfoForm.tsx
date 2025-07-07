@@ -20,10 +20,20 @@ type ProfileFormData = {
 };
 
 type ExtraInfoFormProps = {
-  handleFormSubmit: (formData: ProfileFormData) => void;
+  onFormSubmit: (formData: ProfileFormData) => void;
 };
 
-export default function ExtraInfoForm({ handleFormSubmit }: ExtraInfoFormProps) {
+export default function ExtraInfoForm({ onFormSubmit }: ExtraInfoFormProps) {
+
+  const AUDIENCES = [
+    {id: 'kids', label: 'Kids (0-12)'},
+    {id: 'teens', label: 'Teens (13-17)'},
+    {id: 'young_adults', label: 'Young Adults (18-25)'},
+    {id: 'adults', label: 'Adults (26-35)'},
+    {id: 'mature', label: 'Mature (35+)'},
+    {id: 'all_ages', label: 'All Ages'},
+  ];
+
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
 
@@ -43,7 +53,7 @@ export default function ExtraInfoForm({ handleFormSubmit }: ExtraInfoFormProps) 
       tags,
     };
 
-    handleFormSubmit(profileData);
+    onFormSubmit(profileData);
   }
   return (
     <>
@@ -78,12 +88,9 @@ export default function ExtraInfoForm({ handleFormSubmit }: ExtraInfoFormProps) 
                   <SelectValue placeholder='Select your target audience' />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value='kids'>Kids (0-12)</SelectItem>
-                  <SelectItem value='teens'>Teens (13-17)</SelectItem>
-                  <SelectItem value='young_adults'>Young Adults (18-25)</SelectItem>
-                  <SelectItem value='adults'>Adults (26-35)</SelectItem>
-                  <SelectItem value='mature'>Mature (35+)</SelectItem>
-                  <SelectItem value='all_ages'>All Ages</SelectItem>
+                  {AUDIENCES.map(audience => (
+                    <SelectItem id={audience.id} value={audience.id}>{audience.label}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>

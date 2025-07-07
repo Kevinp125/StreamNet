@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { DISCOVER_PATH } from "@/lib/paths";
 import StreamerCard from "@/components/StreamerCard/StreamerCard";
-import { fetchStreamerCardInfo } from '@/lib/utils';
+import { fetchStreamerInfo } from "@/lib/api_client";
 import { useAuthContext } from "@/Context/AuthProvider";
 
 export default function DashboardPage() {
@@ -13,22 +13,19 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-
-    async function populateStreamerCard(){
-      if (!session || !session.access_token) {
-        console.error("No valid session");
-        //if there isnt a session we set loading to false because we currently arent checking profile
-        setLoading(false); 
-        return;
-      }
-
+    async function populateStreamerCard() {
       //once there is a session setLoading to true so we can display loading text since we are checking profile
       try {
+        if (!session || !session.access_token) {
+          //if there isnt a session we set loading to false because we currently arent checking profile
+          setLoading(false);
+          throw Error("No valid session");
+        }
         setLoading(true);
 
         //fetch the information through fetchStreamerCardInfo function which calls our api and it returns a profile object
-        const profile = await fetchStreamerCardInfo(session?.access_token);
-        setUserProfile(profile)
+        const profile = await fetchStreamerInfo(session?.access_token);
+        setUserProfile(profile);
       } catch (err) {
         console.error(`Failed to load profile, ${err}`);
         //once we are done going through whole try catch block it means loading is done so set state back to false so that the card can be rendered
@@ -38,27 +35,25 @@ export default function DashboardPage() {
     }
 
     populateStreamerCard();
-
   }, [session]);
   //placing session in dependency array because on page mount session might not be loaded yet so have this here so we can run the fetch user profile again if session gets updated
 
-  if(loading){
+  if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-white">Loading your profile...</div>
+      <div className='flex min-h-screen items-center justify-center'>
+        <div className='text-white'>Loading your profile...</div>
       </div>
-    );  
+    );
   }
 
-  //keep in mind in future below discover streamers button wont be positioned absolutely but rather be in a flex box container that also contains prompt of day and recent activity
   return (
     <div className='flex min-h-screen flex-row gap-1 p-14'>
       <div className='flex-1'>
         {/*Dont render streamer card until the profile is available */}
-        {userProfile && <StreamerCard profile = {userProfile} />} 
+        {userProfile && <StreamerCard profile={userProfile} />}
       </div>
 
-      <div className='flex flex-1 flex-col items-center gap-6'>
+      <div className='flex flex-1 flex-col-reverse items-center gap-6'>
         {/*Prompt of day and recent avtiviy components go here */}
 
         <Button

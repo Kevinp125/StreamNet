@@ -1,21 +1,9 @@
 import { useEffect, useState } from "react";
 import StreamerGrid from "@/components/StreamerGrid/StreamerGrid";
 import StreamerCard from "@/components/StreamerCard/StreamerCard";
-import { fetchRecommendedStreamers } from "@/lib/utils";
+import { fetchRecommendedStreamers } from "@/lib/api_client";
 import { useAuthContext } from "@/Context/AuthProvider";
-
-type StreamerProfile = {
-  id: string;
-  name: string;
-  twitchUser: string;
-  email: string;
-  profilePic: string;
-  description: string;
-  targetAudience: string;
-  tags: string[];
-  date_of_birth: string;
-  created_at: string;
-};
+import type { StreamerProfile } from "@/Types/AppTypes";
 
 export default function DiscoverPage() {
   const { session } = useAuthContext();
@@ -41,7 +29,6 @@ export default function DiscoverPage() {
   //Stretch maybe in future add a not interested and connect button inside modal but for now click will just be detailed view
   //and user has to click out to connect or be not interested.
 
-  
   useEffect(() => {
     async function storeRecommendedStreamers() {
       if (session?.access_token) {
