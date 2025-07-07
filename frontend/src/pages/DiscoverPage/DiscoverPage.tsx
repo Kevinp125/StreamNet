@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import StreamerGrid from "@/components/StreamerGrid/StreamerGrid";
 import StreamerCard from "@/components/StreamerCard/StreamerCard";
-import { fetchRecommendedStreamers } from "@/lib/utils";
+import { fetchRecommendedStreamers } from "@/lib/api_client";
 import { useAuthContext } from "@/Context/AuthProvider";
 import type { StreamerProfile } from "@/Types/AppTypes";
 

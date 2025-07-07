@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { DISCOVER_PATH } from "@/lib/paths";
 import StreamerCard from "@/components/StreamerCard/StreamerCard";
-import { fetchStreamerInfo } from '@/lib/utils';
+import { fetchStreamerInfo } from '@/lib/api_client';
 import { useAuthContext } from "@/Context/AuthProvider";
 
 export default function DashboardPage() {
