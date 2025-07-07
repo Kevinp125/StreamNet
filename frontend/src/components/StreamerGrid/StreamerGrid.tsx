@@ -19,7 +19,7 @@ export default function StreamerGrid({
         <DiscoverStreamerCard
           key={streamer.id}
           streamer={streamer}
-          handleStreamerClick={handleStreamerClick}
+          onStreamerClick={handleStreamerClick}
         />
       ))}
     </div>

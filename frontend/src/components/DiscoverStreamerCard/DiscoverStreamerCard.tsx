@@ -9,19 +9,19 @@ import type { StreamerProfile } from "@/Types/AppTypes";
 
 type DisoverStreamerCardProps = {
   streamer: StreamerProfile;
-  handleStreamerClick: (profile: StreamerProfile) => void;
+  onStreamerClick: (profile: StreamerProfile) => void;
 };
 
 export default function DiscoverStreamerCard({
   streamer,
-  handleStreamerClick,
+  onStreamerClick,
 }: DisoverStreamerCardProps) {
   //using the date-fns library function differenceInYears to calculate someones age based on todays date and date_of_birth
   const age = differenceInYears(new Date(), new Date(streamer.date_of_birth));
 
   return (
     <Card
-      onClick={() => handleStreamerClick(streamer)}
+      onClick={() => onStreamerClick(streamer)}
       className='w-full max-w-md cursor-pointer flex-col gap-2 transition-all duration-300 hover:scale-105'
     >
       <CardHeader>
