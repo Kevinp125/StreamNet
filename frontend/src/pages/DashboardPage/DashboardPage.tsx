@@ -57,8 +57,12 @@ export default function DashboardPage() {
       <div className='flex flex-1 flex-col-reverse items-center gap-6'>
         {/*Prompt of day and recent avtiviy components go here */}
 
-        <Button className = "h-16 w-72 cursor-pointer transition-transform duration-200 ease-in-out hover:scale-105" variant = "destructive" onClick = {signOut}>
-          <LogOut/>
+        <Button
+          className='h-16 w-72 cursor-pointer transition-transform duration-200 ease-in-out hover:scale-105'
+          variant='destructive'
+          onClick={signOut}
+        >
+          <LogOut />
           Logout
         </Button>
         <Button
