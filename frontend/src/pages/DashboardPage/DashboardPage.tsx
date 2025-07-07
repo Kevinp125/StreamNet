@@ -14,15 +14,13 @@ export default function DashboardPage() {
 
   useEffect(() => {
     async function populateStreamerCard() {
-      if (!session || !session.access_token) {
-        console.error("No valid session");
-        //if there isnt a session we set loading to false because we currently arent checking profile
-        setLoading(false);
-        return;
-      }
-
       //once there is a session setLoading to true so we can display loading text since we are checking profile
       try {
+        if (!session || !session.access_token) {
+          //if there isnt a session we set loading to false because we currently arent checking profile
+          setLoading(false);
+          throw Error("No valid session");
+        }
         setLoading(true);
 
         //fetch the information through fetchStreamerCardInfo function which calls our api and it returns a profile object
