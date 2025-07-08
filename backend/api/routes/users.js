@@ -55,9 +55,9 @@ router.route("/get-all").get(authenticateMiddleware, async (req, res) => {
     const connectedStreamersIds = connections.map(
       (c) => c.connected_streamer_id
     );
+
     
-
-
+    //here we arent calling query yet just building it and storing it in a variable
     let query = supabase
       .from("profiles")
       .select("*")
@@ -66,10 +66,12 @@ router.route("/get-all").get(authenticateMiddleware, async (req, res) => {
       //ascending false allows us to get newly created streamers first
       .order("created_at", { ascending: false });
 
-    if (streamersError) {
-      throw new Error("Error fetching the streamers", streamersError);
+    //if user had connections then we want to filter them out
+    if(connectedStreamersIds.length > 0){
+      //do this by using the not query. Got some weird looking syntaxt cause the third argument it takes is a string in this exact format (abc, efg, 123)
+      //Then the not means we dont want any of thoses connectedStreamersIds that are in our id column in profiles tables
+      query = query.not("id", "in", `(${connectedStreamerIds.join(",")})`);
     }
-
     //once we have fetched both the current User and the streamers in our database we need to map through the streamers and for each streamer calculate its match score with user and return the object with a new "score" field which we will use to sort order
     const streamersWithMatchScores = streamers.map((streamer) => {
       const matchScore = calculateMatchScore(currentUser, streamer);
