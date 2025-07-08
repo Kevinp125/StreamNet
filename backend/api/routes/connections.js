@@ -24,4 +24,28 @@ router.route("/add").post(authenticateMiddleware, async (req, res) => {
   }
 });
 
+router.route("/get-all").get(authenticateMiddleware, async (req, res) => {
+  try {
+    const user_id = req.user.id;
+    const supabaseClient = req.supabase;
+
+    const { data: connectionProfiles, error } = await supabaseClient
+      .from("connections")
+      //below syntax is interesting. The exclamation mark in supabase connects table by their foreign key relationships. Since connected_streamer_id
+      //is a foreign key to id in profiles table it points to all that information. ! joins them so for each connected_streamer_id it looks at the corresponding
+      //id in profiles table it is pointing at and returns all of that profiles columns. So all the streamer information we need to populate the cards.
+      .select("profiles!connected_streamer_id (*)")
+      .eq("user_id", user_id);
+
+    if (error) throw error;
+    
+    //need to do this because since above we are doing ! it wraps each connection profile in a profiles object which we dont need 
+    const userConnections = connectionProfiles.map(connection => connection.profiles);
+    
+    res.status(201).json({ success: true, message: "Connection created" });
+
+    
+  } catch (err) {}
+});
+
 module.exports = router;
