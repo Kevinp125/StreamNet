@@ -81,28 +81,41 @@ export default function DiscoverStreamerCard({
         </div>
       </CardContent>
       <CardFooter className='flex justify-between'>
-        <Button
-          onClick={e => {
-            e.stopPropagation();
-            if(onStreamerConnectClick) onStreamerConnectClick(streamer.id);
-          }}
-          variant='ghost'
-          className='cursor-pointer'
-        >
-          <Heart className='h-3 w-3' />
-          <span className='text-sm'>Connect</span>
-        </Button>
+        {/*isConnectionsPage bool lets us render different buttons. So if we are on discover page it wont be true so !isConnectionsPage will be !false which means display the discover page buttons */}
+        {!isConnectionsPage && (
+          <>
+            <Button
+              onClick={e => {
+                e.stopPropagation();
+                if (onStreamerConnectClick) onStreamerConnectClick(streamer.id);
+              }}
+              variant='ghost'
+              className='cursor-pointer'
+            >
+              <Heart className='h-3 w-3' />
+              <span className='text-sm'>Connect</span>
+            </Button>
 
-        <Button
-          onClick={e => {
-            e.stopPropagation();
-          }}
-          variant='ghost'
-          className='cursor-pointer text-red-500 hover:text-red-500'
-        >
-          <X className='h-3 w-3' />
-          <span className='text-sm'>Not Interested</span>
-        </Button>
+            <Button
+              onClick={e => {
+                e.stopPropagation();
+              }}
+              variant='ghost'
+              className='cursor-pointer text-red-500 hover:text-red-500'
+            >
+              <X className='h-3 w-3' />
+              <span className='text-sm'>Not Interested</span>
+            </Button>
+          </>
+        )}
+
+        {isConnectionsPage && (
+
+
+
+
+
+        )}
       </CardFooter>
     </Card>
   );
