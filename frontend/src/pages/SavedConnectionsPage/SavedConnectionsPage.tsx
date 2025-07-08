@@ -42,7 +42,7 @@ export default function SavedConnectionsPage() {
 
   return (
     <>
-      <StreamerGrid handleStreamerClick={handleStreamerClick} streamers={connections} />
+      <StreamerGrid handleStreamerClick={handleStreamerClick} streamers={connections} isConnectionsPage={true}/>
 
       {/*Below is modal view we only want it to render if a card is clicked and we call the handleStreamerClick and it setSelectedStreamer to be a profile */}
       {selectedStreamer && (

@@ -13,6 +13,7 @@ type StreamerGridProps = {
 export default function StreamerGrid({
   handleStreamerClick,
   handleStreamerConnect,
+  isConnectionsPage,
   streamers,
 }: StreamerGridProps) {
   return (
@@ -25,6 +26,7 @@ export default function StreamerGrid({
           streamer={streamer}
           onStreamerClick={handleStreamerClick}
           onStreamerConnectClick = {handleStreamerConnect}
+          isConnectionsPage = {isConnectionsPage}
         />
       ))}
     </div>

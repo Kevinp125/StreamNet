@@ -17,6 +17,7 @@ type DisoverStreamerCardProps = {
 
 export default function DiscoverStreamerCard({
   streamer,
+  isConnectionsPage,
   onStreamerClick,
   onStreamerConnectClick,
 }: DisoverStreamerCardProps) {
