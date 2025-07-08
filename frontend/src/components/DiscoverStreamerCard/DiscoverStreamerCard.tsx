@@ -2,6 +2,8 @@ import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card"
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import { Heart, X, Users } from "lucide-react";
+import { Trash } from "lucide-react";
+import { Twitch } from "lucide-react";
 //library with a function that can calculate the difference in years from today and someones birthday
 import { differenceInYears } from "date-fns";
 
@@ -21,6 +23,7 @@ export default function DiscoverStreamerCard({
   onStreamerClick,
   onStreamerConnectClick,
 }: DisoverStreamerCardProps) {
+  const twitchUrl = "https://twitch.tv/";
   //using the date-fns library function differenceInYears to calculate someones age based on todays date and date_of_birth
   const age = differenceInYears(new Date(), new Date(streamer.date_of_birth));
 
@@ -110,11 +113,32 @@ export default function DiscoverStreamerCard({
         )}
 
         {isConnectionsPage && (
+          <>
+            {/*For this button it it just takes user to that streamers twitch channel now that they are connected. Just provisional for mvp no handler needs to get called we just redirect with window.open*/}
+            <Button
+              variant='ghost'
+              className='text-twitch-purple hover:text-twitch-purple cursor-pointer'
+              onClick={e => {
+                e.stopPropagation();
+                window.open(`${twitchUrl}${streamer.twitchUser}`, "_blank");
+              }}
+            >
+              <Twitch className='h-3 w-3' />
+              <span className='text-sm'>Visit Twitch</span>
+            </Button>
 
-
-
-
-
+            {/*TODO: add below the function that calls parent function whenever we remove a saved connection onRemoveClick */}
+            <Button
+              variant='ghost'
+              className='cursor-pointer text-red-500 hover:text-red-500'
+              onClick={e => {
+                e.stopPropagation();
+              }}
+            >
+              <Trash className='h-3 w-3' />
+              <span className='text-sm'>Remove</span>
+            </Button>
+          </>
         )}
       </CardFooter>
     </Card>
