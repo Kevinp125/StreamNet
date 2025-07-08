@@ -10,7 +10,9 @@ import type { StreamerProfile } from "@/types/AppTypes";
 type DisoverStreamerCardProps = {
   streamer: StreamerProfile;
   onStreamerClick: (profile: StreamerProfile) => void;
-  onStreamerConnectClick: (streamerToConnectId: string) => void;
+  onStreamerConnectClick?: (streamerToConnectId: string) => void;
+  onRemoveConnectionClick?: (streamerId: string) => void;
+  isConnectionsPage?: boolean;
 };
 
 export default function DiscoverStreamerCard({
@@ -81,7 +83,7 @@ export default function DiscoverStreamerCard({
         <Button
           onClick={e => {
             e.stopPropagation();
-            onStreamerConnectClick(streamer.id);
+            if(onStreamerConnectClick) onStreamerConnectClick(streamer.id);
           }}
           variant='ghost'
           className='cursor-pointer'
