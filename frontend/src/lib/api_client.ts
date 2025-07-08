@@ -72,15 +72,14 @@ export async function postStreamerConnection(accessToken: string, streamerId: st
 }
 
 //function makes a fetch request to the /connections/get-all api which returns an array of connections the user has
-export async function fetchUserConnections(accessToken: string){
-
+export async function fetchUserConnections(accessToken: string) {
   try {
     const res = await fetch(`${API_BASE_URL}/api/connections/get-all`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
-      }
+      },
     });
 
     if (!res.ok) {
@@ -93,12 +92,4 @@ export async function fetchUserConnections(accessToken: string){
     console.error(`Could not get connections`, err);
     throw new Error("Unable to get connections");
   }
-}
-
-
-
-
-
-
-
 }
