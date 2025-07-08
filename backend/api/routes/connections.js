@@ -38,14 +38,17 @@ router.route("/get-all").get(authenticateMiddleware, async (req, res) => {
       .eq("user_id", user_id);
 
     if (error) throw error;
-    
-    //need to do this because since above we are doing ! it wraps each connection profile in a profiles object which we dont need 
-    const userConnections = connectionProfiles.map(connection => connection.profiles);
-    
-    res.status(201).json({ success: true, message: "Connection created" });
 
-    
-  } catch (err) {}
+    //need to do this because since above we are doing ! it wraps each connection profile in a profiles object which we dont need
+    const userConnections = connectionProfiles.map(
+      (connection) => connection.profiles
+    );
+
+    res.status(200).json(userConnections);
+  } catch (err) {
+    console.error("Error fetching all the connections", err);
+    res.status(500).json({ error: "Failed to fetch all the connections" });
+  }
 });
 
 module.exports = router;
