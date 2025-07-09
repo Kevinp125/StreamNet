@@ -3,6 +3,7 @@ import StreamerGrid from "@/components/StreamerGrid/StreamerGrid";
 import StreamerCard from "@/components/StreamerCard/StreamerCard";
 import { fetchRecommendedStreamers } from "@/lib/api_client";
 import { postStreamerConnection } from "@/lib/api_client";
+import { updateUserWeigths } from "@/lib/api_client";
 import { useAuthContext } from "@/Context/AuthProvider";
 import type { StreamerProfile } from "@/types/AppTypes";
 
@@ -38,7 +39,7 @@ export default function DiscoverPage() {
       if (data.success) {
 
         //if data was added succesfully we now update all our weights so that our algorithm can improve...
-        
+        await updateUserWeigths(session.access_token, streamerToConnectId);
 
         setRecommendedStreamers(prev =>
           prev.filter(streamer => streamer.id !== streamerToConnectId),
