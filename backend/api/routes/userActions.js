@@ -49,8 +49,14 @@ router.route("/connect").post(authenticateMiddleware, async (req, res) => {
     if (gameMatch) userWeights.game_weight += 0.1;
     if (languageMatch) userWeights.language_weight += 0.1;
 
+    //we need to make a bigger array of tags based off the tags the user has on our platform combined with their tags on twitch that they dont know we are using shhhh
+    const allTags = [...(streamer.tags || []), ...(streamer.twitch_tags || [])];
+
+    // Below just makes all tags lowercase so comparison is always good as well as putting them in a set because that auto takes care of duplicates
+    const noDupTags = [...new Set(allTags.map(tag => tag.toLowerCase()))];
+
     //for each tag the streamer we connected with has
-    streamer.tags.forEach((tag) => {
+    noDupTags.forEach((tag) => {
       if (userWeights.preferred_tags[tag]) {
         //check the json of preffered tags if that tag exists in there already update the weight on that tag
         userWeights.preferred_tags[tag] += 0.1;
