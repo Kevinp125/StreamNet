@@ -93,3 +93,23 @@ export async function fetchUserConnections(accessToken: string) {
     throw new Error("Unable to get connections");
   }
 }
+
+//function makes a request to the api that updates the userWeights table whenever a user hits the connect button
+export async function updateUserWeigths(accessToken: string, streamerToConnectId: string) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/user-actions/connect`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ streamerId: streamerToConnectId }),
+    });
+
+    if (!res.ok) {
+      throw new Error("Weights were not updated succesfully");
+    }
+  } catch (err) {
+    console.error(err);
+  }
+}

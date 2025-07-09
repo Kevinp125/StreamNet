@@ -36,6 +36,10 @@ export default function DiscoverPage() {
 
       //if success field is true it means we added a connection then filter out the connection we just added from our recommnededStreamers grid
       if (data.success) {
+
+        //if data was added succesfully we now update all our weights so that our algorithm can improve...
+        
+
         setRecommendedStreamers(prev =>
           prev.filter(streamer => streamer.id !== streamerToConnectId),
         );
