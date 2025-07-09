@@ -10,8 +10,8 @@ function calculateMatchScore(currentUser, streamerToCompare) {
   //to start off score can only go up.
   let score = 0;
 
-  score += calcAgeScore();
-  score += calcAudienceScore();
+  score += calcAgeScore(currentUser, streamerToCompare);
+  score += calcAudienceScore(currentUser, streamerToCompare);
   score += calcTagScore(currentUser, streamerToCompare);
 
 
@@ -39,12 +39,15 @@ function calcAgeScore(currentUser, streamerToCompare){
   } else if (ageDifference <= SOMEWHAT_CLOSE_AGE_THRESHOLD) {
     return 1;
   }
+  return 0.5;
 }
 
 function calcAudienceScore(currentUser, streamerToCompare){
   //check targetAudience. This one is a BIG boost. If user and streamer we are comparing them with stream to same audience give them 6 points
   if (currentUser.targetAudience === streamerToCompare.targetAudience) {
-    return 6;
+    return 5;
+  }else{
+    return 1; //small base score if audience isnt the saem but at least weights will still affect it.
   }
 }
 
@@ -56,9 +59,35 @@ function calcTagScore(currentUser, streamerToCompare){
     return streamerToCompare.tags.includes(tag);
   })
 
-  //for each tag that is in common add 3 points to the score. Hence the sharedTags * 3
-  return sharedTags.length * 3;
+  //for each tag that is in common add 2 points to the score. Hence the sharedTags * 2
+  return Math.max(1, sharedTags.length * 2); //return min 1 point so it isnt 0 if no shared tags
+}
 
+
+function calcGameScore(currentUser, streamerToCompare) {
+  // Handle missing game data not all twitch users might have it most do though
+  if (!currentUser.twitch_game_name || !streamerToCompare.twitch_game_name) {
+    return 1; // Can't compare, return base score
+  }
+
+  if (currentUser.twitch_game_name === streamerToCompare.twitch_game_name) {
+    return 3; // Same game
+  } else {
+    return 1; // Different game
+  }
+}
+
+function calcLanguageScore(currentUser, streamerToCompare) {
+  //handle missing language data should have it but some twitch streamers donbt have it set
+  if (!currentUser.twitch_broadcaster_language || !streamerToCompare.twitch_broadcaster_language) {
+    return 1; // Can't compare, return base score
+  }
+
+  if (currentUser.twitch_broadcaster_language === streamerToCompare.twitch_broadcaster_language) {
+    return 4; // Same language
+  } else {
+    return 1; // Different language
+  }
 }
 
 module.exports = { calculateMatchScore };
