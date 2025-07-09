@@ -10,6 +10,15 @@ function calculateMatchScore(currentUser, streamerToCompare) {
   //to start off score can only go up.
   let score = 0;
 
+  score += calcAgeScore();
+  score += calcAudienceScore();
+  score += calcTagScore(currentUser, streamerToCompare);
+
+
+  return score;
+}
+
+function calcAgeScore(currentUser, streamerToCompare){
   //converting the date of births of both the current user and streamer we are comparing with to years so we can check if they are close in age.
   const currentUserAge = differenceInYears(
     new Date(),
@@ -24,18 +33,22 @@ function calculateMatchScore(currentUser, streamerToCompare) {
   const ageDifference = Math.abs(currentUserAge - streamerAge);
 
   if (ageDifference <= VERY_CLOSE_AGE_THRESHOLD) {
-    score += 4;
+    return 4;
   } else if (ageDifference <= CLOSE_AGE_THRESHOLD) {
-    score += 2;
+    return 2;
   } else if (ageDifference <= SOMEWHAT_CLOSE_AGE_THRESHOLD) {
-    score++;
+    return 1;
   }
+}
 
+function calcAudienceScore(currentUser, streamerToCompare){
   //check targetAudience. This one is a BIG boost. If user and streamer we are comparing them with stream to same audience give them 6 points
   if (currentUser.targetAudience === streamerToCompare.targetAudience) {
-    score += 6;
+    return 6;
   }
+}
 
+function calcTagScore(currentUser, streamerToCompare){
   //TODO: CASE INSENSITIVITY if user has tag "valorant" vs "Valorant" should still match
   //Now we need to check tags. We can add points depending on how many tags are shared between the user and the streamer we are checking
   //filter through current users tags and return tags that are in the streamerTocompare tags
@@ -44,9 +57,8 @@ function calculateMatchScore(currentUser, streamerToCompare) {
   })
 
   //for each tag that is in common add 3 points to the score. Hence the sharedTags * 3
-  score += sharedTags.length * 3;
+  return sharedTags.length * 3;
 
-  return score;
 }
 
 module.exports = { calculateMatchScore };
