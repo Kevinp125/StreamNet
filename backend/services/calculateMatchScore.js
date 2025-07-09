@@ -101,4 +101,4 @@ function calcLanguageScore(currentUser, streamerToCompare) {
   }
 }
 
-module.exports = { calculateMatchScore };
+module.exports = { calculateMatchScore, calcAgeScore, calcAudienceScore, calcGameScore, calcLanguageScore };
