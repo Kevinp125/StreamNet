@@ -44,6 +44,16 @@ router.route("/connect").post(authenticateMiddleware, async (req, res) => {
     if (gameMatch) userWeights.game_weight += 0.1;
     if (languageMatch) userWeights.language_weight += 0.1;
 
+    //for each tag the streamer we connected with has
+    streamer.tags.forEach(tag => {
+      if (userWeights.preferred_tags[tag]) { //check the json of preffered tags if that tag exists in there already update the weight on that tag
+        userWeights.preferred_tags[tag] += 0.1;
+      } else { //if the tag doesnt exist then add it as a new tag and add the intial boost of 1.1 that is what all new tags will start with
+        userWeights.preferred_tags[tag] = 1.1;
+      }
+    });
+
+
 
   } catch (err) {}
 });
