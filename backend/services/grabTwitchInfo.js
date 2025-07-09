@@ -82,3 +82,5 @@ async function processTwitchUserData(twitchUserId) {
     };
   }
 }
+
+module.exports = processTwitchUserData;
