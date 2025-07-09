@@ -53,7 +53,7 @@ router.route("/connect").post(authenticateMiddleware, async (req, res) => {
     const allTags = [...(streamer.tags || []), ...(streamer.twitch_tags || [])];
 
     // Below just makes all tags lowercase so comparison is always good as well as putting them in a set because that auto takes care of duplicates
-    const noDupTags = [...new Set(allTags.map(tag => tag.toLowerCase()))];
+    const noDupTags = [...new Set(allTags.map((tag) => tag.toLowerCase()))];
 
     //for each tag the streamer we connected with has
     noDupTags.forEach((tag) => {
@@ -78,11 +78,9 @@ router.route("/connect").post(authenticateMiddleware, async (req, res) => {
       })
       .eq("user_id", userId);
 
-    return res
-      .status(200)
-      .json({
-        message: "Connection processed and weights have all been updated",
-      });
+    return res.status(200).json({
+      message: "Connection processed and weights have all been updated",
+    });
   } catch (err) {
     console.error("Failed to update weights accordingly", err);
     return res
