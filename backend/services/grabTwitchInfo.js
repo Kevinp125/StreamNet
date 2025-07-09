@@ -21,4 +21,20 @@ async function getTwitchAppAccessToken() {
 }
 
 //this function will make fetch request to twitch api with access token we got and retrieve some extra channel information such as the language, game last played, and twitch's own tags
-async function getTwitchChannelData() {}
+async function getTwitchChannelData(twtichUserId, accessToken) {
+  try {
+    //fetching channel data based off the twitch userID we got from auth flow and we pass in to this function
+    const res = await fetch(
+      `https://api.twitch.tv/helix/channels?broadcaster_id=${twitchUserId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Client-Id": process.env.TWITCH_CLIENT_ID,
+        },
+      }
+    );
+
+
+
+  } catch (err) {}
+}
