@@ -98,7 +98,11 @@ router.route("/get-all").get(authenticateMiddleware, async (req, res) => {
 
     //once we have fetched both the current User and the streamers in our database we need to map through the streamers and for each streamer calculate its match score with user and return the object with a new "score" field which we will use to sort order
     const streamersWithMatchScores = streamers.map((streamer) => {
-      const matchScore = calculateMatchScore(currentUser, streamer, userWeights);
+      const matchScore = calculateMatchScore(
+        currentUser,
+        streamer,
+        userWeights
+      );
 
       return {
         ...streamer,
