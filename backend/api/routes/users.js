@@ -83,9 +83,22 @@ router.route("/get-all").get(authenticateMiddleware, async (req, res) => {
       );
     }
 
+    //here before we populate the discover page with the recommened streamers based on match score fetch user weights so it can be used in calculating the match score
+    const { data: userWeights, error: weightsError } = await supabase
+      .from("user_weights")
+      .select("*")
+      .eq("user_id", userId)
+      .single();
+
+    //if theres an error print it and resturn status code 500
+    if (weightsError) {
+      console.error("Error fetching user weights:", weightsError);
+      return res.status(500).json({ error: "Failed to fetch user weights" });
+    }
+
     //once we have fetched both the current User and the streamers in our database we need to map through the streamers and for each streamer calculate its match score with user and return the object with a new "score" field which we will use to sort order
     const streamersWithMatchScores = streamers.map((streamer) => {
-      const matchScore = calculateMatchScore(currentUser, streamer);
+      const matchScore = calculateMatchScore(currentUser, streamer, userWeights);
 
       return {
         ...streamer,
