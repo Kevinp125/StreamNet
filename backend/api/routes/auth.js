@@ -1,6 +1,6 @@
 const express = require("express");
 const { authenticateMiddleware } = require("../../middleware/authRequest");
-const { processTwitchUserData } = require("../../services/grabTwitchInfo");
+const { processTwitchUserData }= require("../../services/grabTwitchInfo");
 const router = express.Router(); //making a router
 
 router.route("/check-user-exists").get(authenticateMiddleware, async (req, res) => {

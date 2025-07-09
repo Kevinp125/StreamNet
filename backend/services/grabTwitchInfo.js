@@ -11,7 +11,7 @@ async function getTwitchAppAccessToken() {
       throw new Error(`Could not get the twitch app token:${res.status}`);
     }
 
-    const token = await response.json();
+    const token = await res.json();
     //above returns a token object with like 3 different fields we just want access token field.
     return token.access_token;
   } catch (err) {
@@ -83,4 +83,4 @@ async function processTwitchUserData(twitchUserId) {
   }
 }
 
-module.exports = processTwitchUserData;
+module.exports = { processTwitchUserData };
