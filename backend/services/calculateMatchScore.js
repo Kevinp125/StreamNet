@@ -10,7 +10,7 @@ function calculateMatchScore(currentUser, streamerToCompare, userWeights) {
   //calculate each base score for the five data points we have on each streamer
   const ageScore = calcAgeScore(currentUser, streamerToCompare);
   const audienceScore = calcAudienceScore(currentUser, streamerToCompare);
-  const tagScore = calcTagScore(currentUser, streamerToCompare);
+  const tagScore = calcTagScore(currentUser, streamerToCompare, userWeights);
   const gameScore = calcGameScore(currentUser, streamerToCompare);
   const languageScore = calcLanguageScore(currentUser, streamerToCompare);
 
@@ -18,7 +18,7 @@ function calculateMatchScore(currentUser, streamerToCompare, userWeights) {
   return (
     ageScore * userWeights.age_weight +
     audienceScore * userWeights.audience_weight +
-    tagScore * userWeights.tags_weight +
+    tagScore +
     gameScore * userWeights.game_weight +
     languageScore * userWeights.language_weight
   );
@@ -57,16 +57,30 @@ function calcAudienceScore(currentUser, streamerToCompare) {
   }
 }
 
-function calcTagScore(currentUser, streamerToCompare) {
-  //TODO: CASE INSENSITIVITY if user has tag "valorant" vs "Valorant" should still match
-  //Now we need to check tags. We can add points depending on how many tags are shared between the user and the streamer we are checking
-  //filter through current users tags and return tags that are in the streamerTocompare tags
-  const sharedTags = currentUser.tags.filter((tag) => {
-    return streamerToCompare.tags.includes(tag);
+//refactored this function fully so that we can do smart tag checking based on user preference
+function calcTagScore(currentUser, streamerToCompare, userWeights) {
+  //use similar tactic to one we used in the user action connect request when we wanted to update weigths group all of the tags user inputed on my app and ones twitch gives them automatically into one array
+  const allTags = [
+    ...(streamerToCompare.tags || []),
+    ...(streamerToCompare.twitch_tags || []),
+  ];
+  //then store in a set to get rid of dups as well as making all of them lowercase because they are stored lowercase for case insenstivuty
+  const noDupTags = [...new Set(allTags.map((tag) => tag.toLowerCase()))];
+
+  if (noDupTags.length === 0) return 1; // No tags = base score
+
+  let totalPreference = 0; //going with an average approach so that users with more tags dont beat user with less amount of tags but better perfefnce to them
+
+  noDupTags.forEach((tag) => {
+    const preference = userWeights.preferred_tags[tag] || 1.0; //for every tag the streamer we are comparting to has check the weight for that tag on user side default to 1 if no preference yet
+    totalPreference += preference; //add that to the total preference (weights) for the tags
   });
 
-  //for each tag that is in common add 2 points to the score. Hence the sharedTags * 2
-  return Math.max(1, sharedTags.length * 2); //return min 1 point so it isnt 0 if no shared tags
+  //Then average it if there are some heavy weighted tags and a small amount of them this will get a good score
+  const averagePreference = totalPreference / noDupTags.length;
+
+  // Scale it up (multiply by 3 for meaningful range)
+  return averagePreference * 3;
 }
 
 function calcGameScore(currentUser, streamerToCompare) {
@@ -101,4 +115,10 @@ function calcLanguageScore(currentUser, streamerToCompare) {
   }
 }
 
-module.exports = { calculateMatchScore, calcAgeScore, calcAudienceScore, calcGameScore, calcLanguageScore };
+module.exports = {
+  calculateMatchScore,
+  calcAgeScore,
+  calcAudienceScore,
+  calcGameScore,
+  calcLanguageScore,
+};
