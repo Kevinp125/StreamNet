@@ -35,6 +35,16 @@ router.route("/create-profile").post(authenticateMiddleware, async (req, res) =>
     if (!name || !date_of_birth || !targetAudience || !tags) {
       return res.status(400).json({ error: "Missing required fields" });
     }
+    
+    //NEW ADDITION FOR WHEN USER MAKES A PROFILE WE ARE GOING TO FETCH ADDITIONAL INFO FROM TWITCH API
+
+    let twitchChannelData = {
+      twitch_game_name: null,
+      twitch_broadcaster_language: null,
+      twitch_tags: []
+    };
+
+    
 
     //finally send the database query
     const { data: profile, error } = await req.supabase
