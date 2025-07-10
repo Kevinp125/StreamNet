@@ -24,7 +24,7 @@ router.route("/").post(authenticateMiddleware, async (req, res) => {
   }
 });
 
-router.route("/get-all").get(authenticateMiddleware, async (req, res) => {
+router.route("/").get(authenticateMiddleware, async (req, res) => {
   try {
     const user_id = req.user.id;
     const supabaseClient = req.supabase;
