@@ -14,16 +14,10 @@ export default function DiscoverPage() {
   //below is state and functions that will take care of the modal popping up / interactions
   const [selectedStreamer, setSelectedStreamer] = useState<StreamerProfile | null>(null);
 
-  {
-    /*This will be passed through the StreamerGrid component and then to each card so when they are clicked this function is called with that cards info */
-  }
   function handleStreamerClick(profile: StreamerProfile) {
     setSelectedStreamer(profile);
   }
 
-  {
-    /*This is just passed to modal so that when close is clicked it closes */
-  }
   function handleCloseModal() {
     setSelectedStreamer(null);
   }
@@ -37,7 +31,6 @@ export default function DiscoverPage() {
 
       //if success field is true it means we added a connection then filter out the connection we just added from our recommnededStreamers grid
       if (data.success) {
-
         //if data was added succesfully we now update all our weights so that our algorithm can improve...
         await updateUserWeigths(session.access_token, streamerToConnectId);
 
@@ -52,6 +45,11 @@ export default function DiscoverPage() {
     }
   }
 
+  async function handleStreamerNotInterestedClick(){
+
+
+
+  }
   //Stretch maybe in future add a not interested and connect button inside modal but for now click will just be detailed view
   //and user has to click out to connect or be not interested.
 
@@ -72,6 +70,7 @@ export default function DiscoverPage() {
         handleStreamerClick={handleStreamerClick}
         streamers={recommendedStreamers}
         handleStreamerConnect={handleStreamerConnect}
+        handleStreamerNotInterestedClick={handleStreamerNotInterestedClick}
       />
 
       {/*Below is modal view we only want it to render if a card is clicked and we call the handleStreamerClick and it setSelectedStreamer to be a profile */}
