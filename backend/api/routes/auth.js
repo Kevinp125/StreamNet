@@ -1,5 +1,6 @@
 const express = require("express");
 const { authenticateMiddleware } = require("../../middleware/authRequest");
+const { processTwitchUserData }= require("../../services/grabTwitchInfo");
 const router = express.Router(); //making a router
 
 router.route("/check-user-exists").get(authenticateMiddleware, async (req, res) => {
@@ -35,6 +36,10 @@ router.route("/create-profile").post(authenticateMiddleware, async (req, res) =>
     if (!name || !date_of_birth || !targetAudience || !tags) {
       return res.status(400).json({ error: "Missing required fields" });
     }
+    
+    //NEW ADDITION FOR WHEN USER MAKES A PROFILE WE ARE GOING TO FETCH ADDITIONAL INFO FROM TWITCH API WITH FUCNTIONS WE MDE IN GRABTWITCHINFO
+    const twitchUserId = req.user.user_metadata?.provider_id || req.user.user_metadata?.sub;
+    const twitchData = await processTwitchUserData(twitchUserId);
 
     //finally send the database query
     const { data: profile, error } = await req.supabase
@@ -52,6 +57,7 @@ router.route("/create-profile").post(authenticateMiddleware, async (req, res) =>
         targetAudience,
         tags,
         created_at: new Date().toISOString(),
+        ...twitchData //spread the extra twitch data properties we got from fetchign from api into our profiles table
       })
       .select() //once thats done select row created
       .single(); //return single one
