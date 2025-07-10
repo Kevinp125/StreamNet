@@ -46,18 +46,17 @@ export default function DiscoverPage() {
     }
   }
 
-  async function handleStreamerNotInterestedClick(){
+  async function handleStreamerNotInterestedClick(streamerId: string) {
     if (!session?.access_token) return;
-    try{
+    try {
+      await addToNotInterestedAndUpdateWeights(session?.access_token, streamerId);
 
-
-
-    }catch(err){
-    
-
+      // If we get here, it succeeded remove from UI
+      //TO DO IN FUTURE JUST FETCH HERE INSTEAD OF FILTERING ONCE I CALCULATR SCORES ON USER LOGIN
+      setRecommendedStreamers(prev => prev.filter(streamer => streamer.id !== streamerId));
+    } catch (err) {
+      console.error("Failed to put in not interested / update weights", err);
     }
-
-
   }
   //Stretch maybe in future add a not interested and connect button inside modal but for now click will just be detailed view
   //and user has to click out to connect or be not interested.

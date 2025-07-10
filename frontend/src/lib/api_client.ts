@@ -130,5 +130,6 @@ export async function addToNotInterestedAndUpdateWeights(accessToken: string, st
     }
   } catch (err) {
     console.error(err);
+    throw err; //this passes it up to parent
   }
 }
