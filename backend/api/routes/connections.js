@@ -3,7 +3,7 @@ const { authenticateMiddleware } = require("../../middleware/authRequest");
 const router = express.Router(); //making a router
 
 //Route will add a connection to the database table
-router.route("/add").post(authenticateMiddleware, async (req, res) => {
+router.route("/").post(authenticateMiddleware, async (req, res) => {
   try {
     const { connected_streamer_id } = req.body;
     const user_id = req.user.id;
