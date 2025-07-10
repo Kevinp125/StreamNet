@@ -100,7 +100,10 @@ function calcGameScore(currentUser, streamerToCompare) {
 
 function calcLanguageScore(currentUser, streamerToCompare) {
   //handle if the language is other
-  if (currentUser.twitch_broadcaster_language === "other" || streamerToCompare.twitch_broadcaster_language === "other") {
+  if (
+    currentUser.twitch_broadcaster_language === "other" ||
+    streamerToCompare.twitch_broadcaster_language === "other"
+  ) {
     return 1; // Neutral score
   }
 
