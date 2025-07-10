@@ -7,6 +7,8 @@ const {
   calcGameScore,
 } = require("../../services/calculateMatchScore.js");
 
+const WEIGHT_UPDATE_TRESHOLD = 1;
+const WEIGHT_DECREASE = 0.1;
 
 //learning from past so this route is going to add a streamer to the not interested table as well as updating the weights for our algorithm negatively since user wasnt interested
 router.route("/").post(authenticateMiddleware, async (req, res) => {
@@ -42,7 +44,18 @@ router.route("/").post(authenticateMiddleware, async (req, res) => {
     .eq("user_id", userId)
     .single();
 
-  
+  //check if factors matched same as the connections way
+  //but this time if say the age was close or the language matched
+  //but user picked NOT INTERESTED it is becuase they dont show much importance
+  //to those things so LOWER their weights
+  const ageClose = calcAgeScore(user, streamer) > WEIGHT_UPDATE_TRESHOLD;
+  const languageMatch =
+    calcLanguageScore(user, streamer) > WEIGHT_UPDATE_TRESHOLD;
+  const gameMatch = calcGameScore(user, streamer) > WEIGHT_UPDATE_TRESHOLD;
+
+  if (ageClose) userWeights.age_weight -= WEIGHT_DECREASE;
+  if (gameMatch) userWeights.game_weight -= WEIGHT_DECREASE;
+  if (languageMatch) userWeights.language_weight -= WEIGHT_DECREASE;
 });
 
 module.exports = router;
