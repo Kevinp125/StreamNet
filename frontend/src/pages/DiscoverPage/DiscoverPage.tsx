@@ -65,7 +65,7 @@ export default function DiscoverPage() {
     <>
       <StreamerGrid
         handleStreamerClick={handleStreamerClick}
-        recommendedStreamers={recommendedStreamers}
+        streamers={recommendedStreamers}
         handleStreamerConnect={handleStreamerConnect}
       />
 

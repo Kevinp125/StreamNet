@@ -70,3 +70,26 @@ export async function postStreamerConnection(accessToken: string, streamerId: st
     throw new Error("Unable to create connection");
   }
 }
+
+//function makes a fetch request to the /connections/get-all api which returns an array of connections the user has
+export async function fetchUserConnections(accessToken: string) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/connections/get-all`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) {
+      throw new Error(`Failed to fetch the connections ${res.status}`);
+    }
+
+    const result = await res.json();
+    return result;
+  } catch (err) {
+    console.error(`Could not get connections`, err);
+    throw new Error("Unable to get connections");
+  }
+}
