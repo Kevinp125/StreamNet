@@ -1,5 +1,6 @@
 const express = require("express");
 const { authenticateMiddleware } = require("../../middleware/authRequest");
+const { mergeAndDeduplicateTags } = require("../../services/mergeArrays.js");
 const router = express.Router(); //making a router
 const {
   calcAgeScore,
@@ -62,6 +63,25 @@ router.route("/").post(authenticateMiddleware, async (req, res) => {
   const streamerAudience = streamer.targetAudience; //get what audience the streamer streams too
   //Finally lower the pereference for that specific audience
   audiencePreferences[streamerAudience] -= WEIGHT_DECREASE;
+
+  //grab all the tags the streamer we clicked on has
+  const noDupTags = mergeAndDeduplicateTags(
+    streamer.tags,
+    streamer.twitch_tags
+  );
+
+  //for each tag the streamer we connected with has
+  noDupTags.forEach((tag) => {
+    if (userWeights.preferred_tags[tag]) {
+      //check the json of preffered tags if that tag exists in there already update the weight on that tag
+      userWeights.preferred_tags[tag] -= WEIGHT_DECREASE;
+    } else {
+      //if the tag doesnt exist then add it as a new tag and add the intial score of 0.9 which is under the boost for a tag we liked which was 1.1. Just so we can log tags user did not like
+      userWeights.preferred_tags[tag] = 0.9;
+    }
+  });
+
+  
 });
 
 module.exports = router;
