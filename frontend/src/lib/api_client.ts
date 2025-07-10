@@ -49,7 +49,7 @@ export async function fetchRecommendedStreamers(accessToken: string) {
 //function makes fetch request to the api that posts a connection on the database
 export async function postStreamerConnection(accessToken: string, streamerId: string) {
   try {
-    const res = await fetch(`${API_BASE_URL}/api/connections/add`, {
+    const res = await fetch(`${API_BASE_URL}/api/connections`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,
