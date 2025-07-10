@@ -56,6 +56,12 @@ router.route("/").post(authenticateMiddleware, async (req, res) => {
   if (ageClose) userWeights.age_weight -= WEIGHT_DECREASE;
   if (gameMatch) userWeights.game_weight -= WEIGHT_DECREASE;
   if (languageMatch) userWeights.language_weight -= WEIGHT_DECREASE;
+
+  //decrease audience preferences since we clicked not interested it means the preference for that audience is lowered
+  const audiencePreferences = userWeights.audience_preferences;
+  const streamerAudience = streamer.targetAudience; //get what audience the streamer streams too
+  //Finally lower the pereference for that specific audience
+  audiencePreferences[streamerAudience] -= WEIGHT_DECREASE;
 });
 
 module.exports = router;
