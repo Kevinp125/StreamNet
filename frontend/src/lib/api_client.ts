@@ -45,3 +45,28 @@ export async function fetchRecommendedStreamers(accessToken: string) {
     throw new Error("Unable to fetch streamers");
   }
 }
+
+//function makes fetch request to the api that posts a connection on the database
+export async function postStreamerConnection(accessToken: string, streamerId: string) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/connections/add`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      //pass in the request body the id of the streamer user is connecting with
+      body: JSON.stringify({ connected_streamer_id: streamerId }),
+    });
+
+    if (!res.ok) {
+      throw new Error(`Failed to connect with the streamer: ${res.status}`);
+    }
+
+    const result = await res.json();
+    return result;
+  } catch (err) {
+    console.error(`Could not create connection`, err);
+    throw new Error("Unable to create connection");
+  }
+}
