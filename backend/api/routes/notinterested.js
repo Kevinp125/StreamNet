@@ -15,6 +15,28 @@ router.route("/").post(authenticateMiddleware, async (req, res) => {
     });
 
   if (notInterestedError) throw notInterestedError;
+
+  //get data of user that is logged in as well as streamer that was clicked on which will be passed through the body
+  const { data: user } = await req.supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", userId)
+    .single();
+
+  const { data: streamer } = await req.supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", streamerId)
+    .single();
+
+  //get what the users weights are right now
+  const { data: userWeights } = await req.supabase
+    .from("user_weights")
+    .select("*")
+    .eq("user_id", userId)
+    .single();
+
+  
 });
 
 module.exports = router;
