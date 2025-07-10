@@ -55,15 +55,21 @@ router.route("/").post(authenticateMiddleware, async (req, res) => {
       calcLanguageScore(user, streamer) > WEIGHT_UPDATE_TRESHOLD;
     const gameMatch = calcGameScore(user, streamer) > WEIGHT_UPDATE_TRESHOLD;
 
-    if (ageClose) userWeights.age_weight -= WEIGHT_DECREASE;
-    if (gameMatch) userWeights.game_weight -= WEIGHT_DECREASE;
-    if (languageMatch) userWeights.language_weight -= WEIGHT_DECREASE;
+    //keep in mind since we are decreasing now we are using max to keep our weights always in positive level
+    //if they decrease to negative when we multiplu weights by base scores well get some wonky behaviro
+    if (ageClose) Math.max(0.05, (userWeights.age_weight -= WEIGHT_DECREASE));
+    if (gameMatch) Math.max(0.05, (userWeights.game_weight -= WEIGHT_DECREASE));
+    if (languageMatch)
+      Math.max(0.05, (userWeights.language_weight -= WEIGHT_DECREASE));
 
     //decrease audience preferences since we clicked not interested it means the preference for that audience is lowered
     const audiencePreferences = userWeights.audience_preferences;
     const streamerAudience = streamer.targetAudience; //get what audience the streamer streams too
     //Finally lower the pereference for that specific audience
-    audiencePreferences[streamerAudience] -= WEIGHT_DECREASE;
+    audiencePreferences[streamerAudience] = Math.max(
+      0.05,
+      audiencePreferences[streamerAudience] - WEIGHT_DECREASE
+    );
 
     //grab all the tags the streamer we clicked on has
     const noDupTags = mergeAndDeduplicateTags(
@@ -75,7 +81,10 @@ router.route("/").post(authenticateMiddleware, async (req, res) => {
     noDupTags.forEach((tag) => {
       if (userWeights.preferred_tags[tag]) {
         //check the json of preffered tags if that tag exists in there already update the weight on that tag
-        userWeights.preferred_tags[tag] -= WEIGHT_DECREASE;
+        userWeights.preferred_tags[tag] = Math.max(
+          0.05,
+          userWeights.preferred_tags[tag] - WEIGHT_DECREASE
+        );
       } else {
         //if the tag doesnt exist then add it as a new tag and add the intial score of 0.9 which is under the boost for a tag we liked which was 1.1. Just so we can log tags user did not like
         userWeights.preferred_tags[tag] = 0.9;
@@ -101,11 +110,9 @@ router.route("/").post(authenticateMiddleware, async (req, res) => {
       "Failed to update weights accordingly or post a not_interested user",
       err
     );
-    return res
-      .status(500)
-      .json({
-        error: "Failed to process weights after clicking not_interested",
-      });
+    return res.status(500).json({
+      error: "Failed to process weights after clicking not_interested",
+    });
   }
 });
 
