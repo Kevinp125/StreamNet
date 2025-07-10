@@ -2,6 +2,8 @@
 import { Outlet } from "react-router-dom";
 import { useNavigate, useLocation } from "react-router-dom";
 import { DASHBOARD_PATH, DISCOVER_PATH, CONNECTIONS_PATH, EVENTS_PATH } from "@/lib/paths";
+import { LogOut } from "lucide-react"
+import { useAuthContext } from "@/Context/AuthProvider";
 
 import {
   NavigationMenu,
@@ -10,7 +12,11 @@ import {
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
 
+import { Button } from "../ui/button";
+
 export default function Layout() {
+
+  const {signOut} = useAuthContext(); //grabbing the signOut function from our context so when button is clicked we can call the function
   const location = useLocation(); //using location to figure out what path we are currently on to highlight it to user
   const navigate = useNavigate();
 
@@ -64,6 +70,12 @@ export default function Layout() {
             </NavigationMenuLink>
           </NavigationMenuItem>
         </NavigationMenuList>
+
+        <Button className ="position absolute right-6 cursor-pointer hover:scale-105 transition-transform duration-200" variant = "destructive" onClick = {signOut}>
+          <LogOut/>
+        </Button>
+
+
       </NavigationMenu>
       <Outlet />
     </div>

@@ -45,6 +45,8 @@ router.route("/get-all").get(authenticateMiddleware, async (req, res) => {
     if (userErr) {
       throw new Error("Error fetching the current user", userErr);
     }
+
+    //TODO: ONCE SAVED CONNECTIONS IS IMPLEMENTED (THE PAGE) we need to filter out and only display streamers the user has not connected with. Dont want to display current connections on the discover page.
     //fetch all profile rows
     const { data: streamers, streamersError } = await supabase
       .from("profiles")

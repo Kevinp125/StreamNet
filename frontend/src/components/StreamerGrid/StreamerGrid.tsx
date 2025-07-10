@@ -1,5 +1,5 @@
 import DiscoverStreamerCard from "../DiscoverStreamerCard/DiscoverStreamerCard";
-import type { StreamerProfile } from "@/Types/AppTypes";
+import type { StreamerProfile } from "@/types/AppTypes";
 
 type StreamerGridProps = {
   handleStreamerClick: (profile: StreamerProfile) => void;

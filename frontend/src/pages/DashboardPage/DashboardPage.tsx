@@ -5,10 +5,11 @@ import { DISCOVER_PATH } from "@/lib/paths";
 import StreamerCard from "@/components/StreamerCard/StreamerCard";
 import { fetchStreamerInfo } from "@/lib/api_client";
 import { useAuthContext } from "@/Context/AuthProvider";
+import { LogOut } from "lucide-react";
 
 export default function DashboardPage() {
   const navigate = useNavigate();
-  const { session } = useAuthContext();
+  const { session, signOut } = useAuthContext();
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -57,10 +58,18 @@ export default function DashboardPage() {
         {/*Prompt of day and recent avtiviy components go here */}
 
         <Button
+          className='h-16 w-72 cursor-pointer transition-transform duration-200 ease-in-out hover:scale-105'
+          variant='destructive'
+          onClick={signOut}
+        >
+          <LogOut />
+          Logout
+        </Button>
+        <Button
           onClick={() => {
             navigate(DISCOVER_PATH);
           }}
-          className='position bg-electric-indigo h-16 w-72 cursor-pointer transition-transform duration-200 ease-in-out hover:scale-105'
+          className='bg-electric-indigo h-16 w-72 cursor-pointer transition-transform duration-200 ease-in-out hover:scale-105'
         >
           Discover Streamers!
         </Button>
