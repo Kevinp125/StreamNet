@@ -1,3 +1,4 @@
+const { mergeAndDeduplicateTags } = require("./mergeArrays");
 const { differenceInYears } = require("date-fns");
 
 // Age difference thresholds (in years)
@@ -63,13 +64,10 @@ function calcAudienceScore(streamerToCompare, userWeights) {
 
 //refactored this function fully so that we can do smart tag checking based on user preference
 function calcTagScore(streamerToCompare, userWeights) {
-  //use similar tactic to one we used in the user action connect request when we wanted to update weigths group all of the tags user inputed on my app and ones twitch gives them automatically into one array
-  const allTags = [
-    ...(streamerToCompare.tags || []),
-    ...(streamerToCompare.twitch_tags || []),
-  ];
-  //then store in a set to get rid of dups as well as making all of them lowercase because they are stored lowercase for case insenstivuty
-  const noDupTags = [...new Set(allTags.map((tag) => tag.toLowerCase()))];
+  const noDupTags = mergeAndDeduplicateTags(
+    streamerToCompare.tags,
+    streamerToCompare.twitch_tags
+  );
 
   let totalPreference = 0; //going with an average approach so that users with more tags dont beat user with less amount of tags but better perfefnce to them
 

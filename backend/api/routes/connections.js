@@ -1,5 +1,6 @@
 const express = require("express");
 const { authenticateMiddleware } = require("../../middleware/authRequest");
+const { mergeAndDeduplicateTags } = require("./mergeArrays");
 const router = express.Router(); //making a router
 const {
   calcAgeScore,
@@ -91,7 +92,8 @@ router
       //remember calcAgeScore returns 2 or 4 if ages are closer so if its greater than 1 we consider it that user cares about age
       const ageClose = calcAgeScore(user, streamer) > WEIGHT_UPDATE_TRESHOLD;
       //same thing language matches if calc language checks them and they return greater than 1 cause they are same
-      const languageMatch = calcLanguageScore(user, streamer) > WEIGHT_UPDATE_TRESHOLD;
+      const languageMatch =
+        calcLanguageScore(user, streamer) > WEIGHT_UPDATE_TRESHOLD;
       const gameMatch = calcGameScore(user, streamer) > WEIGHT_UPDATE_TRESHOLD;
 
       //now after we checked why user connected with this streamer. Did he give importance to languages matching, games matching, age?
@@ -109,14 +111,10 @@ router
       //increase the weight of that streamer's audience in our preferences because if we connected with a mature streamer it is because we want to see more of those.
       audiencePreferences[streamerAudience] += WEIGHT_INCREASE;
 
-      //we need to make a bigger array of tags based off the tags the user has on our platform combined with their tags on twitch that they dont know we are using shhhh
-      const allTags = [
-        ...(streamer.tags || []),
-        ...(streamer.twitch_tags || []),
-      ];
-
-      // Below just makes all tags lowercase so comparison is always good as well as putting them in a set because that auto takes care of duplicates
-      const noDupTags = [...new Set(allTags.map((tag) => tag.toLowerCase()))];
+      const noDupTags = mergeAndDeduplicateTags(
+        streamer.tags,
+        streamer.twitch_tags
+      );
 
       //for each tag the streamer we connected with has
       noDupTags.forEach((tag) => {
