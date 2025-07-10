@@ -101,12 +101,9 @@ function calcGameScore(currentUser, streamerToCompare) {
 }
 
 function calcLanguageScore(currentUser, streamerToCompare) {
-  //handle missing language data should have it but some twitch streamers donbt have it set
-  if (
-    !currentUser.twitch_broadcaster_language ||
-    !streamerToCompare.twitch_broadcaster_language
-  ) {
-    return 0.5; // Can't compare, return base score
+  //handle if the language is other
+  if (currentUser.twitch_broadcaster_language === "other" || streamerToCompare.twitch_broadcaster_language === "other") {
+    return 1; // Neutral score
   }
 
   if (
