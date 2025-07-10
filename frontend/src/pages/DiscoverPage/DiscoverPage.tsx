@@ -4,6 +4,7 @@ import StreamerCard from "@/components/StreamerCard/StreamerCard";
 import { fetchRecommendedStreamers } from "@/lib/api_client";
 import { postStreamerConnection } from "@/lib/api_client";
 import { updateUserWeigths } from "@/lib/api_client";
+import { addToNotInterestedAndUpdateWeights } from "@/lib/api_client";
 import { useAuthContext } from "@/Context/AuthProvider";
 import type { StreamerProfile } from "@/types/AppTypes";
 
@@ -46,7 +47,15 @@ export default function DiscoverPage() {
   }
 
   async function handleStreamerNotInterestedClick(){
+    if (!session?.access_token) return;
+    try{
 
+
+
+    }catch(err){
+    
+
+    }
 
 
   }
