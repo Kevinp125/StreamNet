@@ -1,6 +1,6 @@
 const express = require("express");
 const { authenticateMiddleware } = require("../../middleware/authRequest");
-const { mergeAndDeduplicateTags } = require("./mergeArrays");
+const { mergeAndDeduplicateTags } = require("../../services/mergeArrays.js");
 const router = express.Router(); //making a router
 const {
   calcAgeScore,
