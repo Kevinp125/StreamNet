@@ -46,9 +46,19 @@ router.route("/get-all").get(authenticateMiddleware, async (req, res) => {
       throw new Error("Error fetching the current user", userErr);
     }
 
-    //TODO: ONCE SAVED CONNECTIONS IS IMPLEMENTED (THE PAGE) we need to filter out and only display streamers the user has not connected with. Dont want to display current connections on the discover page.
-    //fetch all profile rows
-    const { data: streamers, streamersError } = await supabase
+    //get the connections this user has. We get connections from connections table and select the connected streamer id whenever that connection's user_id matches ours
+    const { data: connections } = await supabase
+      .from("connections")
+      .select("connected_streamer_id")
+      .eq("user_id", userId);
+
+    //just to make our life easier map through connections cause each itme in it is a database object. just extract the id and put it in a new array.
+    const connectedStreamersIds = connections.map(
+      (c) => c.connected_streamer_id
+    );
+
+    //here we arent calling query yet just building it and storing it in a variable
+    let query = supabase
       .from("profiles")
       .select("*")
       //neq means select all profiles that arent equal to current user session id. We dont want oursevles showing up in recommendation
@@ -56,8 +66,21 @@ router.route("/get-all").get(authenticateMiddleware, async (req, res) => {
       //ascending false allows us to get newly created streamers first
       .order("created_at", { ascending: false });
 
-    if (streamersError) {
-      throw new Error("Error fetching the streamers", streamersError);
+    //if user had connections then we want to filter them out
+    if (connectedStreamersIds.length > 0) {
+      //do this by using the not query. Got some weird looking syntaxt cause the third argument it takes is a string in this exact format (abc, efg, 123)
+      //Then the not means we dont want any of thoses connectedStreamersIds that are in our id column in profiles tables
+      query = query.not("id", "in", `(${connectedStreamersIds.join(",")})`);
+    }
+
+    //finally just execute the query to get all the streamers that dont include our own user or any of their connections.
+    const { data: streamers, streamerErr } = await query;
+
+    if (streamerErr) {
+      throw new Error(
+        "Error fetching all the streamers excluding ones that are the user or its connections",
+        streamerErr
+      );
     }
 
     //once we have fetched both the current User and the streamers in our database we need to map through the streamers and for each streamer calculate its match score with user and return the object with a new "score" field which we will use to sort order

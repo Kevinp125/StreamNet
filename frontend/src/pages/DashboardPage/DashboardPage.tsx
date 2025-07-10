@@ -13,6 +13,9 @@ export default function DashboardPage() {
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  //TODO: Remove later, leaving this here for now so that it is easier to test my apis. Whenever I test them since they have middleware I need to provide a token this is how I see and get that token.
+  console.log(session?.access_token);
+
   useEffect(() => {
     async function populateStreamerCard() {
       //once there is a session setLoading to true so we can display loading text since we are checking profile
