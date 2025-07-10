@@ -71,8 +71,6 @@ function calcTagScore(streamerToCompare, userWeights) {
   //then store in a set to get rid of dups as well as making all of them lowercase because they are stored lowercase for case insenstivuty
   const noDupTags = [...new Set(allTags.map((tag) => tag.toLowerCase()))];
 
-  if (noDupTags.length === 0) return 1; // No tags = base score
-
   let totalPreference = 0; //going with an average approach so that users with more tags dont beat user with less amount of tags but better perfefnce to them
 
   noDupTags.forEach((tag) => {
