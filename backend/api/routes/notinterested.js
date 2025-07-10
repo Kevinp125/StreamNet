@@ -1,6 +1,12 @@
 const express = require("express");
 const { authenticateMiddleware } = require("../../middleware/authRequest");
 const router = express.Router(); //making a router
+const {
+  calcAgeScore,
+  calcLanguageScore,
+  calcGameScore,
+} = require("../../services/calculateMatchScore.js");
+
 
 //learning from past so this route is going to add a streamer to the not interested table as well as updating the weights for our algorithm negatively since user wasnt interested
 router.route("/").post(authenticateMiddleware, async (req, res) => {
