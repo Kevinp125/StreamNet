@@ -7,6 +7,9 @@ const {
   calcGameScore,
 } = require("../../services/calculateMatchScore.js");
 
+const WEIGHT_UPDATE_TRESHOLD = 1;
+const WEIGHT_INCREASE = 0.1;
+
 //Route will add a connection to the database table
 router.route("/").post(authenticateMiddleware, async (req, res) => {
   try {
@@ -86,16 +89,16 @@ router
         .single();
 
       //remember calcAgeScore returns 2 or 4 if ages are closer so if its greater than 1 we consider it that user cares about age
-      const ageClose = calcAgeScore(user, streamer) > 1;
+      const ageClose = calcAgeScore(user, streamer) > WEIGHT_UPDATE_TRESHOLD;
       //same thing language matches if calc language checks them and they return greater than 1 cause they are same
-      const languageMatch = calcLanguageScore(user, streamer) > 1;
-      const gameMatch = calcGameScore(user, streamer) > 1;
+      const languageMatch = calcLanguageScore(user, streamer) > WEIGHT_UPDATE_TRESHOLD;
+      const gameMatch = calcGameScore(user, streamer) > WEIGHT_UPDATE_TRESHOLD;
 
       //now after we checked why user connected with this streamer. Did he give importance to languages matching, games matching, age?
       //we update all the weights based on the matching
-      if (ageClose) userWeights.age_weight += 0.1;
-      if (gameMatch) userWeights.game_weight += 0.1;
-      if (languageMatch) userWeights.language_weight += 0.1;
+      if (ageClose) userWeights.age_weight += WEIGHT_INCREASE;
+      if (gameMatch) userWeights.game_weight += WEIGHT_INCREASE;
+      if (languageMatch) userWeights.language_weight += WEIGHT_INCREASE;
 
       //Below two weight updates since they arent something as binary as same language or range of age we update based on user preference
       //dont need to parse audience_preferences I forgot supabase returns it as an object already not a string
@@ -104,7 +107,7 @@ router
 
       //since when users sign up they have a dropdown list of audiences streamers audience will always exist in our JSON of audience preference weights
       //increase the weight of that streamer's audience in our preferences because if we connected with a mature streamer it is because we want to see more of those.
-      audiencePreferences[streamerAudience] += 0.1;
+      audiencePreferences[streamerAudience] += WEIGHT_INCREASE;
 
       //we need to make a bigger array of tags based off the tags the user has on our platform combined with their tags on twitch that they dont know we are using shhhh
       const allTags = [
@@ -119,7 +122,7 @@ router
       noDupTags.forEach((tag) => {
         if (userWeights.preferred_tags[tag]) {
           //check the json of preffered tags if that tag exists in there already update the weight on that tag
-          userWeights.preferred_tags[tag] += 0.1;
+          userWeights.preferred_tags[tag] += WEIGHT_INCREASE;
         } else {
           //if the tag doesnt exist then add it as a new tag and add the intial boost of 1.1 that is what all new tags will start with
           userWeights.preferred_tags[tag] = 1.1;
