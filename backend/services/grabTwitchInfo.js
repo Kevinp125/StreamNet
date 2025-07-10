@@ -50,9 +50,9 @@ async function getTwitchChannelData(twitchUserId, accessToken) {
 
     //otherwise return an object with all the information we want from the channel object have an or with a null set as a fall back
     return {
-      twitch_game_name: channel.game_name || null,
-      twitch_broadcaster_language: channel.broadcaster_language || null,
-      twitch_tags: channel.tags || [],
+      twitch_game_name: channel.game_name ?? null,
+      twitch_broadcaster_language: channel.broadcaster_language ?? null,
+      twitch_tags: channel.tags ?? [],
     };
   } catch (err) {
     console.error(`Did not succeed in egetting twitch Channel data:`, err);
