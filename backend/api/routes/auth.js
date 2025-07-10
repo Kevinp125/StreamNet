@@ -6,9 +6,7 @@ const router = express.Router(); //making a router
 router
   .route("/check-user-exists")
   .get(authenticateMiddleware, async (req, res) => {
-    //authenticateMiddleware will do the token checking for us and attach User to the req body as well as supabase client
     try {
-      // Check if user has profile in database
       const { data: profile, error } = await req.supabase
         .from("profiles")
         .select("*")
