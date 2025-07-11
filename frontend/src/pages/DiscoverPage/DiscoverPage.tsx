@@ -34,6 +34,9 @@ export default function DiscoverPage() {
       if (!data.success) {
         throw new Error("failed to send connection request");
       }
+
+      const recommendedStreamers = await fetchRecommendedStreamers(session.access_token);
+      setRecommendedStreamers(recommendedStreamers);
     } catch (err) {
       console.error("Failed to connect:", err);
     }
