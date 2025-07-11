@@ -49,7 +49,7 @@ export async function fetchRecommendedStreamers(accessToken: string) {
 //function makes fetch request to the api that posts a connection on the database
 export async function postStreamerConnection(accessToken: string, streamerId: string) {
   try {
-    const res = await fetch(`${API_BASE_URL}/api/connections/add`, {
+    const res = await fetch(`${API_BASE_URL}/api/connections`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -71,10 +71,10 @@ export async function postStreamerConnection(accessToken: string, streamerId: st
   }
 }
 
-//function makes a fetch request to the /connections/get-all api which returns an array of connections the user has
+//function makes a fetch request to the /connections api which returns an array of connections the user has
 export async function fetchUserConnections(accessToken: string) {
   try {
-    const res = await fetch(`${API_BASE_URL}/api/connections/get-all`, {
+    const res = await fetch(`${API_BASE_URL}/api/connections`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -97,7 +97,7 @@ export async function fetchUserConnections(accessToken: string) {
 //function makes a request to the api that updates the userWeights table whenever a user hits the connect button
 export async function updateUserWeigths(accessToken: string, streamerToConnectId: string) {
   try {
-    const res = await fetch(`${API_BASE_URL}/api/user-actions/connect`, {
+    const res = await fetch(`${API_BASE_URL}/api/connections/update-weight`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,
