@@ -21,6 +21,18 @@ export default function DashboardPage() {
   //TODO: Remove later, leaving this here for now so that it is easier to test my apis. Whenever I test them since they have middleware I need to provide a token this is how I see and get that token.
   console.log(session?.access_token);
 
+  async function handleConnectRequestResponse(decision: string, request: any){
+
+    //TODO: Call the util function that makes like 
+    //three fetch requests the one that updates connection request status
+    //then the post connection depending on user decision to accept or deny
+    //then the update weights
+
+
+
+
+  }
+
   useEffect(() => {
     async function populateStreamerCard() {
       //once there is a session setLoading to true so we can display loading text since we are checking profile
@@ -104,10 +116,10 @@ export default function DashboardPage() {
               return (
                 <div className='flex gap-4'>
                   <p>{`@${request.sender.twitchUser} has sent you a connection request`}</p>
-                  <Button className='bg-green-600 cursor-pointer'>
+                  <Button onClick = {() => {handleConnectRequestResponse('accept', request)}}className='bg-green-600 cursor-pointer'>
                     <Check />
                   </Button>
-                  <Button variant='destructive' className = 'cursor-pointer'>
+                  <Button onClick = {() => {handleConnectRequestResponse('deny', request)}}variant='destructive' className = 'cursor-pointer'>
                     <X />
                   </Button>
                 </div>
