@@ -204,22 +204,26 @@ router
       `
         )
         .eq("receiver_id", userId)
-        .eq("status", "pending");
+        .eq("status", "pending")
+        .order("created_at", { ascending: false }); //get most recent requests first
 
-        if(error) throw error;
-        
-        //below code just helps us get cleaner response.
-        //instead of sender being in profiles it is in sender and we arent copying the id twice.
-        const reformattedRequests = pendingRequests.map((request) => ({
-          requestId: request.id,
-          createdAt: request.created_at,
-          sender: request.profiles
-        }))
+      if (error) throw error;
 
-        res.status(200).json(reformattedRequests);
+      //below code just helps us get cleaner response.
+      //instead of sender being in profiles it is in sender and we arent copying the id twice.
+      const reformattedRequests = pendingRequests.map((request) => ({
+        requestId: request.id,
+        createdAt: request.created_at,
+        sender: request.profiles,
+      }));
 
+      res.status(200).json(reformattedRequests);
     } catch (err) {
-      
+      console.error(
+        "could not get all the pending requests for this user",
+        err
+      );
+      res.status(500).json({ error: "failed to fetch pending requests" });
     }
   });
 
