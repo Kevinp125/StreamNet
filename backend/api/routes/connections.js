@@ -178,33 +178,40 @@ router.route("/send-request").post(authenticateMiddleware, async (req, res) => {
     if (error) throw error;
 
     res.status(201).json({ success: true, message: "Connection request sent" });
-
   } catch (err) {
     console.error("Error sending the connect request", err);
-    res.status(500).json({error: "Failed to send request"});
+    res.status(500).json({ error: "Failed to send request" });
   }
 });
 
-//route gets all pending-requests the user has from connection requests table so we can display them 
-router.route("/pending-requests").get(authenticateMiddleware, async(req, res) => {
-  try{
-    const userId = req.user.id;
-    const supabaseClient = req.supabase;
+//route gets all pending-requests the user has from connection requests table so we can display them
+router
+  .route("/pending-requests")
+  .get(authenticateMiddleware, async (req, res) => {
+    try {
+      const userId = req.user.id;
+      const supabaseClient = req.supabase;
+
+      //grab from connect_requests the id, sender, and use supabasejoin syntax to get sender's profile. We get all senders that have corresponding reciever as the user Id and status is pending
+      const { data: pendingRequests, error } = await supabaseClient
+        .from("connection_requests")
+        .select(
+          `
+        id,
+        sender_id,
+        created_at,
+        profiles!sender_id (*)
+      `
+        )
+        .eq("receiver_id", userId)
+        .eq("status", "pending");
+
+        if(error) throw error;
+        
 
 
 
-
-  }catch(err){
-
-
-
-
-
-  }
-
-
-
-
-})
+    } catch (err) {}
+  });
 
 module.exports = router;
