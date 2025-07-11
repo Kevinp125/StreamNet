@@ -148,6 +148,8 @@ export async function sendConnectionRequest(accessToken: string, receiverId: str
     if (!res.ok) {
       throw new Error("Could not send a connection request");
     }
+
+    return await res.json();
   } catch (err) {
     console.error(err);
     throw err; //this passes it up to parent
