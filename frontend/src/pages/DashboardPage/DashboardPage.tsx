@@ -6,12 +6,14 @@ import StreamerCard from "@/components/StreamerCard/StreamerCard";
 import { fetchStreamerInfo } from "@/lib/api_client";
 import { useAuthContext } from "@/Context/AuthProvider";
 import { LogOut } from "lucide-react";
+import { Card, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 
 export default function DashboardPage() {
   const navigate = useNavigate();
   const { session, signOut } = useAuthContext();
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [pendingRequests, setPendingRequests] = useState([]);
 
   //TODO: Remove later, leaving this here for now so that it is easier to test my apis. Whenever I test them since they have middleware I need to provide a token this is how I see and get that token.
   console.log(session?.access_token);
@@ -76,6 +78,12 @@ export default function DashboardPage() {
         >
           Discover Streamers!
         </Button>
+
+        <Card className='h-full w-2/3'>
+          <CardTitle className='flex justify-center'>Recent Notifications</CardTitle>
+
+          <CardContent></CardContent>
+        </Card>
       </div>
     </div>
   );
