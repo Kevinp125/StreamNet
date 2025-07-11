@@ -156,7 +156,7 @@ export async function sendConnectionRequest(accessToken: string, receiverId: str
   }
 }
 
-export async function getPendingRequests(accessToken: string) {
+export async function fetchPendingRequests(accessToken: string) {
   try {
     const res = await fetch(`${API_BASE_URL}/api/connections/pending-requests`, {
       method: "GET",
