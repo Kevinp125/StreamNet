@@ -39,7 +39,11 @@ export default function DiscoverStreamerCard({
   //using the date-fns library function differenceInYears to calculate someones age based on todays date and date_of_birth
   const age = differenceInYears(new Date(), new Date(streamer.date_of_birth));
 
+  const connectStatusText = (streamer.requestStatus === "pending") ? "Pending..." : "Connect";
+  const isDisabled = streamer.requestStatus === 'pending';
+
   return (
+
     <Card
       onClick={() => onStreamerClick(streamer)}
       className='w-full max-w-md cursor-pointer flex-col gap-2 transition-all duration-300 hover:scale-105'
@@ -98,6 +102,7 @@ export default function DiscoverStreamerCard({
       <CardFooter className='flex justify-between'>
         {/*isConnectionsPage bool lets us render different buttons. So if we are on discover page it wont be true so !isConnectionsPage will be !false which means display the discover page buttons */}
         {!isConnectionsPage && (
+
           <>
             <Button onClick={handleConnectClick} variant='ghost' className='cursor-pointer'>
               <Heart className='h-3 w-3' />
