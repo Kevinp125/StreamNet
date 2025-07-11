@@ -208,10 +208,19 @@ router
 
         if(error) throw error;
         
+        //below code just helps us get cleaner response.
+        //instead of sender being in profiles it is in sender and we arent copying the id twice.
+        const reformattedRequests = pendingRequests.map((request) => ({
+          requestId: request.id,
+          createdAt: request.created_at,
+          sender: request.profiles
+        }))
 
+        res.status(200).json(reformattedRequests);
 
-
-    } catch (err) {}
+    } catch (err) {
+      
+    }
   });
 
 module.exports = router;
