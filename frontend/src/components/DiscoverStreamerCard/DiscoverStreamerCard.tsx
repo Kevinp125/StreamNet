@@ -14,6 +14,7 @@ type DisoverStreamerCardProps = {
   onStreamerClick: (profile: StreamerProfile) => void;
   onStreamerConnectClick?: (streamerToConnectId: string) => void;
   onRemoveConnectionClick?: (streamerId: string) => void;
+  onStreamerNotInterestedClick?:(streamerId: string) => void;
   isConnectionsPage?: boolean;
 };
 
@@ -22,7 +23,18 @@ export default function DiscoverStreamerCard({
   isConnectionsPage,
   onStreamerClick,
   onStreamerConnectClick,
+  onStreamerNotInterestedClick
 }: DisoverStreamerCardProps) {
+  function handleConnectClick(e: React.MouseEvent<HTMLButtonElement>) {
+    e.stopPropagation();
+    if (onStreamerConnectClick) onStreamerConnectClick(streamer.id);
+  }
+
+  function handleNotInterestedClick(e: React.MouseEvent<HTMLButtonElement>){
+    e.stopPropagation();
+    if (onStreamerNotInterestedClick) onStreamerNotInterestedClick(streamer.id);
+  }
+
   const twitchUrl = "https://twitch.tv/";
   //using the date-fns library function differenceInYears to calculate someones age based on todays date and date_of_birth
   const age = differenceInYears(new Date(), new Date(streamer.date_of_birth));
@@ -87,22 +99,13 @@ export default function DiscoverStreamerCard({
         {/*isConnectionsPage bool lets us render different buttons. So if we are on discover page it wont be true so !isConnectionsPage will be !false which means display the discover page buttons */}
         {!isConnectionsPage && (
           <>
-            <Button
-              onClick={e => {
-                e.stopPropagation();
-                if (onStreamerConnectClick) onStreamerConnectClick(streamer.id);
-              }}
-              variant='ghost'
-              className='cursor-pointer'
-            >
+            <Button onClick={handleConnectClick} variant='ghost' className='cursor-pointer'>
               <Heart className='h-3 w-3' />
               <span className='text-sm'>Connect</span>
             </Button>
 
             <Button
-              onClick={e => {
-                e.stopPropagation();
-              }}
+              onClick={handleNotInterestedClick}
               variant='ghost'
               className='cursor-pointer text-red-500 hover:text-red-500'
             >
