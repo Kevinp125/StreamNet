@@ -150,4 +150,27 @@ router
     }
   });
 
+router.route("/send-request").post(authenticateMiddleware, async (req, res) => {
+  try {
+    const { reciever_id } = req.body;
+    const sender_id = req.user.id;
+    const supabaseClient = req.supabase;
+
+    //check if the request being sent out exists in our table already jic
+    const { data: existingRequest } = await supabaseClient
+      .from("connection_requests")
+      .select("*")
+      .eq("sender_id", sender_id)
+      .eq("receiver_id", receiver_id)
+      .single();
+
+    if (existingRequest) {
+      return res.status(400).json({ error: "Request already sent" });
+    }
+
+
+    
+  } catch (err) {}
+});
+
 module.exports = router;
