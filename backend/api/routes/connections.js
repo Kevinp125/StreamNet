@@ -36,11 +36,34 @@ router.route("/").post(authenticateMiddleware, async (req, res) => {
       .update({ status: decision === "accept" ? "accepted" : "denied" })
       .eq("id", requestId);
 
-    //201 status code signifies successful creation of a connection
-    res.status(201).json({ success: true, message: "Connection created" });
+    if (updateError) throw updateError;
+
+    //if user decided to accept connection that is only time we make bi directional connection
+    //bi directional in the sense it will appear on my connections and user who sent it
+    if (decision === "accept") {
+      const { error: connectError } = await supabaseClient
+        .from("connections")
+        .insert([
+          { user_id: request.sender_id, connected_streamer_id: user_id },
+          { user_id: user_id, connected_streamer_id: request.sender_id },
+        ]);
+
+      if (connectError) throw connectError;
+    }
+
+    //201 status code signifies successful processing of a request
+    res
+      .status(201)
+      .json({
+        success: true,
+        message:
+          decision === "accept"
+            ? "the request has been accepted"
+            : "request has been denied and no connection has been posted",
+      });
   } catch (err) {
-    console.error("Error creating connection:", err);
-    res.status(500).json({ error: "Failed to create connection" });
+    console.error("Error processing the connection request", err);
+    res.status(500).json({ error: "Failed to process request" });
   }
 });
 
