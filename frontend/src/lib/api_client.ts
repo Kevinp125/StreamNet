@@ -176,3 +176,28 @@ export async function fetchPendingRequests(accessToken: string) {
     throw err; //this passes it up to parent
   }
 }
+
+export async function setConnectionRequestStatusAndPostIfAccept(
+  accessToken: string,
+  decision: string,
+  requestId: string,
+) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/connections`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ decision: decision, requestId: requestId }),
+    });
+
+    if (!res.ok) {
+      throw new Error("Could update request status and / or post");
+    }
+    return await res.json();
+  } catch (err) {
+    console.error(err);
+    throw err; //this passes it up to parent
+  }
+}

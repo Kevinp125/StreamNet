@@ -52,15 +52,13 @@ router.route("/").post(authenticateMiddleware, async (req, res) => {
     }
 
     //201 status code signifies successful processing of a request
-    res
-      .status(201)
-      .json({
-        success: true,
-        message:
-          decision === "accept"
-            ? "the request has been accepted"
-            : "request has been denied and no connection has been posted",
-      });
+    res.status(201).json({
+      success: true,
+      message:
+        decision === "accept"
+          ? "accepted"
+          : "denied",
+    });
   } catch (err) {
     console.error("Error processing the connection request", err);
     res.status(500).json({ error: "Failed to process request" });
