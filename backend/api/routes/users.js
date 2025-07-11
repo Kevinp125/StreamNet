@@ -59,35 +59,35 @@ router.route("/get-all").get(authenticateMiddleware, async (req, res) => {
       .eq("user_id", userId);
 
     //grab all the streamers that have a pendign request sent out to them by this user
-    const { data: pendingRequestStreamers } = await supbase
+    const { data: pendingRequestStreamers } = await supabase
       .from("connection_requests")
       .select("receiever_id")
       .eq("sender_id", userId)
       .eq("status", "pending");
 
     //also grab all the ones who denied the requset sent out by the user
-    const { data: deniedRequestStreamers } = await supbase
+    const { data: deniedRequestStreamers } = await supabase
       .from("connection_requests")
       .select("receiever_id")
       .eq("sender_id", userId)
       .eq("status", "denied");
 
     //just to make our life easier map through connections cause each itme in it is a database object. just extract the id and put it in a new array.
-    const connectedStreamersIds = connections.map(
+    const connectedStreamersIds = connections?.map(
       (c) => c.connected_streamer_id
-    );
+    ) ?? [];
 
-    const notInterestedStreamersIds = notInterestedStreamers.map(
+    const notInterestedStreamersIds = notInterestedStreamers?.map(
       (notInterestedStreamer) => notInterestedStreamer.streamer_id
-    );
+    ) ?? [];
 
-    const pendingRequestIds = pendingRequestStreamers.map(
+    const pendingRequestIds = pendingRequestStreamers?.map(
       (request) => request.receiver_id
-    );
+    ) ?? [];
 
-    const deniedRequestIds = deniedRequestStreamers.map(
+    const deniedRequestIds = deniedRequestStreamers?.map(
       (request) => request.receiver_id
-    );
+    ) ?? [];
 
     //join ids of users we are connected with and not interested in so we can filter them out below
     const streamersToFilterOut = [

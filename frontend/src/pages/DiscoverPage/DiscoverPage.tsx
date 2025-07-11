@@ -31,16 +31,8 @@ export default function DiscoverPage() {
     try {
       const data = await sendConnectionRequest(session?.access_token, streamerToConnectId);
 
-      //if success field is true it means we added a connection then filter out the connection we just added from our recommnededStreamers grid
-      if (data.success) {
-        //if data was added succesfully we now update all our weights so that our algorithm can improve...
-        await updateUserWeigths(session.access_token, streamerToConnectId);
-
-        setRecommendedStreamers(prev =>
-          prev.filter(streamer => streamer.id !== streamerToConnectId),
-        );
-      } else {
-        console.error("Connection fetch request failed");
+      if (!data.success) {
+        throw new Error("failed to send connection request");
       }
     } catch (err) {
       console.error("Failed to connect:", err);
