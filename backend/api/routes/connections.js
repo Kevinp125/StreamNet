@@ -23,13 +23,18 @@ router.route("/").post(authenticateMiddleware, async (req, res) => {
       .from("connection_requests")
       .select("sender_id, receiver_id")
       .eq("id", requestId)
-      .eq("receiver_id", user_id) 
+      .eq("receiver_id", user_id)
       .eq("status", "pending")
       .single();
 
     if (error) throw error;
 
-    
+    //after we grab all the request infromtion above check how we need to update request. This is important becayse rest of app checks this field to determine how buttons look
+    //when to display requests on dashboard etc
+    const { error: updateError } = await supabaseClient
+      .from("connection_requests")
+      .update({ status: decision === "accept" ? "accepted" : "denied" })
+      .eq("id", requestId);
 
     //201 status code signifies successful creation of a connection
     res.status(201).json({ success: true, message: "Connection created" });
