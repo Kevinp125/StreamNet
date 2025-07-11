@@ -105,8 +105,8 @@ export default function DiscoverStreamerCard({
 
           <>
             <Button onClick={handleConnectClick} variant='ghost' className='cursor-pointer'>
-              <Heart className='h-3 w-3' />
-              <span className='text-sm'>Connect</span>
+              {connectStatusText !== "Pending..." && <Heart className='h-3 w-3' />}
+              <span className='text-sm'>{connectStatusText}</span>
             </Button>
 
             <Button

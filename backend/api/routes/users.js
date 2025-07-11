@@ -61,14 +61,14 @@ router.route("/get-all").get(authenticateMiddleware, async (req, res) => {
     //grab all the streamers that have a pendign request sent out to them by this user
     const { data: pendingRequestStreamers } = await supabase
       .from("connection_requests")
-      .select("receiever_id")
+      .select("receiver_id")
       .eq("sender_id", userId)
       .eq("status", "pending");
 
     //also grab all the ones who denied the requset sent out by the user
     const { data: deniedRequestStreamers } = await supabase
       .from("connection_requests")
-      .select("receiever_id")
+      .select("receiver_id")
       .eq("sender_id", userId)
       .eq("status", "denied");
 
