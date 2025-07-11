@@ -152,7 +152,7 @@ router
 
 router.route("/send-request").post(authenticateMiddleware, async (req, res) => {
   try {
-    const { reciever_id } = req.body;
+    const { receiver_id } = req.body;
     const sender_id = req.user.id;
     const supabaseClient = req.supabase;
 
@@ -179,7 +179,10 @@ router.route("/send-request").post(authenticateMiddleware, async (req, res) => {
 
     res.status(201).json({ success: true, message: "Connection request sent" });
 
-  } catch (err) {}
+  } catch (err) {
+    console.error("Error sending the connect request", err);
+    res.status(500).json({error: "Failed to send request"});
+  }
 });
 
 module.exports = router;
