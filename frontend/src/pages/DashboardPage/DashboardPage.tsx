@@ -5,6 +5,8 @@ import { DISCOVER_PATH } from "@/lib/paths";
 import StreamerCard from "@/components/StreamerCard/StreamerCard";
 import { fetchStreamerInfo } from "@/lib/api_client";
 import { fetchPendingRequests } from "@/lib/api_client";
+import { setConnectionRequestStatusAndPostIfAccept } from "@/lib/api_client";
+import { updateUserWeigths } from "@/lib/api_client";
 import { useAuthContext } from "@/Context/AuthProvider";
 import { LogOut } from "lucide-react";
 import { Card, CardTitle, CardContent } from "@/components/ui/card";
@@ -21,16 +23,33 @@ export default function DashboardPage() {
   //TODO: Remove later, leaving this here for now so that it is easier to test my apis. Whenever I test them since they have middleware I need to provide a token this is how I see and get that token.
   console.log(session?.access_token);
 
-  async function handleConnectRequestResponse(decision: string, request: any){
+  async function handleConnectRequestResponse(decision: string, requestId: string) {
+    try {
+      if (!session?.access_token) {
+        throw Error("no valid session");
+      }
 
-    //TODO: Call the util function that makes like 
-    //three fetch requests the one that updates connection request status
-    //then the post connection depending on user decision to accept or deny
-    //then the update weights
+      //storing the request info because we need it later to update the weights if the user decided to approve request
+      const requestInfo = pendingRequests.find(req => req.requestId === requestId);
 
+      const res = await setConnectionRequestStatusAndPostIfAccept(
+        session?.access_token,
+        decision,
+        requestId,
+      );
 
-
-
+      //if we successfully updated a connection request status
+      if (res.success) {
+        //first thing we want to do is filter out the request from the frontend dw on next page load the status already changed in backend
+        setPendingRequests(prev => prev.filter(request => request.requestId !== requestId));
+        //dont forget we need to update weights for our algorithm if user decided to accept means they are interested in that kind of streamer
+        if (decision === "accepted" && requestInfo) {
+          await updateUserWeigths(session.access_token, requestInfo.sender.id);
+        }
+      }
+    } catch (err) {
+      console.error(`failed to process connection request`, err);
+    }
   }
 
   useEffect(() => {
@@ -111,15 +130,26 @@ export default function DashboardPage() {
         <Card className='h-full w-2/3'>
           <CardTitle className='flex justify-center'>Recent Notifications</CardTitle>
 
-          <CardContent className='text-sm flex flex-col gap-6'>
+          <CardContent className='flex flex-col gap-6 text-sm'>
             {pendingRequests.map(request => {
               return (
                 <div className='flex gap-4'>
                   <p>{`@${request.sender.twitchUser} has sent you a connection request`}</p>
-                  <Button onClick = {() => {handleConnectRequestResponse('accept', request)}}className='bg-green-600 cursor-pointer'>
+                  <Button
+                    onClick={() => {
+                      handleConnectRequestResponse("accept", request.requestId);
+                    }}
+                    className='cursor-pointer bg-green-600'
+                  >
                     <Check />
                   </Button>
-                  <Button onClick = {() => {handleConnectRequestResponse('deny', request)}}variant='destructive' className = 'cursor-pointer'>
+                  <Button
+                    onClick={() => {
+                      handleConnectRequestResponse("deny", request.requestId);
+                    }}
+                    variant='destructive'
+                    className='cursor-pointer'
+                  >
                     <X />
                   </Button>
                 </div>
