@@ -185,4 +185,26 @@ router.route("/send-request").post(authenticateMiddleware, async (req, res) => {
   }
 });
 
+//route gets all pending-requests the user has from connection requests table so we can display them 
+router.route("/pending-requests").get(authenticateMiddleware, async(req, res) => {
+  try{
+    const userId = req.user.id;
+    const supabaseClient = req.supabase;
+
+
+
+
+  }catch(err){
+
+
+
+
+
+  }
+
+
+
+
+})
+
 module.exports = router;
