@@ -11,19 +11,25 @@ const {
 const WEIGHT_UPDATE_TRESHOLD = 1;
 const WEIGHT_INCREASE = 0.1;
 
-//Route will add a connection to the database table
+//Route will grab a requestId update its status to approved or denied depending on user decision and if it is approved it will post the connection to connections table
 router.route("/").post(authenticateMiddleware, async (req, res) => {
   try {
-    const { connected_streamer_id } = req.body;
+    const { decision, requestId } = req.body;
     const user_id = req.user.id;
     const supabaseClient = req.supabase;
 
-    const { error } = await supabaseClient.from("connections").insert({
-      user_id: user_id,
-      connected_streamer_id: connected_streamer_id,
-    });
+    //first let us get the details on the request that was sent to the user (connection request)
+    const { data: request, error: error } = await supabaseClient
+      .from("connection_requests")
+      .select("sender_id, receiver_id")
+      .eq("id", requestId)
+      .eq("receiver_id", user_id) 
+      .eq("status", "pending")
+      .single();
 
     if (error) throw error;
+
+    
 
     //201 status code signifies successful creation of a connection
     res.status(201).json({ success: true, message: "Connection created" });
