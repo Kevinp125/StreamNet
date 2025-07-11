@@ -133,3 +133,23 @@ export async function addToNotInterestedAndUpdateWeights(accessToken: string, st
     throw err; //this passes it up to parent
   }
 }
+
+export async function sendConnectionRequest(accessToken: string, receiverId: string) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/connections/send-request`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ receiver_id: receiverId }),
+    });
+
+    if (!res.ok) {
+      throw new Error("Could not send a connection request");
+    }
+  } catch (err) {
+    console.error(err);
+    throw err; //this passes it up to parent
+  }
+}
