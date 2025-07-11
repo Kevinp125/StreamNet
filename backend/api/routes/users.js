@@ -58,6 +58,13 @@ router.route("/get-all").get(authenticateMiddleware, async (req, res) => {
       .select("streamer_id")
       .eq("user_id", userId);
 
+    //grabbing the information on which streamers this user has a pending request sent out too that way we can attach a bool in json of streamers we send out to classify which ones are pending
+    const { data: pendingRequestStreamers } = await supbase
+      .from("connection_requests")
+      .select("receiever_id")
+      .eq("sender_id", userId)
+      .eq("status", "pending");
+
     //just to make our life easier map through connections cause each itme in it is a database object. just extract the id and put it in a new array.
     const connectedStreamersIds = connections.map(
       (c) => c.connected_streamer_id
@@ -66,6 +73,8 @@ router.route("/get-all").get(authenticateMiddleware, async (req, res) => {
     const notInterestedStreamersIds = notInterestedStreamers.map(
       (notInterestedStreamer) => notInterestedStreamer.streamer_id
     );
+
+    const pendingStreamers =
 
     //join ids of users we are connected with and not interested in so we can filter them out below
     const streamersToFilterOut = [
