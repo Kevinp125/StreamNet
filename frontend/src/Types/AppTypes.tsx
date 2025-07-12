@@ -12,4 +12,5 @@ export type StreamerProfile = {
   tags: string[];
   date_of_birth: string;
   created_at: string;
+  requestStatus: string;
 };
