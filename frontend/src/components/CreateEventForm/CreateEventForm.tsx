@@ -11,13 +11,20 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { fetchUserConnections } from "@/lib/api_client";
+import { useAuthContext } from "@/Context/AuthProvider";
+import type { StreamerProfile } from "@/types/AppTypes";
 
 type EventFormProps = {
   onClose: () => void;
 };
 export default function CreateEventForm({ onClose }: EventFormProps) {
+  const { session } = useAuthContext();
   const [eventModality, setEventModality] = useState("");
+  const [privacyLevel, setPrivacyLevel] = useState("");
+  const [connections, setConnections] = useState<StreamerProfile[]>([]);
+  const [selectedInvites, setSelectedInvites] = useState<string[]>([]);
 
   const PRIVACY_LEVELS = [
     { id: "private", label: "Private" },
@@ -34,6 +41,23 @@ export default function CreateEventForm({ onClose }: EventFormProps) {
     event.preventDefault();
   }
 
+  {
+    /*Using useEffect to fetch a users connections on page mount that way if they click that they want to make a private event we can display to them the list of users they can invite */
+  }
+  useEffect(() => {
+    async function loadConnections() {
+      if (!session?.access_token) return;
+
+      try {
+        const userConnections = await fetchUserConnections(session.access_token);
+        setConnections(userConnections);
+      } catch (err) {
+        console.error("Failed to load connections", err);
+      }
+    }
+
+    loadConnections();
+  }, [session?.access_token]);
   return (
     <>
       <Card className='relative w-[45%] items-center justify-center p-10'>
@@ -53,7 +77,7 @@ export default function CreateEventForm({ onClose }: EventFormProps) {
           </CardDescription>
         </CardHeader>
 
-        <CardContent className='w-[85%]'>
+        <CardContent className='max-h-[60vh] w-[85%] overflow-y-auto'>
           <form onSubmit={handleSubmit} className='flex flex-col gap-6'>
             <div className='flex flex-col gap-2'>
               <Label htmlFor='event_name'>Event Name</Label>
