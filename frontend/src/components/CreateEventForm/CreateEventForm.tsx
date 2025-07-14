@@ -11,7 +11,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export default function CreateEventForm() {
+type EventFormProps = {
+  onClose: () => void;
+
+}
+export default function CreateEventForm({onClose}:EventFormProps) {
 
   const PRIVACY_LEVELS = [
     {id: 'private', label: 'Private'},
@@ -21,13 +25,20 @@ export default function CreateEventForm() {
   function handleSubmit(event: React.FormEvent){
     event.preventDefault(); 
 
-
-
-
   }
+
   return (
     <>
-      <Card className='w-[40%] items-center justify-center p-10'>
+      <Card className='relative w-[40%] items-center justify-center p-10'>
+
+        <Button
+          variant='ghost'
+          size='sm'
+          onClick={onClose}
+          className='absolute top-3 right-3 cursor-pointer text-gray-500 hover:bg-transparent hover:text-red-600'
+        >
+          X
+        </Button>
         <CardHeader className='w-[85%]'>
           <CardTitle> Add Event! </CardTitle>
           <CardDescription>
