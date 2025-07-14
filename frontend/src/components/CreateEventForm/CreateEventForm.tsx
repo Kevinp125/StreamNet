@@ -45,7 +45,6 @@ export default function CreateEventForm({ onClose }: EventFormProps) {
 
         <CardContent className='w-[85%]'>
           <form onSubmit={handleSubmit} className='flex flex-col gap-6'>
-            {/* Display Name */}
             <div className='flex flex-col gap-2'>
               <Label htmlFor='event_name'>Event Name</Label>
               <Input id='event_name' name='event_name' placeholder='Event Name' required />
@@ -61,10 +60,9 @@ export default function CreateEventForm({ onClose }: EventFormProps) {
               />
             </div>
 
-            {/* Date of birth picker */}
             <div className='flex flex-col gap-2'>
-              <Label htmlFor='date_of_birth'>Date of Birth</Label>
-              <Input id='date_of_birth' name='date_of_birth' type='date' required />
+              <Label htmlFor='event_datetime'>Date & Time</Label>
+              <Input id='event_datetime' name='event_datetime' type='datetime-local' required />
             </div>
 
             {/*Dropdown to select the audience that streamer streams to */}
@@ -82,6 +80,14 @@ export default function CreateEventForm({ onClose }: EventFormProps) {
                   ))}
                 </SelectContent>
               </Select>
+            </div>
+            
+            <div className='flex flex-col gap-2'>
+              <Label htmlFor='tags'>Event Tags</Label>
+              <Input id='tags' name='tags' placeholder='valorant, fun, soccer' required />
+              <p className='text-muted-foreground mt-1 text-sm'>
+                Separate tags with commas (e.g., fun, soccer, chatting)
+              </p>
             </div>
 
             <Button type='submit' className='bg-electric-indigo cursor-pointer'>
