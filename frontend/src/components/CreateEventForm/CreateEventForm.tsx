@@ -39,6 +39,23 @@ export default function CreateEventForm({ onClose }: EventFormProps) {
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
+
+    const form = event.target as HTMLFormElement; //getting the dom element that represents my form in browser.
+    const formData = new FormData(form); //FormData is a browser api that gets all values from a form. Below we can access certain things since we labeled inputs with names
+
+    //grab all event data with formData.get and using some of the state we already had thsi will be sent to post even api
+    const eventData = {
+      title: formData.get("event_name"),
+      description: formData.get("description"),
+      event_date: formData.get("event_datetime"),
+      privacy_level: privacyLevel, //here we can just use our state since we already have it
+      modality: eventModality,
+      location: formData.get("location"), //will just be null if they chose online
+      tags: formData.get("tags"),
+      invited_users: privacyLevel === "private" ? selectedInvites : [],
+    };
+
+    //TODO CALL API THAT POSTS THE EVENT ON TO THE TABLE
   }
 
   {
