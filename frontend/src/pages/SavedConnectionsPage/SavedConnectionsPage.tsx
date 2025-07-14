@@ -19,7 +19,9 @@ export default function SavedConnectionsPage() {
   }
 
   //TODO: This function will be built next. Will allow user to remove a connection
-  async function handleRemoveConnection(streamerId: string) {}
+  async function handleRemoveConnection(streamerId: string) {
+
+  }
 
   useEffect(() => {
     //wrapper function because useEffect cannot be async and we are going to make a fetch request so we need async function
@@ -41,6 +43,7 @@ export default function SavedConnectionsPage() {
     <>
       <StreamerGrid
         handleStreamerClick={handleStreamerClick}
+        handleRemoveConnection={handleRemoveConnection}
         streamers={connections}
         isConnectionsPage={true}
       />

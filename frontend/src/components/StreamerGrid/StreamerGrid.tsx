@@ -15,6 +15,7 @@ export default function StreamerGrid({
   handleStreamerClick,
   handleStreamerConnect,
   handleStreamerNotInterestedClick,
+  handleRemoveConnection,
   isConnectionsPage,
   streamers,
 }: StreamerGridProps) {
@@ -29,6 +30,7 @@ export default function StreamerGrid({
           onStreamerClick={handleStreamerClick}
           onStreamerConnectClick = {handleStreamerConnect}
           onStreamerNotInterestedClick = {handleStreamerNotInterestedClick}
+          onRemoveConnectionClick={handleRemoveConnection}
           isConnectionsPage = {isConnectionsPage}
         />
       ))}
