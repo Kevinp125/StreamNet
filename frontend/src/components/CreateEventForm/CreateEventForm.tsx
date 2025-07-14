@@ -13,24 +13,20 @@ import {
 
 type EventFormProps = {
   onClose: () => void;
-
-}
-export default function CreateEventForm({onClose}:EventFormProps) {
-
+};
+export default function CreateEventForm({ onClose }: EventFormProps) {
   const PRIVACY_LEVELS = [
-    {id: 'private', label: 'Private'},
-    {id: 'network', label: 'Network'},
-    {id: 'public', label: 'Public'},
+    { id: "private", label: "Private" },
+    { id: "network", label: "Network" },
+    { id: "public", label: "Public" },
   ];
-  function handleSubmit(event: React.FormEvent){
-    event.preventDefault(); 
-
+  function handleSubmit(event: React.FormEvent) {
+    event.preventDefault();
   }
 
   return (
     <>
       <Card className='relative w-[40%] items-center justify-center p-10'>
-
         <Button
           variant='ghost'
           size='sm'
@@ -42,7 +38,8 @@ export default function CreateEventForm({onClose}:EventFormProps) {
         <CardHeader className='w-[85%]'>
           <CardTitle> Add Event! </CardTitle>
           <CardDescription>
-            Add your event details below! An event can be private (invite only), public (all streamers can see), or within your network (all connections can see).   
+            Add your event details below! An event can be private (invite only), public (all
+            streamers can see), or within your network (all connections can see).
           </CardDescription>
         </CardHeader>
 
@@ -56,7 +53,12 @@ export default function CreateEventForm({onClose}:EventFormProps) {
 
             <div className='flex flex-col gap-2'>
               <Label htmlFor='description'>Description</Label>
-              <Textarea id='description' name='description' placeholder='Describe your event...' required />
+              <Textarea
+                id='description'
+                name='description'
+                placeholder='Describe your event...'
+                required
+              />
             </div>
 
             {/* Date of birth picker */}
@@ -81,7 +83,6 @@ export default function CreateEventForm({onClose}:EventFormProps) {
                 </SelectContent>
               </Select>
             </div>
-
 
             <Button type='submit' className='bg-electric-indigo cursor-pointer'>
               Submit!
