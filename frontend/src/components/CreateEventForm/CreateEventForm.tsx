@@ -102,7 +102,7 @@ export default function CreateEventForm({ onClose }: EventFormProps) {
             {/*Dropdown to select the audience that streamer streams to */}
             <div className='flex flex-col gap-2'>
               <Label htmlFor='privacy_level'>Privacy Level</Label>
-              <Select name='privacy_level' required>
+              <Select name='privacy_level' onValueChange={setPrivacyLevel} required>
                 <SelectTrigger className='w-full'>
                   <SelectValue placeholder='Select your events privacy level' />
                 </SelectTrigger>
@@ -115,6 +115,48 @@ export default function CreateEventForm({ onClose }: EventFormProps) {
                 </SelectContent>
               </Select>
             </div>
+
+            {/*If user selected private as the option for the event they want to post we need to dislpay a list of their connections to choose from to invite */}
+            {privacyLevel === "private" && (
+              <div className='flex flex-col gap-2'>
+                <Label>Invite Connections</Label>
+                {/*Have it be scrollable */}
+                <div className='max-h-32 overflow-y-auto rounded border p-2'>
+                  {/*Check if the connections length is even greater than 0 if they have no connections they cant make a private event */}
+                  {connections.length > 0 ? (
+                    connections.map((connection: StreamerProfile) => (
+                      <label
+                        key={connection.id}
+                        className='flex items-center gap-2 p-1 hover:bg-gray-50'
+                      >
+                        {/*Using normal input instead of Shad because shad input component is more for standard text */}
+                        {/*If we check the box then we add it to the selectedInvites array otherwise (unchecked) filter it out of that array */}
+                        <input
+                          type='checkbox'
+                          value={connection.id}
+                          onChange={e => {
+                            if (e.target.checked) {
+                              setSelectedInvites(prev => [...prev, connection.id]);
+                            } else {
+                              setSelectedInvites(prev => prev.filter(id => id !== connection.id));
+                            }
+                          }}
+                        />
+                        <span className='text-sm'>
+                          {connection.name} (@{connection.twitchUser})
+                        </span>
+                      </label>
+                    ))
+                  ) : (
+                    <p className='text-sm text-gray-500'>No connections to invite</p>
+                  )}
+                </div>
+                {/*Nice user experience to include how many people are being invited */}
+                <p className='text-xs text-gray-500'>
+                  {selectedInvites.length} connection(s) selected to be invited
+                </p>
+              </div>
+            )}
 
             <div className='flex flex-col gap-2'>
               <Label htmlFor='event_modality'>Event Modality</Label>
