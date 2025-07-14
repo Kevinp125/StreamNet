@@ -30,7 +30,7 @@ export default function DashboardPage() {
       }
 
       //storing the request info because we need it later to update the weights if the user decided to approve request
-      const requestInfo = pendingRequests.find(req => req.requestId === requestId);
+      const requestInfo = pendingRequests.find((req: any) => req.requestId === requestId);
 
       const res = await setConnectionRequestStatusAndPostIfAccept(
         session?.access_token,
@@ -41,7 +41,7 @@ export default function DashboardPage() {
       //if we successfully updated a connection request status
       if (res.success) {
         //first thing we want to do is filter out the request from the frontend dw on next page load the status already changed in backend
-        setPendingRequests(prev => prev.filter(request => request.requestId !== requestId));
+        setPendingRequests((prev: any) => prev.filter((request: any) => request.requestId !== requestId));
         //dont forget we need to update weights for our algorithm if user decided to accept means they are interested in that kind of streamer
         if (decision === "accepted" && requestInfo) {
           await updateUserWeigths(session.access_token, requestInfo.sender.id);
@@ -131,7 +131,7 @@ export default function DashboardPage() {
           <CardTitle className='flex justify-center'>Recent Notifications</CardTitle>
 
           <CardContent className='flex flex-col gap-6 text-sm'>
-            {pendingRequests.map(request => {
+            {pendingRequests.map((request: any) => {
               return (
                 <div className='flex gap-4'>
                   <p>{`@${request.sender.twitchUser} has sent you a connection request`}</p>
