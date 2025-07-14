@@ -72,12 +72,14 @@ router.route("/").delete(authenticateMiddleware, async (req, res) => {
     const { error } = await supabaseClient.from("connections").delete()
       .or(`and(user_id.eq.${user_id},connected_streamer_id.eq.${connected_streamer_id}),
   and(user_id.eq.${connected_streamer_id},connected_streamer_id.eq.${user_id})`);
-    
-    if(error) throw error;
 
-    res.status(200).json({success: true, message: "Connection was deleted!"})
-    
-  } catch (err) {}
+    if (error) throw error;
+
+    res.status(200).json({ success: true, message: "Connection was deleted!" });
+  } catch (err) {
+    console.error("Could not remove connection:", err);
+    res.status(500).json({ error: "Failed to remove connection", err });
+  }
 });
 
 router.route("/").get(authenticateMiddleware, async (req, res) => {
