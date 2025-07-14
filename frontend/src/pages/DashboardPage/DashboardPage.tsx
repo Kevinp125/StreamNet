@@ -28,9 +28,6 @@ export default function DashboardPage() {
         throw Error("no valid session");
       }
 
-      //storing the request info because we need it later to update the weights if the user decided to approve request
-      const requestInfo = pendingRequests.find((req: any) => req.requestId === requestId);
-
       const res = await setConnectionRequestStatusAndPostIfAccept(
         session?.access_token,
         decision,
@@ -40,7 +37,9 @@ export default function DashboardPage() {
       //if we successfully updated a connection request status
       if (res.success) {
         //first thing we want to do is filter out the request from the frontend dw on next page load the status already changed in backend
-        setPendingRequests((prev: any) => prev.filter((request: any) => request.requestId !== requestId));
+        setPendingRequests((prev: any) =>
+          prev.filter((request: any) => request.requestId !== requestId),
+        );
       }
     } catch (err) {
       console.error(`failed to process connection request`, err);
