@@ -201,3 +201,24 @@ export async function setConnectionRequestStatusAndPostIfAccept(
     throw err; //this passes it up to parent
   }
 }
+
+export async function removeConnection(accessToken: string, connected_streamer: string) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/connections`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ connected_streamer_id: connected_streamer }),
+    });
+
+    if (!res.ok) {
+      throw new Error("Was not able to remove the connection");
+    }
+    return await res.json();
+  } catch (err) {
+    console.error(err);
+    throw err; 
+  }
+}
