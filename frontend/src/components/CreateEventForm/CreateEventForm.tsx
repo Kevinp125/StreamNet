@@ -94,7 +94,7 @@ export default function CreateEventForm({ onClose }: EventFormProps) {
 
             <div className='flex flex-col gap-2'>
               <Label htmlFor='event_modality'>Event Modality</Label>
-              <Select name='even_modality' onValueChange={setEventModality} required>
+              <Select name='event_modality' onValueChange={setEventModality} required>
                 <SelectTrigger className='w-full'>
                   <SelectValue placeholder='Select your events modality' />
                 </SelectTrigger>
@@ -107,6 +107,19 @@ export default function CreateEventForm({ onClose }: EventFormProps) {
                 </SelectContent>
               </Select>
             </div>
+
+            {/*If user specifies that their event is in person we want them to be able to enter the location its taking place at */}
+            {eventModality === "in_person" && (
+              <div className='flex flex-col gap-2'>
+                <Label htmlFor='location'>Location</Label>
+                <Input
+                  id='location'
+                  name='location'
+                  placeholder='Enter event location...'
+                  required
+                />
+              </div>
+            )}
 
             <div className='flex flex-col gap-2'>
               <Label htmlFor='tags'>Event Tags</Label>
