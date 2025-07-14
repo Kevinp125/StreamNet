@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import StreamerGrid from "@/components/StreamerGrid/StreamerGrid";
 import StreamerCard from "@/components/StreamerCard/StreamerCard";
 import { fetchUserConnections } from "@/lib/api_client";
+import { removeConnection } from "@/lib/api_client";
 import { useAuthContext } from "@/Context/AuthProvider";
 import type { StreamerProfile } from "@/types/AppTypes";
 
@@ -18,9 +19,18 @@ export default function SavedConnectionsPage() {
     setSelectedStreamer(null);
   }
 
-  //TODO: This function will be built next. Will allow user to remove a connection
   async function handleRemoveConnection(streamerId: string) {
+    try {
+      if (!session?.access_token) return;
 
+      const res = await removeConnection(session.access_token, streamerId);
+
+      if (res.success) {
+        setConnections(prev => prev.filter(connection => connection.id !== streamerId));
+      }
+    } catch (err) {
+      console.error("Was not able to remove the connection", err);
+    }
   }
 
   useEffect(() => {
