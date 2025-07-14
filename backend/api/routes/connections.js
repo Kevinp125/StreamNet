@@ -70,8 +70,7 @@ router.route("/").delete(authenticateMiddleware, async (req, res) => {
 
     //delete a row from connections whenver user id = the user_id column AND the streamer we connected with equals their column OR it is the other way around because we want to also remove connection from other streamers page
     const { error } = await supabaseClient.from("connections").delete()
-      .or(`and(user_id.eq.${user_id},connected_streamer_id.eq.${connected_streamer_id}),
-  and(user_id.eq.${connected_streamer_id},connected_streamer_id.eq.${user_id})`);
+      .or(`and(user_id.eq.${user_id},connected_streamer_id.eq.${connected_streamer_id}),and(user_id.eq.${connected_streamer_id},connected_streamer_id.eq.${user_id})`);
 
     if (error) throw error;
 
