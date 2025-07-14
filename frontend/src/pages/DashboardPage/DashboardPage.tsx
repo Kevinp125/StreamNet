@@ -6,7 +6,6 @@ import StreamerCard from "@/components/StreamerCard/StreamerCard";
 import { fetchStreamerInfo } from "@/lib/api_client";
 import { fetchPendingRequests } from "@/lib/api_client";
 import { setConnectionRequestStatusAndPostIfAccept } from "@/lib/api_client";
-import { updateUserWeigths } from "@/lib/api_client";
 import { useAuthContext } from "@/Context/AuthProvider";
 import { LogOut } from "lucide-react";
 import { Card, CardTitle, CardContent } from "@/components/ui/card";
@@ -42,10 +41,6 @@ export default function DashboardPage() {
       if (res.success) {
         //first thing we want to do is filter out the request from the frontend dw on next page load the status already changed in backend
         setPendingRequests((prev: any) => prev.filter((request: any) => request.requestId !== requestId));
-        //dont forget we need to update weights for our algorithm if user decided to accept means they are interested in that kind of streamer
-        if (decision === "accepted" && requestInfo) {
-          await updateUserWeigths(session.access_token, requestInfo.sender.id);
-        }
       }
     } catch (err) {
       console.error(`failed to process connection request`, err);

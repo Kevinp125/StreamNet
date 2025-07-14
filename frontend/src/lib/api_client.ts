@@ -95,7 +95,7 @@ export async function fetchUserConnections(accessToken: string) {
 }
 
 //function makes a request to the api that updates the userWeights table whenever a user hits the connect button
-export async function updateUserWeigths(accessToken: string, streamerToConnectId: string) {
+export async function updateUserWeights(accessToken: string, streamerToConnectId: string) {
   try {
     const res = await fetch(`${API_BASE_URL}/api/connections/update-weight`, {
       method: "POST",
