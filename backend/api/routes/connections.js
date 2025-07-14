@@ -54,15 +54,25 @@ router.route("/").post(authenticateMiddleware, async (req, res) => {
     //201 status code signifies successful processing of a request
     res.status(201).json({
       success: true,
-      message:
-        decision === "accept"
-          ? "accepted"
-          : "denied",
+      message: decision === "accept" ? "accepted" : "denied",
     });
   } catch (err) {
     console.error("Error processing the connection request", err);
     res.status(500).json({ error: "Failed to process request" });
   }
+});
+
+router.route("/").delete(authenticateMiddleware, async (req, res) => {
+  try {
+    const {connected_streamer_id} = req.body;
+    const user_id = req.user.id;
+    const supabaseClient = req.supabase;
+
+    const {error} = await supabaseClient.from("connections").delete()
+
+
+
+  } catch (err) {}
 });
 
 router.route("/").get(authenticateMiddleware, async (req, res) => {
