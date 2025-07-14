@@ -29,7 +29,7 @@ export default function CreateEventForm({ onClose }: EventFormProps) {
     { id: "online", label: "Online" },
     { id: "in_person", label: "In Person" },
   ];
-  
+
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
   }
@@ -91,7 +91,23 @@ export default function CreateEventForm({ onClose }: EventFormProps) {
                 </SelectContent>
               </Select>
             </div>
-            
+
+            <div className='flex flex-col gap-2'>
+              <Label htmlFor='event_modality'>Event Modality</Label>
+              <Select name='even_modality' onValueChange={setEventModality} required>
+                <SelectTrigger className='w-full'>
+                  <SelectValue placeholder='Select your events modality' />
+                </SelectTrigger>
+                <SelectContent>
+                  {EVENT_MODALITIES.map(eventModality => (
+                    <SelectItem id={eventModality.id} value={eventModality.id}>
+                      {eventModality.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
             <div className='flex flex-col gap-2'>
               <Label htmlFor='tags'>Event Tags</Label>
               <Input id='tags' name='tags' placeholder='valorant, fun, soccer' required />
