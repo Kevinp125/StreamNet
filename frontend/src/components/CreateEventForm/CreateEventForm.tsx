@@ -11,22 +11,32 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+import { useState } from "react";
+
 type EventFormProps = {
   onClose: () => void;
 };
 export default function CreateEventForm({ onClose }: EventFormProps) {
+  const [eventModality, setEventModality] = useState("");
+
   const PRIVACY_LEVELS = [
     { id: "private", label: "Private" },
     { id: "network", label: "Network" },
     { id: "public", label: "Public" },
   ];
+
+  const EVENT_MODALITIES = [
+    { id: "online", label: "Online" },
+    { id: "in_person", label: "In Person" },
+  ];
+  
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
   }
 
   return (
     <>
-      <Card className='relative w-[40%] items-center justify-center p-10'>
+      <Card className='relative w-[45%] items-center justify-center p-10'>
         <Button
           variant='ghost'
           size='sm'
