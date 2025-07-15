@@ -70,6 +70,24 @@ export default function EventCard({ event, onRSVPClick }: EventCardProps) {
         </div>
         <p className='text-md mt-2 text-gray-500'>📍 {eventModality}</p>
         {event.location && <p className='text-md text-gray-500 capitalize'>🗺️ {event.location}</p>}
+
+        {/*Below shows how many people are attending an event using same logic I have been using for tags etc */}
+        <p>Attending ({event.attendeeCount})</p>
+        <div className='flex flex-wrap gap-1'>
+          {/*We cant display every single attendee in the card. Slice from the array the first 4 and map through those and display attendees */}
+          {event.attendees.slice(0, 4).map((attendee: any, index: any) => (
+            <Badge variant='outline' className='bg-twitch-purple text-white capitalize' key={index}>
+              @{attendee.twitchUser}
+            </Badge>
+          ))}
+
+          {/*After that check if the array length is more than the 4 we are displaying. If it is render one more badge that says how many extra attendees the event has - 4 already displayed */}
+          {event.attendees.length > 4 && (
+            <Badge variant='outline' className='text-xs text-gray-400'>
+              +{event.attendees.length - 4}
+            </Badge>
+          )}
+        </div>
       </CardContent>
 
       <CardFooter className='mt-auto'>
