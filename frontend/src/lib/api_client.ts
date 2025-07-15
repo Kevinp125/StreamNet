@@ -219,6 +219,27 @@ export async function removeConnection(accessToken: string, connected_streamer: 
     return await res.json();
   } catch (err) {
     console.error(err);
-    throw err; 
+    throw err;
+  }
+}
+
+export async function postEvent(accessToken: string, eventData: any) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/events`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ eventData }),
+    });
+
+    if (!res.ok) {
+      throw new Error("Was not able to add a new event");
+    }
+    return await res.json();
+  } catch (err) {
+    console.error(err);
+    throw err;
   }
 }
