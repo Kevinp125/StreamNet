@@ -264,5 +264,23 @@ export async function fetchEvents(accessToken: string) {
   }
 }
 
+export async function postEventRsvp(accessToken: string, rsvpInfo: any) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/events/rsvp`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(rsvpInfo),
+    });
 
-
+    if (!res.ok) {
+      throw new Error("Was not able to update the rsvp status.");
+    }
+    return await res.json();
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
