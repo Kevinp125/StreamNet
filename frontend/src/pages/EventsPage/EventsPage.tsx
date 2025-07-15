@@ -14,6 +14,12 @@ export default function EventsPage() {
     setShowEventForm(false);
   }
 
+  async function handleRSVP(eventId:string, userStatus: string){
+
+
+
+  }
+
   async function loadEvents() {
     try {
       if (!session?.access_token) return;
@@ -37,7 +43,7 @@ export default function EventsPage() {
         Post Event!
       </Button>
 
-      <EventsGrid events = {eventList}/>
+      <EventsGrid events = {eventList} handleRSVP = {handleRSVP} />
 
       {showEventForm && (
         <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'>
