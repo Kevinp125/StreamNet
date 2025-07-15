@@ -35,7 +35,7 @@ router.route("/").post(authenticateMiddleware, async (req, res) => {
       .select()
       .single();
 
-    if (eventError) throw eventError;
+    if (eventError) throw eventErr;
 
     //if the event we inserted has a privacy level of private it means we need to add to the event_invites tables all the users that were invited so we can display that invite to the right users
     if (privacy_level === "private" && invited_users.length > 0) {
