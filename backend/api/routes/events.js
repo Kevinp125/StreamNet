@@ -116,4 +116,18 @@ router.route("/").get(authenticateMiddleware, async (req, res) => {
   }
 });
 
+router.route("/rsvp").post(authenticateMiddleware, async (req, res) => {
+  try{
+
+
+
+
+  } catch(err){
+    
+
+
+  }
+
+})
+
 module.exports = router;
