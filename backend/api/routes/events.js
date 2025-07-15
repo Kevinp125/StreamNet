@@ -61,4 +61,22 @@ router.route("/").post(authenticateMiddleware, async (req, res) => {
   }
 });
 
+router.route("/").get(authenticateMiddleware, async (req, res) => {
+  try{
+    const userId = req.user.id;
+    const supabaseClient = req.supabase;
+
+
+
+  } catch(err){
+    
+
+
+
+
+  }  
+
+
+})
+
 module.exports = router;
