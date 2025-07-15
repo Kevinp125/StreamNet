@@ -105,7 +105,7 @@ router.route("/").get(authenticateMiddleware, async (req, res) => {
           ","
         )})))`
       )
-      .order("created_at", { ascending: false })
+      .order("event_date", { ascending: true })
   } catch (err) {}
 });
 
