@@ -4,11 +4,20 @@ import { Badge } from "@/components/ui/badge";
 
 type EventCardProps = {
   event: any;
-  onRSVPClick: (eventId:string, userStatus: string) => void;
+  onRSVPClick: (eventId: string, userStatus: string) => void;
 };
 
 export default function EventCard({ event, onRSVPClick }: EventCardProps) {
   const eventModality = event.modality === "in_person" ? "In Person" : "Online";
+
+  //check from what we updated in our backend if the user is already attending the event or not
+  const userIsAttending = event.userRSVPStatus === "attending";
+
+  //and when user clicks we need to check what status is right now cause its a toggle and flip it
+  function handleRSVPClick() {
+    const newStatus = userIsAttending ? "not_going" : "attending";
+    onRSVPClick(event.id, newStatus);
+  }
 
   return (
     <Card className='w-full max-w-md flex-col gap-2'>
@@ -64,7 +73,10 @@ export default function EventCard({ event, onRSVPClick }: EventCardProps) {
       </CardContent>
 
       <CardFooter className='mt-auto'>
-        <Button onClick = {() => onRSVPClick(event.id, )} className='bg-electric-indigo w-full'> I'm Attending</Button>
+        <Button onClick={handleRSVPClick} className='bg-electric-indigo w-full'>
+          {" "}
+          I'm Attending
+        </Button>
       </CardFooter>
     </Card>
   );
