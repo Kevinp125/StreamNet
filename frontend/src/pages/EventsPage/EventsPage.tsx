@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import CreateEventForm from "@/components/CreateEventForm/CreateEventForm";
 import { fetchEvents } from "@/lib/api_client";
 import { useAuthContext } from "@/Context/AuthProvider";
+import EventsGrid from "@/components/EventsGrid /EventsGrid";
 
 export default function EventsPage() {
   const { session } = useAuthContext();
@@ -25,7 +26,6 @@ export default function EventsPage() {
 
   useEffect(() => {
     loadEvents();
-    console.log(eventList);
   }, [session?.access_token]);
 
   return (
@@ -37,7 +37,7 @@ export default function EventsPage() {
         Post Event!
       </Button>
 
-      {/*TODO here we will have the event grid that will map though all events and display them*/}
+      <EventsGrid events = {eventList}/>
 
       {showEventForm && (
         <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'>

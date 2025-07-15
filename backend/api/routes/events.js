@@ -109,7 +109,7 @@ router.route("/").get(authenticateMiddleware, async (req, res) => {
 
     if (eventsErr) throw eventsErr;
 
-    res.status(200).json({ events });
+    res.status(200).json(events);
   } catch (err) {
     console.error("something went wrong when fetching a users events", err);
     res.status(500).json(err);
