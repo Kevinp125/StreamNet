@@ -157,7 +157,7 @@ router.route("/rsvp").post(authenticateMiddleware, async (req, res) => {
       event_id,
       user_id,
       status,
-    });
+    }, {onConflict: "event_id, user_id"});
 
     if (error) throw error;
 
