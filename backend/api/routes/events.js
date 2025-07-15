@@ -52,8 +52,13 @@ router.route("/").post(authenticateMiddleware, async (req, res) => {
       if (inviteError) throw inviteError;
     }
 
-    
-  } catch (err) {}
+    res
+      .status(201)
+      .json({ success: true, message: "event was added to database!" });
+  } catch (err) {
+    console.error("Error creating event:", err);
+    res.status(500).json({ error: "Failed to create event" });
+  }
 });
 
 module.exports = router;
