@@ -35,13 +35,13 @@ router.route("/").post(authenticateMiddleware, async (req, res) => {
       .select()
       .single();
 
-    if (eventError) throw eventErr;
+    if (eventErr) throw eventErr;
 
     //if the event we inserted has a privacy level of private it means we need to add to the event_invites tables all the users that were invited so we can display that invite to the right users
     if (privacy_level === "private" && invited_users.length > 0) {
       const invites = invited_users.map((userId) => ({
         event_id: event.id,
-        invited_user_id: user_id,
+        invited_user_id: userId,
       }));
 
       //after we map through the invited users array and refactor it so that it is an object containing invited user and the event they correspond to insert that to our table
