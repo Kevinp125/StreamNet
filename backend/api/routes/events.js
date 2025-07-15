@@ -119,13 +119,24 @@ router.route("/").get(authenticateMiddleware, async (req, res) => {
           .from("event_rsvps")
           .select(
             `status, user_id, profiles!user_id (id, name, twitchUser, profilePic)`
-          ).eq("event_id", event.id).eq("status", "attending");
+          )
+          .eq("event_id", event.id)
+          .eq("status", "attending");
+
+        const userRSVP = RSVPS?.find((rsvp) => rsvp.user_id === userId); //this will let us know if our user is rsvped to an event we need this because it will help us persis the button state on frontend "im attending" vs "not going"
+        const attendees = RSVPS?.map((rsvp) => rsvp.profiles) ?? []; //this i just to put the attendants in their own array instead of having them be under profiles
+
+        //finally spread the event and attach all these new fields to it
+        return {
+          ...event,
+          userRSVPStatus: userRSVP?.status ?? null,
+          attendees: attendees,
+          attendeeCount: attendees.length,
+        };
       })
-
-
     );
 
-    res.status(200).json(events);
+    res.status(200).json(eventsWithRSVPInfo);
   } catch (err) {
     console.error("something went wrong when fetching a users events", err);
     res.status(500).json(err);
