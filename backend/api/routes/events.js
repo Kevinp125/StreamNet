@@ -95,7 +95,7 @@ router.route("/").get(authenticateMiddleware, async (req, res) => {
     //or events that are my own
     //or event that are netwokr events and the person who created it is in my connections
     //or event that is private and I am invited to it
-    const { data: events, error } = await supabaseClient
+    const { data: events, eventsErr } = await supabaseClient
       .from("events")
       .select(` *, profiles!creator_id(id, name, twitchUser, profilePic)`)
       .or(
@@ -105,8 +105,15 @@ router.route("/").get(authenticateMiddleware, async (req, res) => {
           ","
         )})))`
       )
-      .order("event_date", { ascending: true })
-  } catch (err) {}
+      .order("event_date", { ascending: true }); //want to order events on the one coming soonest.
+
+    if (eventsErr) throw eventsErr;
+
+    res.status(200).json({ events });
+  } catch (err) {
+    console.error("something went wrong when fetching a users events", err);
+    res.status(500).json(err);
+  }
 });
 
 module.exports = router;
