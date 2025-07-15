@@ -48,6 +48,7 @@ export default function EventCard({ event }: any) {
           )}
         </div>
         <p className='mt-2 text-xs text-gray-500'>📍 {event.modality}</p>
+        {event.location && <p className='text-xs text-gray-500'>• {event.location}</p>}
       </CardContent>
 
       <CardFooter>
