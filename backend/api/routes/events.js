@@ -110,11 +110,20 @@ router.route("/").get(authenticateMiddleware, async (req, res) => {
     if (eventsErr) throw eventsErr;
 
     //Here we need to attach to each event who rsvped to each event so that in frontend we cna display it
+    //Promise.all allows us to make queries run at the same time instead of doing them one after another waiting for each to resolve
+    const eventsWithRSVPInfo = await Promise.all(
+      events.map(async (event) => {
+        //for each event get all the rsvps
 
-    const eventsWithRSVPInfo = await Promise.all(events.map( async (event) => {
-        
-    
-    )
+        const { data: RSVPS } = await supabaseClient
+          .from("event_rsvps")
+          .select(
+            `status, user_id, profiles!user_id (id, name, twitchUser, profilePic)`
+          ).eq("event_id", event.id).eq("status", "attending");
+      })
+
+
+    );
 
     res.status(200).json(events);
   } catch (err) {
