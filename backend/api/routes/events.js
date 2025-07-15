@@ -109,6 +109,13 @@ router.route("/").get(authenticateMiddleware, async (req, res) => {
 
     if (eventsErr) throw eventsErr;
 
+    //Here we need to attach to each event who rsvped to each event so that in frontend we cna display it
+
+    const eventsWithRSVPInfo = await Promise.all(events.map( async (event) => {
+        
+    
+    )
+
     res.status(200).json(events);
   } catch (err) {
     console.error("something went wrong when fetching a users events", err);
