@@ -231,7 +231,7 @@ export async function postEvent(accessToken: string, eventData: any) {
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ eventData }),
+      body: JSON.stringify(eventData),
     });
 
     if (!res.ok) {
