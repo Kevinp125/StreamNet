@@ -209,12 +209,10 @@ router.route("/send-request").post(authenticateMiddleware, async (req, res) => {
       })
       .eq("user_id", sender_id);
 
-    res
-      .status(201)
-      .json({
-        success: true,
-        message: "Connection request sent and weigths updated",
-      });
+    res.status(201).json({
+      success: true,
+      message: "Connection request sent and weigths updated",
+    });
   } catch (err) {
     console.error("Error sending the connect request or updating weights", err);
     res.status(500).json({ error: "Failed to send request / update weigths" });
