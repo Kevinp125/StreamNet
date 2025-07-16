@@ -50,6 +50,49 @@ export default function NotificationList() {
           )}
         </div>
       </div>
+
+      <div>
+        <h3 className='mb-3 text-lg font-semibold text-gray-700'>📬 General</h3>
+        <div className='flex flex-col gap-3'>
+          {generalNotifications.length > 0 ? (
+            generalNotifications.map(notification => <p>{`${notification.type}`}</p>)
+          ) : (
+            <p className='text-sm text-gray-500'>No general notifications</p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+//this is a helper component
+//it will display the notifications styled in notification list
+//Takes an onAction which calls the handleAllActions parent function
+//In that function we will check the action user took and the notification type.
+
+function NotificationItem({
+  notification,
+  onAction,
+}: {
+  notification: Notification;
+  onAction: (action: string, notification: Notification) => void;
+}) {
+  return (
+    <div className='flex gap-4'>
+      {/*Notification info on left side first. All notifications will have this info no matter the kind */}
+      <div className='flex-1'>
+        <p className='font-medium'>{notification.title}</p>
+        <p className='text-sm text-gray-600'>{notification.message}</p>
+        <p className='text-xs text-gray-400'>
+          {new Date(notification.created_at).toLocaleString("en-US", {
+            month: "short",
+            day: "numeric",
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
+          })}
+        </p>
+      </div>
     </div>
   );
 }
