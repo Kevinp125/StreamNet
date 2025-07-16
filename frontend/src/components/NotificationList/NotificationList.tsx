@@ -35,5 +35,7 @@ export default function NotificationList() {
   }, [session?.access_token]);
 
 
-  
+  //for now we want to separate the notifications whose priortiy is immediate vs the ones who have a general priortiy
+  const immediateNotifications = notifications.filter(n => n.priority === 'immediate');
+  const generalNotifications = notifications.filter(n => n.priority === 'general');
 }
