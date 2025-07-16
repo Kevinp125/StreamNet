@@ -20,3 +20,5 @@ async function createNotification(
     throw error;
   }
 }
+
+module.exports = { createNotification };
