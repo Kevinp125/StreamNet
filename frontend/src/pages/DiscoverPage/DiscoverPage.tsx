@@ -34,8 +34,6 @@ export default function DiscoverPage() {
         throw new Error("failed to send connection request");
       }
 
-      await updateUserWeights(session.access_token, streamerToConnectId);
-
       const recommendedStreamers = await fetchRecommendedStreamers(session.access_token);
       setRecommendedStreamers(recommendedStreamers);
     } catch (err) {
