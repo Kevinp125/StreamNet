@@ -34,8 +34,22 @@ export default function NotificationList() {
     getNotifications();
   }, [session?.access_token]);
 
-
   //for now we want to separate the notifications whose priortiy is immediate vs the ones who have a general priortiy
-  const immediateNotifications = notifications.filter(n => n.priority === 'immediate');
-  const generalNotifications = notifications.filter(n => n.priority === 'general');
+  const immediateNotifications = notifications.filter(n => n.priority === "immediate");
+  const generalNotifications = notifications.filter(n => n.priority === "general");
+
+  return (
+    <div className='flex flex-col gap-6'>
+      <div>
+        <h3 className='mb-3 text-lg font-semibold text-red-600'>🚨 Important</h3>
+        <div className='flex flex-col gap-3'>
+          {immediateNotifications.length > 0 ? (
+            immediateNotifications.map(notification => <p>{`${notification.type}`}</p>)
+          ) : (
+            <p className='text-sm text-gray-500'>No important notifications</p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 }
