@@ -20,6 +20,10 @@ export default function NotificationList() {
   const { session } = useAuthContext();
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
+  //function gets called whenever an action on notification is clicked.
+  //Whether it be an accept or deny or read and handles it
+  function handleAllNotificationActions(action: string, notification: Notification) {}
+
   useEffect(() => {
     async function getNotifications() {
       if (!session?.access_token) return;
@@ -44,7 +48,12 @@ export default function NotificationList() {
         <h3 className='mb-3 text-lg font-semibold text-red-600'>🚨 Important</h3>
         <div className='flex flex-col gap-3'>
           {immediateNotifications.length > 0 ? (
-            immediateNotifications.map(notification => <p>{`${notification.type}`}</p>)
+            immediateNotifications.map(notification => (
+              <NotificationItem
+                notification={notification}
+                onAction={handleAllNotificationActions}
+              />
+            ))
           ) : (
             <p className='text-sm text-gray-500'>No important notifications</p>
           )}
@@ -55,7 +64,12 @@ export default function NotificationList() {
         <h3 className='mb-3 text-lg font-semibold text-gray-700'>📬 General</h3>
         <div className='flex flex-col gap-3'>
           {generalNotifications.length > 0 ? (
-            generalNotifications.map(notification => <p>{`${notification.type}`}</p>)
+            generalNotifications.map(notification => (
+              <NotificationItem
+                notification={notification}
+                onAction={handleAllNotificationActions}
+              />
+            ))
           ) : (
             <p className='text-sm text-gray-500'>No general notifications</p>
           )}
