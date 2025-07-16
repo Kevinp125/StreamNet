@@ -18,4 +18,22 @@ type Notification = {
 export default function NotificationList() {
   const { session } = useAuthContext();
   const [notifications, setNotifications] = useState<Notification[]>([]);
+
+  useEffect(() => {
+    async function getNotifications(){
+      if(!session?.access_token) return;
+
+
+
+
+
+    }
+
+    getNotifications();
+
+
+
+
+
+  }, [session?.access_token])
 }
