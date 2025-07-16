@@ -93,6 +93,34 @@ function NotificationItem({
           })}
         </p>
       </div>
+
+      {/*Now below to keep it simple for now we are just going to check if
+        a notification is a connection request because we need accept or deny buttons. 
+        All other notifications for now just have a mark as read*/}
+
+      {notification.type === 'connection_request' ? (
+        <div className = "flex gap-2">
+            <Button
+              onClick={() => {
+                onAction("accept",notification);
+              }}
+              className='cursor-pointer bg-green-600'
+            >
+              <Check />
+            </Button> 
+            <Button
+                    onClick={() => {
+                     onAction("deny", notification);
+                    }}
+                    variant='destructive'
+                    className='cursor-pointer'
+                  >
+                    <X />
+                  </Button>
+
+        </div>
+
+      ): }
     </div>
   );
 }
