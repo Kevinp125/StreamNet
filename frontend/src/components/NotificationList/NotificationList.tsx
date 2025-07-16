@@ -22,7 +22,17 @@ export default function NotificationList() {
 
   //function gets called whenever an action on notification is clicked.
   //Whether it be an accept or deny or read and handles it
-  function handleAllNotificationActions(action: string, notification: Notification) {}
+  function handleAllNotificationActions(action: string, notification: Notification) {
+    
+    if(action === "accept" || action === "deny"){
+      //handle connection request stuff here
+    }
+
+    else if(action === "read"){
+      //TODO: handle when a notification is read
+    }
+
+  }
 
   useEffect(() => {
     async function getNotifications() {
@@ -49,7 +59,7 @@ export default function NotificationList() {
         <div className='flex flex-col gap-3'>
           {immediateNotifications.length > 0 ? (
             immediateNotifications.map(notification => (
-              <NotificationItem
+              <NotificationItem key={notification.id}
                 notification={notification}
                 onAction={handleAllNotificationActions}
               />
@@ -65,7 +75,7 @@ export default function NotificationList() {
         <div className='flex flex-col gap-3'>
           {generalNotifications.length > 0 ? (
             generalNotifications.map(notification => (
-              <NotificationItem
+              <NotificationItem key={notification.id}
                 notification={notification}
                 onAction={handleAllNotificationActions}
               />
