@@ -44,7 +44,14 @@ export default function NotificationList() {
         console.error("Could not process connection request", err);
       }
     } else if (action === "read") {
-      //TODO: handle when a notification is read
+      try {
+        if (!session?.access_token) return;
+
+        await updateNotificationStatus(session.access_token, notification.id, "read");
+        setNotifications(prev => prev.filter(n => n.id !== notification.id));
+      } catch (err) {
+        console.error("Could not mark notification as read", err);
+      }
     }
   }
 
