@@ -11,6 +11,7 @@ router.route("/").get(authenticateMiddleware, async (req, res) => {
       .from("notifications")
       .select("*")
       .eq("user_id", user_id)
+      .neq("status", "read")
       .order("created_at", { ascending: false }); // Most recent first
 
     if (error) throw error;
