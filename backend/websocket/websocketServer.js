@@ -63,7 +63,7 @@ wss.on("connection", (ws) => {
           clients.set(user.id, ws);
           ws.userId = user.id;
           console.log(`User ${user.id} authenticated and stored`);
-          
+          console.log(`Total connected users: ${clients.size}`);
         } catch (err) {
           console.error("websocket auth failed", err);
           ws.close();
