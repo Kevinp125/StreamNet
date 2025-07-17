@@ -14,9 +14,6 @@ export default function SavedConnectionsPage() {
     setSelectedStreamer(profile);
   }
 
-  {
-    /*This is just passed to modal so that when close is clicked it closes */
-  }
   function handleCloseModal() {
     setSelectedStreamer(null);
   }
