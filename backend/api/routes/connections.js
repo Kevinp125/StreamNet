@@ -150,4 +150,39 @@ router
     }
   });
 
+router.route("/send-request").post(authenticateMiddleware, async (req, res) => {
+  try {
+    const { receiver_id } = req.body;
+    const sender_id = req.user.id;
+    const supabaseClient = req.supabase;
+
+    //check if the request being sent out exists in our table already jic
+    const { data: existingRequest } = await supabaseClient
+      .from("connection_requests")
+      .select("*")
+      .eq("sender_id", sender_id)
+      .eq("receiver_id", receiver_id)
+      .single();
+
+    if (existingRequest) {
+      return res.status(400).json({ error: "Request already sent" });
+    }
+
+    //since we already checked if the connection request existed previously add the actual connection request now with status pending. We will change it to approved when user clicks accept on their end
+    const { error } = await supabaseClient.from("connection_requests").insert({
+      sender_id: sender_id,
+      receiver_id: receiver_id,
+      status: "pending",
+    });
+
+    if (error) throw error;
+
+    res.status(201).json({ success: true, message: "Connection request sent" });
+
+  } catch (err) {
+    console.error("Error sending the connect request", err);
+    res.status(500).json({error: "Failed to send request"});
+  }
+});
+
 module.exports = router;
