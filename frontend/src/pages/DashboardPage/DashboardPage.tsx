@@ -9,8 +9,7 @@ import { setConnectionRequestStatusAndPostIfAccept } from "@/lib/api_client";
 import { useAuthContext } from "@/Context/AuthProvider";
 import { LogOut } from "lucide-react";
 import { Card, CardTitle, CardContent } from "@/components/ui/card";
-import { X } from "lucide-react";
-import { Check } from "lucide-react";
+import NotificationList from "@/components/NotificationList/NotificationList";
 
 export default function DashboardPage() {
   const navigate = useNavigate();
@@ -125,30 +124,7 @@ export default function DashboardPage() {
           <CardTitle className='flex justify-center'>Recent Notifications</CardTitle>
 
           <CardContent className='flex flex-col gap-6 text-sm'>
-            {pendingRequests.map((request: any) => {
-              return (
-                <div className='flex gap-4'>
-                  <p>{`@${request.sender.twitchUser} has sent you a connection request`}</p>
-                  <Button
-                    onClick={() => {
-                      handleConnectRequestResponse("accept", request.requestId);
-                    }}
-                    className='cursor-pointer bg-green-600'
-                  >
-                    <Check />
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      handleConnectRequestResponse("deny", request.requestId);
-                    }}
-                    variant='destructive'
-                    className='cursor-pointer'
-                  >
-                    <X />
-                  </Button>
-                </div>
-              );
-            })}
+            <NotificationList/>
           </CardContent>
         </Card>
       </div>

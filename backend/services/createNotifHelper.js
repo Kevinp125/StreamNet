@@ -17,7 +17,7 @@ async function createNotification(
     if (error) throw error;
   } catch (err) {
     console.error("Could not create a notification", err);
-    throw error;
+    throw err;
   }
 }
 
