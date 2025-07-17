@@ -3,7 +3,6 @@ const { authenticateMiddleware } = require("../../middleware/authRequest");
 const router = express.Router(); //making a router
 const {
   calcAgeScore,
-  calcAudienceScore,
   calcLanguageScore,
   calcGameScore,
 } = require("../../services/calculateMatchScore.js");
@@ -40,14 +39,21 @@ router.route("/connect").post(authenticateMiddleware, async (req, res) => {
     //same thing language matches if calc language checks them and they return greater than 1 cause they are same
     const languageMatch = calcLanguageScore(user, streamer) > 1;
     const gameMatch = calcGameScore(user, streamer) > 1;
-    const audienceMatch = calcAudienceScore(user, streamer) > 1;
 
-    //now after we checked why user connected with this streamer. Did he give importance to languages matching, games matching, audiences matching?
+    //now after we checked why user connected with this streamer. Did he give importance to languages matching, games matching, age?
     //we update all the weights based on the matching
     if (ageClose) userWeights.age_weight += 0.1;
-    if (audienceMatch) userWeights.audience_weight += 0.1;
     if (gameMatch) userWeights.game_weight += 0.1;
     if (languageMatch) userWeights.language_weight += 0.1;
+
+    //Below two weight updates since they arent something as binary as same language or range of age we update based on user preference
+    //dont need to parse audience_preferences I forgot supabase returns it as an object already not a string
+    const audiencePreferences = userWeights.audience_preferences;
+    const streamerAudience = streamer.targetAudience; //get what audience the streamer streams too
+
+    //since when users sign up they have a dropdown list of audiences streamers audience will always exist in our JSON of audience preference weights
+    //increase the weight of that streamer's audience in our preferences because if we connected with a mature streamer it is because we want to see more of those.
+    audiencePreferences[streamerAudience] += 0.1;
 
     //we need to make a bigger array of tags based off the tags the user has on our platform combined with their tags on twitch that they dont know we are using shhhh
     const allTags = [...(streamer.tags || []), ...(streamer.twitch_tags || [])];
@@ -71,7 +77,7 @@ router.route("/connect").post(authenticateMiddleware, async (req, res) => {
       .from("user_weights")
       .update({
         age_weight: userWeights.age_weight,
-        audience_weight: userWeights.audience_weight,
+        audience_preferences: audiencePreferences,
         game_weight: userWeights.game_weight,
         language_weight: userWeights.language_weight,
         preferred_tags: userWeights.preferred_tags,

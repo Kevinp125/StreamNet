@@ -9,15 +9,15 @@ const SOMEWHAT_CLOSE_AGE_THRESHOLD = 10;
 function calculateMatchScore(currentUser, streamerToCompare, userWeights) {
   //calculate each base score for the five data points we have on each streamer
   const ageScore = calcAgeScore(currentUser, streamerToCompare);
-  const audienceScore = calcAudienceScore(currentUser, streamerToCompare);
-  const tagScore = calcTagScore(currentUser, streamerToCompare, userWeights);
+  const audienceScore = calcAudienceScore(streamerToCompare, userWeights);
+  const tagScore = calcTagScore(streamerToCompare, userWeights);
   const gameScore = calcGameScore(currentUser, streamerToCompare);
   const languageScore = calcLanguageScore(currentUser, streamerToCompare);
 
   //once we have base scores just multiply those base scores by the weight we have in our users table and sum them all up this is the streamers match score
   return (
     ageScore * userWeights.age_weight +
-    audienceScore * userWeights.audience_weight +
+    audienceScore +
     tagScore +
     gameScore * userWeights.game_weight +
     languageScore * userWeights.language_weight
@@ -39,26 +39,30 @@ function calcAgeScore(currentUser, streamerToCompare) {
   const ageDifference = Math.abs(currentUserAge - streamerAge);
 
   if (ageDifference <= VERY_CLOSE_AGE_THRESHOLD) {
-    return 4;
-  } else if (ageDifference <= CLOSE_AGE_THRESHOLD) {
     return 2;
-  } else if (ageDifference <= SOMEWHAT_CLOSE_AGE_THRESHOLD) {
+  } else if (ageDifference <= CLOSE_AGE_THRESHOLD) {
     return 1;
+  } else if (ageDifference <= SOMEWHAT_CLOSE_AGE_THRESHOLD) {
+    return 0.5;
   }
-  return 0.5;
+  return 0.25;
 }
 
-function calcAudienceScore(currentUser, streamerToCompare) {
-  //check targetAudience. This one is a BIG boost. If user and streamer we are comparing them with stream to same audience give them 6 points
-  if (currentUser.targetAudience === streamerToCompare.targetAudience) {
-    return 5;
-  } else {
-    return 1; //small base score if audience isnt the saem but at least weights will still affect it.
-  }
+//This one is smart like the tags. All we have to do is check what audience the streamer we are comparing to has and m
+function calcAudienceScore(streamerToCompare, userWeights) {
+  const audiencePreferences = userWeights.audience_preferences;
+  //store the streamer we are comparing what audience they stream to
+  const streamerAudience = streamerToCompare.targetAudience;
+
+  //then just get the preference for that streamers audience based off of our user audience preference json. Default to 1 if not set (it will be)
+  const audiencePreference = audiencePreferences[streamerAudience] || 1.0;
+
+  //then just multiply that by number 3 out of whim similar to my tags so that the score isnt like just the weight whuch could be 1.1,1.2
+  return audiencePreference * 3;
 }
 
 //refactored this function fully so that we can do smart tag checking based on user preference
-function calcTagScore(currentUser, streamerToCompare, userWeights) {
+function calcTagScore(streamerToCompare, userWeights) {
   //use similar tactic to one we used in the user action connect request when we wanted to update weigths group all of the tags user inputed on my app and ones twitch gives them automatically into one array
   const allTags = [
     ...(streamerToCompare.tags || []),
@@ -86,13 +90,13 @@ function calcTagScore(currentUser, streamerToCompare, userWeights) {
 function calcGameScore(currentUser, streamerToCompare) {
   // Handle missing game data not all twitch users might have it most do though
   if (!currentUser.twitch_game_name || !streamerToCompare.twitch_game_name) {
-    return 1; // Can't compare, return base score
+    return 0.5; // Can't compare, return base score
   }
 
   if (currentUser.twitch_game_name === streamerToCompare.twitch_game_name) {
-    return 3; // Same game
+    return 2; // Same game
   } else {
-    return 1; // Different game
+    return 0.5; // Different game
   }
 }
 
@@ -102,16 +106,16 @@ function calcLanguageScore(currentUser, streamerToCompare) {
     !currentUser.twitch_broadcaster_language ||
     !streamerToCompare.twitch_broadcaster_language
   ) {
-    return 1; // Can't compare, return base score
+    return 0.5; // Can't compare, return base score
   }
 
   if (
     currentUser.twitch_broadcaster_language ===
     streamerToCompare.twitch_broadcaster_language
   ) {
-    return 4; // Same language
+    return 2.5; // Same language
   } else {
-    return 1; // Different language
+    return 0.5; // Different language
   }
 }
 
