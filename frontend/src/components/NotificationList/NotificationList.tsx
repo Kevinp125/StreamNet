@@ -10,7 +10,7 @@ type Notification = {
   type: string;
   title: string;
   message: string;
-  data: any;
+  contextData: any;
   status: string;
   priority: string;
   created_at: string;
@@ -22,16 +22,28 @@ export default function NotificationList() {
 
   //function gets called whenever an action on notification is clicked.
   //Whether it be an accept or deny or read and handles it
-  function handleAllNotificationActions(action: string, notification: Notification) {
-    
-    if(action === "accept" || action === "deny"){
-      //handle connection request stuff here
-    }
+  async function handleAllNotificationActions(action: string, notification: Notification) {
+    if (action === "accept" || action === "deny") {
+      try {
+        if (!session?.access_token) {
+          throw Error("no valid session");
+        }
 
-    else if(action === "read"){
+        const res = await setConnectionRequestStatusAndPostIfAccept(
+          session?.access_token,
+          action,
+          notification.contextData.request_id,
+        );
+
+        if (res.success) {
+          setNotifications(prev => prev.filter(n => n.id !== notification.id));
+        }
+      } catch (err) {
+        console.error("Could not process connection request", err);
+      }
+    } else if (action === "read") {
       //TODO: handle when a notification is read
     }
-
   }
 
   useEffect(() => {
@@ -59,7 +71,8 @@ export default function NotificationList() {
         <div className='flex flex-col gap-3'>
           {immediateNotifications.length > 0 ? (
             immediateNotifications.map(notification => (
-              <NotificationItem key={notification.id}
+              <NotificationItem
+                key={notification.id}
                 notification={notification}
                 onAction={handleAllNotificationActions}
               />
@@ -75,7 +88,8 @@ export default function NotificationList() {
         <div className='flex flex-col gap-3'>
           {generalNotifications.length > 0 ? (
             generalNotifications.map(notification => (
-              <NotificationItem key={notification.id}
+              <NotificationItem
+                key={notification.id}
                 notification={notification}
                 onAction={handleAllNotificationActions}
               />
