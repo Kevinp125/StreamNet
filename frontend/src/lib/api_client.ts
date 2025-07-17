@@ -95,7 +95,7 @@ export async function fetchUserConnections(accessToken: string) {
 }
 
 //function makes a request to the api that updates the userWeights table whenever a user hits the connect button
-export async function updateUserWeigths(accessToken: string, streamerToConnectId: string) {
+export async function updateUserWeights(accessToken: string, streamerToConnectId: string) {
   try {
     const res = await fetch(`${API_BASE_URL}/api/connections/update-weight`, {
       method: "POST",
@@ -170,6 +170,31 @@ export async function fetchPendingRequests(accessToken: string) {
       throw new Error("Could not fetch all the pending requests");
     }
 
+    return await res.json();
+  } catch (err) {
+    console.error(err);
+    throw err; //this passes it up to parent
+  }
+}
+
+export async function setConnectionRequestStatusAndPostIfAccept(
+  accessToken: string,
+  decision: string,
+  requestId: string,
+) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/connections`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ decision: decision, requestId: requestId }),
+    });
+
+    if (!res.ok) {
+      throw new Error("Could update request status and / or post");
+    }
     return await res.json();
   } catch (err) {
     console.error(err);
