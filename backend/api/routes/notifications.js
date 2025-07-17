@@ -39,7 +39,14 @@ router.route("/:id").put(authenticateMiddleware, async (req, res) => {
       })
       .eq("id", id)
       .eq("user_id", user_id);
-  } catch (err) {}
+
+    if (error) throw error;
+
+    res.status(200).json({ success: true });
+  } catch (err) {
+    console.error("Error updating notification:", err);
+    res.status(500).json({ error: "Failed to update notification" });
+  }
 });
 
 module.exports = router;
