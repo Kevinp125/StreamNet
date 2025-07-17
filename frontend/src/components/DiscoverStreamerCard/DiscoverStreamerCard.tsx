@@ -25,6 +25,7 @@ export default function DiscoverStreamerCard({
   onStreamerClick,
   onStreamerConnectClick,
   onStreamerNotInterestedClick,
+  onRemoveConnectionClick,
 }: DisoverStreamerCardProps) {
   function handleConnectClick(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation();
@@ -34,6 +35,11 @@ export default function DiscoverStreamerCard({
   function handleNotInterestedClick(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation();
     if (onStreamerNotInterestedClick) onStreamerNotInterestedClick(streamer.id);
+  }
+
+  function handleRemoveConnectionClick(e: React.MouseEvent<HTMLButtonElement>) {
+    e.stopPropagation();
+    if (onRemoveConnectionClick) onRemoveConnectionClick(streamer.id);
   }
 
   const twitchUrl = "https://twitch.tv/";
@@ -103,7 +109,12 @@ export default function DiscoverStreamerCard({
         {/*isConnectionsPage bool lets us render different buttons. So if we are on discover page it wont be true so !isConnectionsPage will be !false which means display the discover page buttons */}
         {!isConnectionsPage && (
           <>
-            <Button onClick={handleConnectClick} variant='ghost' className='cursor-pointer' disabled = {isDisabled}>
+            <Button
+              onClick={handleConnectClick}
+              variant='ghost'
+              className='cursor-pointer'
+              disabled={isDisabled}
+            >
               {connectStatusText !== "Pending..." ? (
                 <Heart className='h-3 w-3' />
               ) : (
@@ -142,9 +153,7 @@ export default function DiscoverStreamerCard({
             <Button
               variant='ghost'
               className='cursor-pointer text-red-500 hover:text-red-500'
-              onClick={e => {
-                e.stopPropagation();
-              }}
+              onClick={handleRemoveConnectionClick}
             >
               <Trash className='h-3 w-3' />
               <span className='text-sm'>Remove</span>
