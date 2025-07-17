@@ -51,7 +51,14 @@ router.route("/").post(authenticateMiddleware, async (req, res) => {
         .insert(invites);
 
       if (inviteError) throw inviteError;
+    }
 
+    res
+      .status(201)
+      .json({ success: true, message: "event was added to database!" });
+
+    //background processing of notifications after response is sent
+    if (privacy_level === "private" && invited_users.length > 0) {
       invited_users.forEach((userId) => {
         createNotification(supabaseClient, {
           userId: userId,
@@ -61,11 +68,22 @@ router.route("/").post(authenticateMiddleware, async (req, res) => {
           priority: "immediate",
         });
       });
-    }
+    } else if (privacy_level == "newtwok") {
+      const { data: connections } = await supabaseClient
+        .from("connections")
+        .select("connected_streamer_id")
+        .eq("user_id", creator_id);
 
-    res
-      .status(201)
-      .json({ success: true, message: "event was added to database!" });
+      connections?.forEach((connection) => {
+        createNotification(supabaseClient, {
+          userId: connection.connected_streamer_id,
+          type: "network_event_announcement",
+          title: "New Event from Your Network",
+          message: `@${req.user.user_metadata.name} created "${title}" for people in his network`,
+          priority: "general",
+        });
+      });
+    }
   } catch (err) {
     console.error("Error creating event:", err);
     res.status(500).json({ error: "Failed to create event" });
