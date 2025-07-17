@@ -3,7 +3,7 @@ const WebSocket = require("ws");
 //need to make a websocket server that listens on port 8080 (standard)
 
 const wss = new WebSocket.Server({ port: 8080 });
-
+console.log('WebSocket server running on port 8080');
 //this map is going allow us to store each user when they come online along with their ws object (connection)
 // clients = userId: WebSocket connection
 const clients = new Map();
