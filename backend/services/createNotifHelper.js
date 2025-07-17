@@ -10,7 +10,7 @@ async function createNotification(
       type,
       title,
       message,
-      contexData,
+      contextData,
       priority,
     });
 
