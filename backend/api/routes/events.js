@@ -68,7 +68,7 @@ router.route("/").post(authenticateMiddleware, async (req, res) => {
           priority: "immediate",
         });
       });
-    } else if (privacy_level == "newtwok") {
+    } else if (privacy_level === "network") {
       const { data: connections } = await supabaseClient
         .from("connections")
         .select("connected_streamer_id")
@@ -82,6 +82,23 @@ router.route("/").post(authenticateMiddleware, async (req, res) => {
           message: `@${req.user.user_metadata.name} created "${title}" for people in his network`,
           priority: "general",
         });
+      });
+    } else if (privacy_level === "public") {
+      const { data: allUsers } = await supabaseClient
+        .from("profiles")
+        .select("id");
+
+      allUsers?.forEach((user) => {
+        // Don't notify the creator
+        if (user.id !== creator_id) {
+          createNotification(supabaseClient, {
+            userId: user.id,
+            type: "public_event_announcement",
+            title: "New Public Event Available",
+            message: `@${req.user.user_metadata.name} created "${title}" for all check it out!`,
+            priority: "general",
+          });
+        }
       });
     }
   } catch (err) {
