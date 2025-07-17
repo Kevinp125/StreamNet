@@ -4,6 +4,7 @@ import { Check, X } from "lucide-react";
 import { useAuthContext } from "@/Context/AuthProvider";
 import { fetchNotifications } from "@/lib/api_client";
 import { setConnectionRequestStatusAndPostIfAccept } from "@/lib/api_client";
+import { updateNotificationStatus } from "@/lib/api_client";
 
 type Notification = {
   id: string;
@@ -36,6 +37,7 @@ export default function NotificationList() {
         );
 
         if (res.success) {
+          await updateNotificationStatus(session.access_token, notification.id, "read");
           setNotifications(prev => prev.filter(n => n.id !== notification.id));
         }
       } catch (err) {
