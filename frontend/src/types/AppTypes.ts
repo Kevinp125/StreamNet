@@ -14,3 +14,14 @@ export type StreamerProfile = {
   created_at: string;
   requestStatus: string;
 };
+
+export type Notification = {
+  id: string;
+  type: string;
+  title: string;
+  message: string;
+  contextData: any;
+  status: string;
+  priority: string;
+  created_at: string;
+};

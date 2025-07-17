@@ -5,17 +5,7 @@ import { useAuthContext } from "@/Context/AuthProvider";
 import { fetchNotifications } from "@/lib/api_client";
 import { setConnectionRequestStatusAndPostIfAccept } from "@/lib/api_client";
 import { updateNotificationStatus } from "@/lib/api_client";
-
-type Notification = {
-  id: string;
-  type: string;
-  title: string;
-  message: string;
-  contextData: any;
-  status: string;
-  priority: string;
-  created_at: string;
-};
+import type { Notification } from "@/types/AppTypes";
 
 export default function NotificationList() {
   const { session } = useAuthContext();
