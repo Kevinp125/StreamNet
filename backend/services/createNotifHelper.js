@@ -2,7 +2,7 @@
 
 async function createNotification(
   supabaseClient,
-  { userId, type, title, message, data = {}, priority = "general" }
+  { userId, type, title, message, contextData = {}, priority = "general" }
 ) {
   try {
     const { error } = await supabaseClient.from("notifications").insert({
@@ -10,14 +10,14 @@ async function createNotification(
       type,
       title,
       message,
-      data,
+      contextData,
       priority,
     });
 
     if (error) throw error;
   } catch (err) {
     console.error("Could not create a notification", err);
-    throw error;
+    throw err;
   }
 }
 

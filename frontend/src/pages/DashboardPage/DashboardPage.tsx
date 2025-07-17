@@ -5,46 +5,19 @@ import { DISCOVER_PATH } from "@/lib/paths";
 import StreamerCard from "@/components/StreamerCard/StreamerCard";
 import { fetchStreamerInfo } from "@/lib/api_client";
 import { fetchPendingRequests } from "@/lib/api_client";
-import { setConnectionRequestStatusAndPostIfAccept } from "@/lib/api_client";
 import { useAuthContext } from "@/Context/AuthProvider";
 import { LogOut } from "lucide-react";
 import { Card, CardTitle, CardContent } from "@/components/ui/card";
-import { X } from "lucide-react";
-import { Check } from "lucide-react";
+import NotificationList from "@/components/NotificationList/NotificationList";
 
 export default function DashboardPage() {
   const navigate = useNavigate();
   const { session, signOut } = useAuthContext();
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [pendingRequests, setPendingRequests] = useState<any>([]);
 
   //TODO: Remove later, leaving this here for now so that it is easier to test my apis. Whenever I test them since they have middleware I need to provide a token this is how I see and get that token.
   console.log(session?.access_token);
-
-  async function handleConnectRequestResponse(decision: string, requestId: string) {
-    try {
-      if (!session?.access_token) {
-        throw Error("no valid session");
-      }
-
-      const res = await setConnectionRequestStatusAndPostIfAccept(
-        session?.access_token,
-        decision,
-        requestId,
-      );
-
-      //if we successfully updated a connection request status
-      if (res.success) {
-        //first thing we want to do is filter out the request from the frontend dw on next page load the status already changed in backend
-        setPendingRequests((prev: any) =>
-          prev.filter((request: any) => request.requestId !== requestId),
-        );
-      }
-    } catch (err) {
-      console.error(`failed to process connection request`, err);
-    }
-  }
 
   useEffect(() => {
     async function populateStreamerCard() {
@@ -125,30 +98,7 @@ export default function DashboardPage() {
           <CardTitle className='flex justify-center'>Recent Notifications</CardTitle>
 
           <CardContent className='flex flex-col gap-6 text-sm'>
-            {pendingRequests.map((request: any) => {
-              return (
-                <div className='flex gap-4'>
-                  <p>{`@${request.sender.twitchUser} has sent you a connection request`}</p>
-                  <Button
-                    onClick={() => {
-                      handleConnectRequestResponse("accept", request.requestId);
-                    }}
-                    className='cursor-pointer bg-green-600'
-                  >
-                    <Check />
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      handleConnectRequestResponse("deny", request.requestId);
-                    }}
-                    variant='destructive'
-                    className='cursor-pointer'
-                  >
-                    <X />
-                  </Button>
-                </div>
-              );
-            })}
+            <NotificationList />
           </CardContent>
         </Card>
       </div>

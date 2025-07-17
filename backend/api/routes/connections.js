@@ -132,12 +132,20 @@ router.route("/send-request").post(authenticateMiddleware, async (req, res) => {
     }
 
     //since we already checked if the connection request existed previously add the actual connection request now with status pending. We will change it to approved when user clicks accept on their end
-    const { error } = await supabaseClient.from("connection_requests").insert({
-      sender_id: sender_id,
-      receiver_id: receiver_id,
-      status: "pending",
-    });
+    const { data: insertedRequest, error } = await supabaseClient
+      .from("connection_requests")
+      .insert({
+        sender_id: sender_id,
+        receiver_id: receiver_id,
+        status: "pending",
+      })
+      .select()
+      .single();
 
+    //need this so that notification that we put in table has this information. So when user
+    //accepts a request we know which one to accept.
+
+    const requestId = insertedRequest.id;
     if (error) throw error;
 
     //get data of user that is logged in as well as streamer that was clicked on which will be passed through the body
@@ -216,7 +224,7 @@ router.route("/send-request").post(authenticateMiddleware, async (req, res) => {
       type: "connection_request",
       title: "New Connection Request",
       message: `@${user.twitchUser} wants to connect with you`,
-      contextData: { sender_id: sender_id },
+      contextData: { sender_id: sender_id, request_id: requestId },
       priority: "immediate",
     });
 

@@ -264,3 +264,23 @@ export async function postEventRsvp(accessToken: string, rsvpInfo: any) {
     throw err;
   }
 }
+
+export async function fetchNotifications(accessToken: string) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/notifications`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) {
+      throw new Error("Could not fetch notifications");
+    }
+    return await res.json();
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
