@@ -54,14 +54,30 @@ router.route("/").post(authenticateMiddleware, async (req, res) => {
     //201 status code signifies successful processing of a request
     res.status(201).json({
       success: true,
-      message:
-        decision === "accept"
-          ? "accepted"
-          : "denied",
+      message: decision === "accept" ? "accepted" : "denied",
     });
   } catch (err) {
     console.error("Error processing the connection request", err);
     res.status(500).json({ error: "Failed to process request" });
+  }
+});
+
+router.route("/").delete(authenticateMiddleware, async (req, res) => {
+  try {
+    const { connected_streamer_id } = req.body;
+    const user_id = req.user.id;
+    const supabaseClient = req.supabase;
+
+    //delete a row from connections whenver user id = the user_id column AND the streamer we connected with equals their column OR it is the other way around because we want to also remove connection from other streamers page
+    const { error } = await supabaseClient.from("connections").delete()
+      .or(`and(user_id.eq.${user_id},connected_streamer_id.eq.${connected_streamer_id}),and(user_id.eq.${connected_streamer_id},connected_streamer_id.eq.${user_id})`);
+
+    if (error) throw error;
+
+    res.status(200).json({ success: true, message: "Connection was deleted!" });
+  } catch (err) {
+    console.error("Could not remove connection:", err);
+    res.status(500).json({ error: "Failed to remove connection", err });
   }
 });
 
