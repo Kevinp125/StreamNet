@@ -1,6 +1,7 @@
 const express = require("express");
 const { authenticateMiddleware } = require("../../middleware/authRequest");
 const { mergeAndDeduplicateTags } = require("../../services/mergeArrays.js");
+const { createNotification } = require("../../services/createNotifHelper.js");
 const router = express.Router(); //making a router
 const {
   calcAgeScore,
@@ -208,6 +209,16 @@ router.route("/send-request").post(authenticateMiddleware, async (req, res) => {
         preferred_tags: userWeights.preferred_tags,
       })
       .eq("user_id", sender_id);
+
+    //finally we post a notification to the database...
+    await createNotification(supabaseClient, {
+      userId: receiver_id,
+      type: "connection_request",
+      title: "New Connection Request",
+      message: `@${user.twitchUser} wants to connect with you`,
+      contextData: { sender_id: sender_id },
+      priority: "immediate",
+    });
 
     res.status(201).json({
       success: true,
