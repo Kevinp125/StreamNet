@@ -1,5 +1,6 @@
 const express = require("express");
 const { authenticateMiddleware } = require("../../middleware/authRequest");
+const { createNotification } = require("../../services/createNotifHelper");
 const router = express.Router(); //making a router
 
 router.route("/").post(authenticateMiddleware, async (req, res) => {
@@ -50,6 +51,16 @@ router.route("/").post(authenticateMiddleware, async (req, res) => {
         .insert(invites);
 
       if (inviteError) throw inviteError;
+
+      invited_users.forEach((userId) => {
+        createNotification(supabaseClient, {
+          userId: userId,
+          type: "private_event_invite",
+          title: "You are invited to a Private Event!",
+          message: `@${req.user.user_metadata.name} invited you to "${title}"`,
+          priority: "immediate",
+        });
+      });
     }
 
     res
@@ -153,11 +164,14 @@ router.route("/rsvp").post(authenticateMiddleware, async (req, res) => {
 
     //found on supabase documentation interesting query "upsert" will add a new row for the rsvp if it doesnt exist but if user clicked like not going after
     //rsvping this will update it with that status. Pretty useful
-    const { error } = await supabaseClient.from("event_rsvps").upsert({
-      event_id,
-      user_id,
-      status,
-    }, {onConflict: "event_id, user_id"});
+    const { error } = await supabaseClient.from("event_rsvps").upsert(
+      {
+        event_id,
+        user_id,
+        status,
+      },
+      { onConflict: "event_id, user_id" }
+    );
 
     if (error) throw error;
 
