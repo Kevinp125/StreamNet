@@ -33,7 +33,7 @@ function App() {
 
           </Routes>  
 
-          <Toaster position="bottom-right" richColors closeButton theme="dark"/>
+          <Toaster position="bottom-right" richColors closeButton/>
         </WebSocketProvider>
       </AuthProvider>
     </>
