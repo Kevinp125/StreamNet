@@ -13,6 +13,7 @@ import {
 
 import { useState, useEffect } from "react";
 import { fetchUserConnections } from "@/lib/api_client";
+import { postEvent } from "@/lib/api_client";
 import { useAuthContext } from "@/Context/AuthProvider";
 import type { StreamerProfile } from "@/types/AppTypes";
 
@@ -37,11 +38,15 @@ export default function CreateEventForm({ onClose }: EventFormProps) {
     { id: "in_person", label: "In Person" },
   ];
 
-  function handleSubmit(event: React.FormEvent) {
+  async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
 
     const form = event.target as HTMLFormElement; //getting the dom element that represents my form in browser.
     const formData = new FormData(form); //FormData is a browser api that gets all values from a form. Below we can access certain things since we labeled inputs with names
+
+    //want to process tags user entered intp an array same strat as when they input tags to sign up
+    const tagsString = formData.get("tags") as string; //as string so ts doesnt complain
+    const tagsArray = tagsString ? tagsString.split(",").map(tag => tag.trim()) : []; //split by comma and then map through new array to remove whitespaces and stuff and keep tags clean
 
     //grab all event data with formData.get and using some of the state we already had thsi will be sent to post even api
     const eventData = {
@@ -51,11 +56,19 @@ export default function CreateEventForm({ onClose }: EventFormProps) {
       privacy_level: privacyLevel, //here we can just use our state since we already have it
       modality: eventModality,
       location: formData.get("location"), //will just be null if they chose online
-      tags: formData.get("tags"),
+      tags: tagsArray,
       invited_users: privacyLevel === "private" ? selectedInvites : [],
     };
 
-    //TODO CALL API THAT POSTS THE EVENT ON TO THE TABLE
+    try {
+      if (!session?.access_token) return;
+
+      const result = await postEvent(session.access_token, eventData);
+
+      if (result.success) onClose(); //close modal if the event submission was successful.
+    } catch (err) {
+      console.error("not succesful in posting an event to database", err);
+    }
   }
 
   {
