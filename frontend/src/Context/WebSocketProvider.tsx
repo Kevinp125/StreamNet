@@ -1,6 +1,7 @@
 import { useContext, useState, useEffect, createContext, type ReactNode } from "react";
 import { useAuthContext } from "./AuthProvider";
 import type { Notification } from "@/types/AppTypes";
+import { toast } from "sonner"; //function that calls the notif pop up
 
 type WebSocketContextType = {
   socket: WebSocket | null; //can be of type websocket or null ehrn there isnt a connection yet
@@ -22,7 +23,11 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
 
   function handleNewNotification(notification: Notification) {
     if (notification.priority === "immediate") {
-      //TODO Show POP UP
+      //if the notification is of immediate priority we want to pop it up for user. If its a general well jsut leave it in inbox or update like a notif count
+      toast(notification.title, {
+        description:notification.message,
+        duration: 4000,
+      })
     }
 
     setNewNotification(notification); //set state so component can access it
