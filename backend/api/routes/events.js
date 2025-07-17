@@ -211,6 +211,12 @@ router.route("/rsvp").post(authenticateMiddleware, async (req, res) => {
     if (error) throw error;
 
     res.status(200).json({ success: true, message: "RSVP updated" });
+
+    const { data: event } = await supabaseClient
+      .from("events")
+      .select("creator_id, title") 
+      .eq("id", 123)
+      .single();
   } catch (err) {
     console.error("Error updating RSVP:", err);
     res.status(500).json({ error: "Failed to update RSVP" });
