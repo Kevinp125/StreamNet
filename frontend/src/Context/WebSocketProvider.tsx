@@ -63,3 +63,8 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
     </WebSocketContext.Provider>
   );
 }
+
+//hook that will allow us to acces websocket context whenver called from anywhere in app
+export function useWebSocketContext(){
+  return useContext(WebSocketContext);
+}
