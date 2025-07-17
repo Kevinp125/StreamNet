@@ -17,10 +17,12 @@ import { postEvent } from "@/lib/api_client";
 import { useAuthContext } from "@/Context/AuthProvider";
 import type { StreamerProfile } from "@/types/AppTypes";
 
+
 type EventFormProps = {
   onClose: () => void;
+  loadEvents: () => void;
 };
-export default function CreateEventForm({ onClose }: EventFormProps) {
+export default function CreateEventForm({ onClose, loadEvents }: EventFormProps) {
   const { session } = useAuthContext();
   const [eventModality, setEventModality] = useState("");
   const [privacyLevel, setPrivacyLevel] = useState("");
@@ -65,7 +67,12 @@ export default function CreateEventForm({ onClose }: EventFormProps) {
 
       const result = await postEvent(session.access_token, eventData);
 
-      if (result.success) onClose(); //close modal if the event submission was successful.
+      //close modal if the event submission was successful
+      //also refetch events to display newly added one
+      if (result.success) {
+        onClose();
+        loadEvents();
+      }
     } catch (err) {
       console.error("not succesful in posting an event to database", err);
     }

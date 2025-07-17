@@ -243,3 +243,26 @@ export async function postEvent(accessToken: string, eventData: any) {
     throw err;
   }
 }
+
+export async function fetchEvents(accessToken: string) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/events`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) {
+      throw new Error("Was not able to fetch the events");
+    }
+    return await res.json();
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
+
+
