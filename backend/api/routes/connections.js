@@ -178,11 +178,53 @@ router.route("/send-request").post(authenticateMiddleware, async (req, res) => {
     if (error) throw error;
 
     res.status(201).json({ success: true, message: "Connection request sent" });
-
   } catch (err) {
     console.error("Error sending the connect request", err);
-    res.status(500).json({error: "Failed to send request"});
+    res.status(500).json({ error: "Failed to send request" });
   }
 });
+
+//route gets all pending-requests the user has from connection requests table so we can display them
+router
+  .route("/pending-requests")
+  .get(authenticateMiddleware, async (req, res) => {
+    try {
+      const userId = req.user.id;
+      const supabaseClient = req.supabase;
+
+      //grab from connect_requests the id, sender, and use supabasejoin syntax to get sender's profile. We get all senders that have corresponding reciever as the user Id and status is pending
+      const { data: pendingRequests, error } = await supabaseClient
+        .from("connection_requests")
+        .select(
+          `
+        id,
+        sender_id,
+        created_at,
+        profiles!sender_id (*)
+      `
+        )
+        .eq("receiver_id", userId)
+        .eq("status", "pending")
+        .order("created_at", { ascending: false }); //get most recent requests first
+
+      if (error) throw error;
+
+      //below code just helps us get cleaner response.
+      //instead of sender being in profiles it is in sender and we arent copying the id twice.
+      const reformattedRequests = pendingRequests.map((request) => ({
+        requestId: request.id,
+        createdAt: request.created_at,
+        sender: request.profiles,
+      }));
+
+      res.status(200).json(reformattedRequests);
+    } catch (err) {
+      console.error(
+        "could not get all the pending requests for this user",
+        err
+      );
+      res.status(500).json({ error: "failed to fetch pending requests" });
+    }
+  });
 
 module.exports = router;
