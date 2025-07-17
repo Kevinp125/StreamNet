@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { DISCOVER_PATH } from "@/lib/paths";
 import StreamerCard from "@/components/StreamerCard/StreamerCard";
 import { fetchStreamerInfo } from "@/lib/api_client";
-import { fetchPendingRequests } from "@/lib/api_client";
 import { useAuthContext } from "@/Context/AuthProvider";
 import { LogOut } from "lucide-react";
 import { Card, CardTitle, CardContent } from "@/components/ui/card";
@@ -41,21 +40,7 @@ export default function DashboardPage() {
       }
     }
 
-    async function populatePendingRequests() {
-      try {
-        if (!session?.access_token) {
-          throw Error("no valid session");
-        }
-
-        const pendingRequests = await fetchPendingRequests(session?.access_token);
-        setPendingRequests(pendingRequests);
-      } catch (err) {
-        console.error(`failed to fetch pending requests`, err);
-      }
-    }
-
     populateStreamerCard();
-    populatePendingRequests();
   }, [session]);
   //placing session in dependency array because on page mount session might not be loaded yet so have this here so we can run the fetch user profile again if session gets updated
 
