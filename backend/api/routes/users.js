@@ -58,6 +58,20 @@ router.route("/get-all").get(authenticateMiddleware, async (req, res) => {
       .select("streamer_id")
       .eq("user_id", userId);
 
+    //grab all the streamers that have a pendign request sent out to them by this user
+    const { data: pendingRequestStreamers } = await supbase
+      .from("connection_requests")
+      .select("receiever_id")
+      .eq("sender_id", userId)
+      .eq("status", "pending");
+
+    //also grab all the ones who denied the requset sent out by the user
+    const { data: deniedRequestStreamers } = await supbase
+      .from("connection_requests")
+      .select("receiever_id")
+      .eq("sender_id", userId)
+      .eq("status", "denied");
+
     //just to make our life easier map through connections cause each itme in it is a database object. just extract the id and put it in a new array.
     const connectedStreamersIds = connections.map(
       (c) => c.connected_streamer_id
@@ -65,6 +79,14 @@ router.route("/get-all").get(authenticateMiddleware, async (req, res) => {
 
     const notInterestedStreamersIds = notInterestedStreamers.map(
       (notInterestedStreamer) => notInterestedStreamer.streamer_id
+    );
+
+    const pendingRequestIds = pendingRequestStreamers.map(
+      (request) => request.receiver_id
+    );
+
+    const deniedRequestIds = deniedRequestStreamers.map(
+      (request) => request.receiver_id
     );
 
     //join ids of users we are connected with and not interested in so we can filter them out below
@@ -119,9 +141,20 @@ router.route("/get-all").get(authenticateMiddleware, async (req, res) => {
         userWeights
       );
 
+      //when we loop through streamers with match score and return each with new fields check what the request status of that streamer is
+      //if their id is in the pendingRequestIds array then their status is pending. Vice versa if they are denied status is denied. Attach this
+      //so every time discover page is requested we know status of each streamer.
+      let requestStatus = undefined;
+      if (pendingRequestIds.includes(streamer.id)) {
+        requestStatus = "pending";
+      } else if (deniedRequestIds.includes(streamer.id)) {
+        requestStatus = "denied";
+      }
+
       return {
         ...streamer,
         score: matchScore,
+        requestStatus: requestStatus,
       };
     });
 
