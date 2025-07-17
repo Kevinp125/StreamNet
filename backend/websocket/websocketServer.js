@@ -9,3 +9,16 @@ const wss = new WebSocket.Server({port:8080});
 const clients = new Map();
 
 //everything for websockets is event driven...
+
+//on a client connection to the server we want to get their ws object 
+wss.on('connection', (ws) => {
+  console.log('New WebSocket connection has been established')
+
+  
+
+
+
+
+
+
+})
