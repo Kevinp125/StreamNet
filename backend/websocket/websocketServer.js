@@ -70,5 +70,6 @@ function sendNotificationToUser(userId, notification){
 
   console.log(`user is not connected did not send notif real time`);
   return false;
-
 }
+
+module.exports = {sendNotificationToUser};
