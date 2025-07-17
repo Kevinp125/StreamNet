@@ -109,39 +109,63 @@ router.route("/").get(authenticateMiddleware, async (req, res) => {
 
     if (eventsErr) throw eventsErr;
 
-    res.status(200).json(events);
+    //Here we need to attach to each event who rsvped to each event so that in frontend we cna display it
+    //Promise.all allows us to make queries run at the same time instead of doing them one after another waiting for each to resolve
+    const eventsWithRSVPInfo = await Promise.all(
+      events.map(async (event) => {
+        //for each event get all the rsvps
+
+        const { data: RSVPS } = await supabaseClient
+          .from("event_rsvps")
+          .select(
+            `status, user_id, profiles!user_id (id, name, twitchUser, profilePic)`
+          )
+          .eq("event_id", event.id)
+          .eq("status", "attending");
+
+        const userRSVP = RSVPS?.find((rsvp) => rsvp.user_id === userId); //this will let us know if our user is rsvped to an event we need this because it will help us persis the button state on frontend "im attending" vs "not going"
+        const attendees = RSVPS?.map((rsvp) => rsvp.profiles) ?? []; //this i just to put the attendants in their own array instead of having them be under profiles
+
+        //finally spread the event and attach all these new fields to it
+        return {
+          ...event,
+          userRSVPStatus: userRSVP?.status ?? null,
+          attendees: attendees,
+          attendeeCount: attendees.length,
+        };
+      })
+    );
+
+    res.status(200).json(eventsWithRSVPInfo);
   } catch (err) {
     console.error("something went wrong when fetching a users events", err);
     res.status(500).json(err);
   }
 });
 
-//so this route is going to handle both if user clicks im attending or clicks not going after they saif yes. In case they change their mind. 
+//so this route is going to handle both if user clicks im attending or clicks not going after they saif yes. In case they change their mind.
 router.route("/rsvp").post(authenticateMiddleware, async (req, res) => {
-  try{
+  try {
     //in order to log rsvp we need to know what event it is and whether user is attending or they clicked button again and they changed to not going
-    const { event_id, status} = req.body;
+    const { event_id, status } = req.body;
     const user_id = req.user.id;
     const supabaseClient = req.supabase;
 
     //found on supabase documentation interesting query "upsert" will add a new row for the rsvp if it doesnt exist but if user clicked like not going after
     //rsvping this will update it with that status. Pretty useful
-    const {error} = await supabaseClient.from("event_rsvps").upsert({
+    const { error } = await supabaseClient.from("event_rsvps").upsert({
       event_id,
       user_id,
-      status
-    });
+      status,
+    }, {onConflict: "event_id, user_id"});
 
-    if(error) throw error;
+    if (error) throw error;
 
-
-
-  } catch(err){
-    
-
-
+    res.status(200).json({ success: true, message: "RSVP updated" });
+  } catch (err) {
+    console.error("Error updating RSVP:", err);
+    res.status(500).json({ error: "Failed to update RSVP" });
   }
-
-})
+});
 
 module.exports = router;

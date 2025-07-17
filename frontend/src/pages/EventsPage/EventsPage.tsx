@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import CreateEventForm from "@/components/CreateEventForm/CreateEventForm";
 import { fetchEvents } from "@/lib/api_client";
+import { postEventRsvp } from "@/lib/api_client";
 import { useAuthContext } from "@/Context/AuthProvider";
 import EventsGrid from "@/components/EventsGrid /EventsGrid";
 
@@ -12,6 +13,24 @@ export default function EventsPage() {
 
   function handleFormClose() {
     setShowEventForm(false);
+  }
+
+  async function handleRSVP(eventId: string, userStatus: string) {
+    //putting all rsvp info in an object because that is what utol function takes in
+    const rsvpInfo = {
+      event_id: eventId,
+      status: userStatus,
+    };
+    try {
+      if (!session?.access_token) return;
+
+      //when user clicks the im in button itll call handleRSVP with attending status and button changes to opt out. If they click opt out it will call with status not going and button changes back to Im in
+      await postEventRsvp(session?.access_token, rsvpInfo);
+      //whenever rsvp gets updated remember to fetch our events again because it will put all the new rsvp info in the events which we access in our event card to figure out user rsvp status. This way it persists across pages
+      loadEvents();
+    } catch (err) {
+      console.error("Failed to update RSVP", err);
+    }
   }
 
   async function loadEvents() {
@@ -37,7 +56,7 @@ export default function EventsPage() {
         Post Event!
       </Button>
 
-      <EventsGrid events = {eventList}/>
+      <EventsGrid events={eventList} handleRSVP={handleRSVP} />
 
       {showEventForm && (
         <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'>
