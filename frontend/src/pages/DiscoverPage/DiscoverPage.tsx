@@ -3,6 +3,7 @@ import StreamerGrid from "@/components/StreamerGrid/StreamerGrid";
 import StreamerCard from "@/components/StreamerCard/StreamerCard";
 import { fetchRecommendedStreamers } from "@/lib/api_client";
 import { postStreamerConnection } from "@/lib/api_client";
+import { sendConnectionRequest } from "@/lib/api_client";
 import { updateUserWeigths } from "@/lib/api_client";
 import { addToNotInterestedAndUpdateWeights } from "@/lib/api_client";
 import { useAuthContext } from "@/Context/AuthProvider";
@@ -28,7 +29,7 @@ export default function DiscoverPage() {
     //useAuthContext takes care of this but if I dont include this check ts whines
     if (!session?.access_token) return;
     try {
-      const data = await postStreamerConnection(session?.access_token, streamerToConnectId);
+      const data = await sendConnectionRequest(session?.access_token, streamerToConnectId);
 
       //if success field is true it means we added a connection then filter out the connection we just added from our recommnededStreamers grid
       if (data.success) {
