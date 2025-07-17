@@ -116,4 +116,32 @@ router.route("/").get(authenticateMiddleware, async (req, res) => {
   }
 });
 
+//so this route is going to handle both if user clicks im attending or clicks not going after they saif yes. In case they change their mind. 
+router.route("/rsvp").post(authenticateMiddleware, async (req, res) => {
+  try{
+    //in order to log rsvp we need to know what event it is and whether user is attending or they clicked button again and they changed to not going
+    const { event_id, status} = req.body;
+    const user_id = req.user.id;
+    const supabaseClient = req.supabase;
+
+    //found on supabase documentation interesting query "upsert" will add a new row for the rsvp if it doesnt exist but if user clicked like not going after
+    //rsvping this will update it with that status. Pretty useful
+    const {error} = await supabaseClient.from("event_rsvps").upsert({
+      event_id,
+      user_id,
+      status
+    });
+
+    if(error) throw error;
+
+
+
+  } catch(err){
+    
+
+
+  }
+
+})
+
 module.exports = router;
