@@ -74,7 +74,7 @@ router.route("/").post(authenticateMiddleware, async (req, res) => {
         userId: request.sender_id,
         type: "connection_accepted",
         title: "Connection Request Accepted!",
-        message: `@${req.user.user_metadata.twitch_user_name} accepted your request to connect`,
+        message: `@${req.user.user_metadata.name} accepted your request to connect`,
         priority: "immediate",
       });
     } else if (decision === "deny") {
@@ -82,7 +82,7 @@ router.route("/").post(authenticateMiddleware, async (req, res) => {
         userId: request.sender_id,
         type: "connection_denied",
         title: "Connection Request Denied :(",
-        message: `@${req.user.user_metadata.twitch_user_name} denied your request to connect`,
+        message: `@${req.user.user_metadata.name} denied your request to connect`,
         priority: "immediate",
       });
     }
