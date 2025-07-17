@@ -34,4 +34,19 @@ wss.on("connection", (ws) => {
       console.error("Error parsing message", err);
     }
   });
+
+  //runs whenever a user disconnects (closed client, etc)
+  ws.on("close", () => {
+    if (ws.userId) {
+      //if ws object that got closes (from client) has a userId attached it was in our map
+      clients.delete(ws.userId); //delete it to remove connection (they arent online anymore)
+      console.log(`User ${ws.userId} disconnected`);
+      console.log(`Total connected users: ${clients.size}`);
+    }
+  });
+
+  //handle any connection errors
+  ws.on("error", (error) => {
+    console.error("WebSocket error:", error);
+  });
 });
