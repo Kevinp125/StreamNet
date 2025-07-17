@@ -4,11 +4,13 @@ import { useAuthContext } from "./AuthProvider";
 type WebSocketContextType = {
   socket: WebSocket | null; //can be of type websocket or null ehrn there isnt a connection yet
   isConnected: boolean;
+  newNotification: any;
 };
 
 const WebSocketContext = createContext<WebSocketContextType>({
   socket: null,
   isConnected: false,
+  newNotification: null
 });
 
 export function WebSocketProvider({ children }: { children: ReactNode }) {
