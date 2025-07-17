@@ -4,17 +4,34 @@ import { useEffect, useState } from "react";
 import { DISCOVER_PATH } from "@/lib/paths";
 import StreamerCard from "@/components/StreamerCard/StreamerCard";
 import { fetchStreamerInfo } from "@/lib/api_client";
+import { fetchPendingRequests } from "@/lib/api_client";
 import { useAuthContext } from "@/Context/AuthProvider";
 import { LogOut } from "lucide-react";
+import { Card, CardTitle, CardContent } from "@/components/ui/card";
+import { X } from "lucide-react";
+import { Check } from "lucide-react";
 
 export default function DashboardPage() {
   const navigate = useNavigate();
   const { session, signOut } = useAuthContext();
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [pendingRequests, setPendingRequests] = useState<any>([]);
 
   //TODO: Remove later, leaving this here for now so that it is easier to test my apis. Whenever I test them since they have middleware I need to provide a token this is how I see and get that token.
   console.log(session?.access_token);
+
+  async function handleConnectRequestResponse(decision: string, request: any){
+
+    //TODO: Call the util function that makes like 
+    //three fetch requests the one that updates connection request status
+    //then the post connection depending on user decision to accept or deny
+    //then the update weights
+
+
+
+
+  }
 
   useEffect(() => {
     async function populateStreamerCard() {
@@ -38,7 +55,21 @@ export default function DashboardPage() {
       }
     }
 
+    async function populatePendingRequests() {
+      try {
+        if (!session?.access_token) {
+          throw Error("no valid session");
+        }
+
+        const pendingRequests = await fetchPendingRequests(session?.access_token);
+        setPendingRequests(pendingRequests);
+      } catch (err) {
+        console.error(`failed to fetch pending requests`, err);
+      }
+    }
+
     populateStreamerCard();
+    populatePendingRequests();
   }, [session]);
   //placing session in dependency array because on page mount session might not be loaded yet so have this here so we can run the fetch user profile again if session gets updated
 
@@ -76,6 +107,26 @@ export default function DashboardPage() {
         >
           Discover Streamers!
         </Button>
+
+        <Card className='h-full w-2/3'>
+          <CardTitle className='flex justify-center'>Recent Notifications</CardTitle>
+
+          <CardContent className='text-sm flex flex-col gap-6'>
+            {pendingRequests.map(request => {
+              return (
+                <div className='flex gap-4'>
+                  <p>{`@${request.sender.twitchUser} has sent you a connection request`}</p>
+                  <Button onClick = {() => {handleConnectRequestResponse('accept', request)}}className='bg-green-600 cursor-pointer'>
+                    <Check />
+                  </Button>
+                  <Button onClick = {() => {handleConnectRequestResponse('deny', request)}}variant='destructive' className = 'cursor-pointer'>
+                    <X />
+                  </Button>
+                </div>
+              );
+            })}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

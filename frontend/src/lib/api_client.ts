@@ -155,3 +155,24 @@ export async function sendConnectionRequest(accessToken: string, receiverId: str
     throw err; //this passes it up to parent
   }
 }
+
+export async function fetchPendingRequests(accessToken: string) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/connections/pending-requests`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) {
+      throw new Error("Could not fetch all the pending requests");
+    }
+
+    return await res.json();
+  } catch (err) {
+    console.error(err);
+    throw err; //this passes it up to parent
+  }
+}
