@@ -284,3 +284,25 @@ export async function fetchNotifications(accessToken: string) {
     throw err;
   }
 }
+
+
+export async function updateNotificationStatus(accessToken: string, notificationId:string, status:string) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/notifications/${notificationId}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({status})
+    });
+
+    if (!res.ok) {
+      throw new Error("Could not update notification status");
+    }
+    return await res.json();
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
