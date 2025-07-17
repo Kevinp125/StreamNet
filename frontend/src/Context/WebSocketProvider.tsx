@@ -42,6 +42,8 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
           },
         };
       }
+
+      toast(notification.title, toastSettings);
     }
 
     setNewNotification(notification); //set state so component can access it
