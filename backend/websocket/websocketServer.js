@@ -50,3 +50,25 @@ wss.on("connection", (ws) => {
     console.error("WebSocket error:", error);
   });
 });
+
+//this function will get called by createNotification helper whenever notification gets created
+//it attempts to send real time notification if user is online (they are on clients map)
+function sendNotificationToUser(userId, notification){
+  const userConnection = clients.get(userId);
+
+  //we check map above if the userId is there websocket object is returned so check if 
+  //it is exists (isnt null) and the readyState of the ws object is OPEN
+  if(userConnection && userConnection.readyState === WebSocket.OPEN){
+    userConnection.send(JSON.stringify({
+      type: 'notification',
+      data: notification
+    }))
+
+    console.log(`Sent notif to user ${userId}`)
+    return true;
+  }
+
+  console.log(`user is not connected did not send notif real time`);
+  return false;
+
+}
