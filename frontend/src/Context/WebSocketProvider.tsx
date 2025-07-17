@@ -23,11 +23,25 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
 
   function handleNewNotification(notification: Notification) {
     if (notification.priority === "immediate") {
-      //if the notification is of immediate priority we want to pop it up for user. If its a general well jsut leave it in inbox or update like a notif count
-      toast(notification.title, {
-        description:notification.message,
-        duration: 4000,
-      })
+      //if the notification is immediate priortiy we call toast function
+      //below to display pop up to user. Otherwise user can just check when they go to dashboard
+      //reduce the spammy feeling
+
+      //We want to display the notification message and specify how long pop up lasts
+      const toastSettings: any = {
+        description: notification.message,
+        duration: 4500,
+      };
+
+      //quality of life change if the user is not on the dash already add an action button with label Go that takes them to dash to take action on request
+      if (window.location.pathname !== "/dashboard") {
+        toastSettings.action = {
+          label: "Go",
+          onClick: () => {
+            window.location.href = "/dashboard";
+          },
+        };
+      }
     }
 
     setNewNotification(notification); //set state so component can access it
@@ -55,7 +69,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
         );
       };
 
-      ws.onmessage = (event) => {
+      ws.onmessage = event => {
         console.log("Server is sending us message", event.data);
 
         try {
