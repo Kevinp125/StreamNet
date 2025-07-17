@@ -22,4 +22,23 @@ router.route("/").get(authenticateMiddleware, async (req, res) => {
   }
 });
 
+//will update notifcation status whether it be delivered, read, etc
+router.route("/:id").put(authenticateMiddleware, async (req, res) => {
+  try{
+    const { id } = req.params;
+    const { status } = req.body;
+    const user_id = req.user.id;
+    const supabaseClient = req.supabase;
+    
+
+
+
+  } catch(err){
+
+
+
+
+  }
+})
+
 module.exports = router;
