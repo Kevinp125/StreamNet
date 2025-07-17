@@ -50,7 +50,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
         );
       };
 
-      ws.onmessage = event => {
+      ws.onmessage = (event) => {
         console.log("Server is sending us message", event.data);
 
         try {
