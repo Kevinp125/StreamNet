@@ -29,7 +29,6 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
         console.log("WebSocket Connected");
         setIsConnected(true); //update that we are connected
 
-
         //send the server that we want to officially connect. Server processes this message and stores us in map of connections
         ws.send(
           JSON.stringify({
@@ -38,6 +37,29 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
           }),
         );
       };
+
+      ws.onclose = () => {
+        console.log("Websocket has been disconnected");
+        setIsConnected(false);
+      };
+
+      ws.onerror = error => {
+        console.error("Websocker error:", error);
+        setIsConnected(false);
+      };
+
+      setSocket(ws);
+
+      return () => {
+        console.log("Cleaning ws connection");
+        ws.close();
+      };
     }
   }, [session?.user?.id]);
+
+  return (
+    <WebSocketContext.Provider value={{ socket, isConnected }}>
+      {children}
+    </WebSocketContext.Provider>
+  );
 }
