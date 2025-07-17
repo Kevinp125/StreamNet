@@ -52,6 +52,17 @@ router.route("/").post(authenticateMiddleware, async (req, res) => {
       if (connectError) throw connectError;
     }
 
+    const { error: notificationError } = await supabaseClient
+      .from("notifications")
+      .update({ status: "read", read_at: new Date().toISOString() })
+      .eq("user_id", user_id)
+      .eq("contextData->>request_id", requestId);
+
+    if (notificationError) {
+      console.error("Failed to update notification status:", notificationError);
+      // Don't throw here - connection was successful, notification update is secondary
+    }
+
     //201 status code signifies successful processing of a request
     res.status(201).json({
       success: true,
