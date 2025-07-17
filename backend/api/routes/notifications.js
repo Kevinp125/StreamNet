@@ -24,21 +24,22 @@ router.route("/").get(authenticateMiddleware, async (req, res) => {
 
 //will update notifcation status whether it be delivered, read, etc
 router.route("/:id").put(authenticateMiddleware, async (req, res) => {
-  try{
+  try {
     const { id } = req.params;
     const { status } = req.body;
     const user_id = req.user.id;
     const supabaseClient = req.supabase;
-    
 
-
-
-  } catch(err){
-
-
-
-
-  }
-})
+    const { error } = await supabaseClient
+      .from("notifications")
+      .update({
+        status: status,
+        //if status for notif is that it was read then update read_at field will need this later for tracking when user is most active viewing notifs
+        read_at: status === "read" ? new Date().toISOString() : null,
+      })
+      .eq("id", id)
+      .eq("user_id", user_id);
+  } catch (err) {}
+});
 
 module.exports = router;
