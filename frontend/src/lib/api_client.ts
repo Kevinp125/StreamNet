@@ -113,3 +113,23 @@ export async function updateUserWeigths(accessToken: string, streamerToConnectId
     console.error(err);
   }
 }
+
+export async function addToNotInterestedAndUpdateWeights(accessToken: string, streamerId: string) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/not-interested`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ streamerId: streamerId }),
+    });
+
+    if (!res.ok) {
+      throw new Error("Weights were not updated succesfully");
+    }
+  } catch (err) {
+    console.error(err);
+    throw err; //this passes it up to parent
+  }
+}

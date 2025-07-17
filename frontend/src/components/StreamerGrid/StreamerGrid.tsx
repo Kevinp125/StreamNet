@@ -4,6 +4,7 @@ import type { StreamerProfile } from "@/types/AppTypes";
 type StreamerGridProps = {
   handleStreamerClick: (profile: StreamerProfile) => void;
   handleStreamerConnect?: (streamerToConnectId: string) => void; //optional for discover page
+  handleStreamerNotInterestedClick?: (streamerToConnectId: string) => void; //optional for connections page. not interested only on discover page
   handleRemoveConnection?: (streamerId: string) => void; // Optional for connections page  
   streamers: StreamerProfile[];
   isConnectionsPage?: boolean; // To know which buttons to show
@@ -13,6 +14,7 @@ type StreamerGridProps = {
 export default function StreamerGrid({
   handleStreamerClick,
   handleStreamerConnect,
+  handleStreamerNotInterestedClick,
   isConnectionsPage,
   streamers,
 }: StreamerGridProps) {
@@ -26,6 +28,7 @@ export default function StreamerGrid({
           streamer={streamer}
           onStreamerClick={handleStreamerClick}
           onStreamerConnectClick = {handleStreamerConnect}
+          onStreamerNotInterestedClick = {handleStreamerNotInterestedClick}
           isConnectionsPage = {isConnectionsPage}
         />
       ))}

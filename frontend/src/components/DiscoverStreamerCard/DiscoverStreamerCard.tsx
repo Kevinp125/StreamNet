@@ -14,6 +14,7 @@ type DisoverStreamerCardProps = {
   onStreamerClick: (profile: StreamerProfile) => void;
   onStreamerConnectClick?: (streamerToConnectId: string) => void;
   onRemoveConnectionClick?: (streamerId: string) => void;
+  onStreamerNotInterestedClick?:(streamerId: string) => void;
   isConnectionsPage?: boolean;
 };
 
@@ -22,10 +23,16 @@ export default function DiscoverStreamerCard({
   isConnectionsPage,
   onStreamerClick,
   onStreamerConnectClick,
+  onStreamerNotInterestedClick
 }: DisoverStreamerCardProps) {
   function handleConnectClick(e: React.MouseEvent<HTMLButtonElement>) {
     e.stopPropagation();
     if (onStreamerConnectClick) onStreamerConnectClick(streamer.id);
+  }
+
+  function handleNotInterestedClick(e: React.MouseEvent<HTMLButtonElement>){
+    e.stopPropagation();
+    if (onStreamerNotInterestedClick) onStreamerNotInterestedClick(streamer.id);
   }
 
   const twitchUrl = "https://twitch.tv/";
@@ -98,9 +105,7 @@ export default function DiscoverStreamerCard({
             </Button>
 
             <Button
-              onClick={e => {
-                e.stopPropagation();
-              }}
+              onClick={handleNotInterestedClick}
               variant='ghost'
               className='cursor-pointer text-red-500 hover:text-red-500'
             >
