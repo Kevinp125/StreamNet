@@ -79,7 +79,7 @@ router.route("/").post(authenticateMiddleware, async (req, res) => {
           userId: connection.connected_streamer_id,
           type: "network_event_announcement",
           title: "New Event from Your Network",
-          message: `@${req.user.user_metadata.name} created "${title}" for people in his network`,
+          message: `@${req.user.user_metadata.name} created "${title}" for people in their network`,
           priority: "general",
         });
       });
