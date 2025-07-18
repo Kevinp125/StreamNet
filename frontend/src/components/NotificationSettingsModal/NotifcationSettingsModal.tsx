@@ -1,6 +1,5 @@
 import { X } from "lucide-react";
 import { useState } from "react";
-import NotificationList from "../NotificationList/NotificationList";
 
 type NotificationSettingsModalProps = {
   onClose: () => void;
