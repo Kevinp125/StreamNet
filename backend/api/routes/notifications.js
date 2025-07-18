@@ -92,7 +92,7 @@ router.route("/settings").patch(authenticateMiddleware, async (req, res) => {
       network_event_announcements_enabled,
     } = req.body;
 
-    const { data: settings, error } = await supabaseClient
+    const { error } = await supabaseClient
       .from("user_notification_settings")
       .update({
         push_enabled,
