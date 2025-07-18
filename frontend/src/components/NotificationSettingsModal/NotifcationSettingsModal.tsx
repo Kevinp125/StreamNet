@@ -10,21 +10,53 @@ type NotificationSettingsModalProps = {
 
 export default function NotificationSettingsModal({ onClose }: NotificationSettingsModalProps) {
   const { session } = useAuthContext();
-  const [pushEnabled, setPushEnabled] = useState(true);
-  const [importantEnabled, setImportantEnabled] = useState(true);
-  const [generalEnabled, setGeneralEnabled] = useState(true);
-  const [connectRequestEnabled, setConnectRequestEnabled] = useState(true);
-  const [connectionAcceptedEnabled, setConnectionAcceptedEnabled] = useState(true);
-  const [connectionDeniedEnabled, setConnectionDeniedEnabled] = useState(true);
-  const [privateEventInvitationEnabled, setPrivateEventInvitationEnabled] = useState(true);
-  const [eventRsvpUpdatesEnabled, setEventRsvpUpdatesEnabled] = useState(true);
-  const [publicEventAnnouncementsEnabled, setPublicEventAnnouncementsEnabled] = useState(true);
-  const [networkEventAnnouncementsEnabled, setNetworkEventAnnouncementsEnabled] = useState(true);
+  const [pushEnabled, setPushEnabled] = useState<boolean | undefined>(undefined);
+  const [importantEnabled, setImportantEnabled] = useState<boolean | undefined>(undefined);
+  const [generalEnabled, setGeneralEnabled] = useState<boolean | undefined>(undefined);
+  const [connectRequestEnabled, setConnectRequestEnabled] = useState<boolean | undefined>(
+    undefined,
+  );
+  const [connectionAcceptedEnabled, setConnectionAcceptedEnabled] = useState<boolean | undefined>(
+    undefined,
+  );
+  const [connectionDeniedEnabled, setConnectionDeniedEnabled] = useState<boolean | undefined>(
+    undefined,
+  );
+  const [privateEventInvitationEnabled, setPrivateEventInvitationEnabled] = useState<
+    boolean | undefined
+  >(undefined);
+  const [eventRsvpUpdatesEnabled, setEventRsvpUpdatesEnabled] = useState<boolean | undefined>(
+    undefined,
+  );
+  const [publicEventAnnouncementsEnabled, setPublicEventAnnouncementsEnabled] = useState<
+    boolean | undefined
+  >(undefined);
+  const [networkEventAnnouncementsEnabled, setNetworkEventAnnouncementsEnabled] = useState<
+    boolean | undefined
+  >(undefined);
+
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadSettings() {
       if (!session?.access_token) return;
-      const settings = await getNotificationSettings(session?.access_token);
+      try {
+        const settings = await getNotificationSettings(session?.access_token);
+        setPushEnabled(settings.push_enabled);
+        setImportantEnabled(settings.important_enabled);
+        setGeneralEnabled(settings.general_enabled);
+        setConnectRequestEnabled(settings.connection_request_enabled);
+        setConnectionAcceptedEnabled(settings.connection_accepted_enabled);
+        setConnectionDeniedEnabled(settings.connection_denied_enabled);
+        setPrivateEventInvitationEnabled(settings.private_event_invitation_enabled);
+        setEventRsvpUpdatesEnabled(settings.event_rsvp_updates_enabled);
+        setPublicEventAnnouncementsEnabled(settings.public_event_announcements_enabled);
+        setNetworkEventAnnouncementsEnabled(settings.network_event_announcements_enabled);
+      } catch (err) {
+        console.error("Failed to load notification settings:", err);
+      } finally {
+        setLoading(false);
+      }
     }
 
     loadSettings();
