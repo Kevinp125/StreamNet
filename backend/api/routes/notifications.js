@@ -50,22 +50,28 @@ router.route("/:id").put(authenticateMiddleware, async (req, res) => {
   }
 });
 
-router.route("/settings").get(authenticateMiddleware, async (req, res) =>{
-  try{
+router.route("/settings").get(authenticateMiddleware, async (req, res) => {
+  try {
+    const { data: settings, error } = await req.supabase
+      .from("user_notification_settings")
+      .select("*")
+      .eq("user_id", req.user.id)
+      .single();
 
+    if (error) {
+      throw new Error(
+        "Could not fetch the notification preferences for the user",
+        error
+      );
+    }
 
-
-
-  } catch(err){
-
-
-    
+    return res.status(200).json({ settings });
+  } catch (err) {
+    console.error("Could not fetch Notification Settings", err);
+    return res.status(500).json({
+      error: "Failed to fetch settings",
+    });
   }
-
-
-
-
-
-})
+});
 
 module.exports = router;
