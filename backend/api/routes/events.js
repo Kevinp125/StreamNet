@@ -214,9 +214,22 @@ router.route("/rsvp").post(authenticateMiddleware, async (req, res) => {
 
     const { data: event } = await supabaseClient
       .from("events")
-      .select("creator_id, title") 
-      .eq("id", 123)
+      .select("creator_id, title")
+      .eq("id", event_id)
       .single();
+
+    //dont notify if you yourself are rsvping to own event
+    if (event && event.creator_id !== user_id) {
+      createNotification(supabaseClient, {
+        userId: event.creator_id,
+        type: "event_rsvp_update",
+        title: "Someone RSVPed to Your Event",
+        message: `@${req.user.user_metadata.name} ${
+          status === "attending" ? "will attend!!" : "won't attend :("
+        } "${event.title}"`,
+        priority: "general",
+      });
+    }
   } catch (err) {
     console.error("Error updating RSVP:", err);
     res.status(500).json({ error: "Failed to update RSVP" });
