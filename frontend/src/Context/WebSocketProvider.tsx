@@ -66,7 +66,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
         ws.send(
           JSON.stringify({
             type: "auth",
-            userId: session.user.id,
+            token: session.access_token,
           }),
         );
       };

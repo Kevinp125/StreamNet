@@ -1,4 +1,5 @@
 const WebSocket = require("ws");
+const { supbase, supabase } = require("../services/supabaseclient");
 
 //this map is going allow us to store each user when they come online along with their ws object (connection)
 // clients = userId: WebSocket connection
@@ -38,7 +39,7 @@ wss.on("connection", (ws) => {
   console.log("New WebSocket connection has been established");
 
   //this runs when the user who connected sends a message
-  ws.on("message", (message) => {
+  ws.on("message", async (message) => {
     console.log("We got a message:", message.toString());
 
     //wrapping in try catch cause JSON.parse can fail if not valid message
@@ -48,10 +49,25 @@ wss.on("connection", (ws) => {
       //if the message type is auth meaning we are just trying to verify who user is. we store users id into connection map with their ws object.
       //this will allow us to send messages to that ws object in the future
       if (data.type === "auth") {
-        clients.set(data.userId, ws);
-        ws.userId = data.userId; //just put userId directly on ws object will make our life easier down below
-        console.log(`User ${data.userId} authenticated and stored`);
-        console.log(`Total connected users: ${clients.size}`);
+        try {
+          const {
+            data: { user },
+            error,
+          } = await supabase.auth.getUser(data.token);
+
+          if (error || !user) {
+            ws.close();
+            return;
+          }
+
+          clients.set(user.id, ws);
+          ws.userId = user.id;
+          console.log(`User ${user.id} authenticated and stored`);
+          console.log(`Total connected users: ${clients.size}`);
+        } catch (err) {
+          console.error("websocket auth failed", err);
+          ws.close();
+        }
       }
     } catch (err) {
       console.error("Error parsing message", err);

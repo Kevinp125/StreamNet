@@ -1,5 +1,6 @@
 const express = require("express");
 const { authenticateMiddleware } = require("../../middleware/authRequest");
+const { createNotification } = require("../../services/createNotifHelper");
 const router = express.Router(); //making a router
 
 router.route("/").post(authenticateMiddleware, async (req, res) => {
@@ -55,6 +56,51 @@ router.route("/").post(authenticateMiddleware, async (req, res) => {
     res
       .status(201)
       .json({ success: true, message: "event was added to database!" });
+
+    //background processing of notifications after response is sent
+    if (privacy_level === "private" && invited_users.length > 0) {
+      invited_users.forEach((userId) => {
+        createNotification(supabaseClient, {
+          userId: userId,
+          type: "private_event_invite",
+          title: "You are invited to a Private Event!",
+          message: `@${req.user.user_metadata.name} invited you to "${title}"`,
+          priority: "immediate",
+        });
+      });
+    } else if (privacy_level === "network") {
+      const { data: connections } = await supabaseClient
+        .from("connections")
+        .select("connected_streamer_id")
+        .eq("user_id", creator_id);
+
+      connections?.forEach((connection) => {
+        createNotification(supabaseClient, {
+          userId: connection.connected_streamer_id,
+          type: "network_event_announcement",
+          title: "New Event from Your Network",
+          message: `@${req.user.user_metadata.name} created "${title}" for people in their network`,
+          priority: "general",
+        });
+      });
+    } else if (privacy_level === "public") {
+      const { data: allUsers } = await supabaseClient
+        .from("profiles")
+        .select("id");
+
+      allUsers?.forEach((user) => {
+        // Don't notify the creator
+        if (user.id !== creator_id) {
+          createNotification(supabaseClient, {
+            userId: user.id,
+            type: "public_event_announcement",
+            title: "New Public Event Available",
+            message: `@${req.user.user_metadata.name} created "${title}" for all check it out!`,
+            priority: "general",
+          });
+        }
+      });
+    }
   } catch (err) {
     console.error("Error creating event:", err);
     res.status(500).json({ error: "Failed to create event" });
@@ -153,15 +199,37 @@ router.route("/rsvp").post(authenticateMiddleware, async (req, res) => {
 
     //found on supabase documentation interesting query "upsert" will add a new row for the rsvp if it doesnt exist but if user clicked like not going after
     //rsvping this will update it with that status. Pretty useful
-    const { error } = await supabaseClient.from("event_rsvps").upsert({
-      event_id,
-      user_id,
-      status,
-    }, {onConflict: "event_id, user_id"});
+    const { error } = await supabaseClient.from("event_rsvps").upsert(
+      {
+        event_id,
+        user_id,
+        status,
+      },
+      { onConflict: "event_id, user_id" }
+    );
 
     if (error) throw error;
 
     res.status(200).json({ success: true, message: "RSVP updated" });
+
+    const { data: event } = await supabaseClient
+      .from("events")
+      .select("creator_id, title")
+      .eq("id", event_id)
+      .single();
+
+    //dont notify if you yourself are rsvping to own event
+    if (event && event.creator_id !== user_id) {
+      createNotification(supabaseClient, {
+        userId: event.creator_id,
+        type: "event_rsvp_update",
+        title: `${status === "attending" ? "Someone RSVPed to Your Event" : "Someone Opted Out of Your Event"}`,
+        message: `@${req.user.user_metadata.name} ${
+          status === "attending" ? "will attend " : "won't attend "
+        } "${event.title}"`,
+        priority: "general",
+      });
+    }
   } catch (err) {
     console.error("Error updating RSVP:", err);
     res.status(500).json({ error: "Failed to update RSVP" });
