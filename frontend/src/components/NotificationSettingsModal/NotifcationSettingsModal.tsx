@@ -19,8 +19,9 @@ export default function NotificationSettingsModal({ onClose }: NotificationSetti
   const [networkEventAnnouncementsEnabled, setNetworkEventAnnouncementsEnabled] = useState(true);
 
   return (
-    <section className='max-h-[80vh] w-full max-w-xl overflow-hidden rounded-lg bg-white shadow-xl'>
-      <header className='flex items-center justify-between border-b border-gray-200 p-6'>
+    <section className='flex max-h-[70vh] w-full max-w-xl flex-col rounded-lg bg-white'>
+      {/*Header just has title and close  */}
+      <header className='flex flex-shrink-0 items-center justify-between border-b border-gray-200 p-6'>
         <h2 className='text-xl font-semibold'>Notification Settings 🔔</h2>
         <X
           onClick={onClose}
@@ -28,7 +29,9 @@ export default function NotificationSettingsModal({ onClose }: NotificationSetti
         />
       </header>
 
-      <main className='px-8'>
+      {/*Main section comprises all the notification toggles */}
+      <main className='flex-1 overflow-y-scroll px-8'>
+        {/*This is the Push Notifications toggle has its own little section */}
         <div className='flex flex-col gap-2 border-b py-5'>
           <div className='flex items-center justify-between'>
             <span className='font-medium'> Push Notifications</span>
@@ -39,6 +42,7 @@ export default function NotificationSettingsModal({ onClose }: NotificationSetti
           </p>
         </div>
 
+        {/*This section is for important notifications starts with toggle to disbale all or enable and you can select which ones */}
         <div className='flex flex-col gap-6 border-b py-5'>
           <div className='flex items-center justify-between'>
             <span className='font-medium'> 🚨 Important Notifications</span>
@@ -62,7 +66,10 @@ export default function NotificationSettingsModal({ onClose }: NotificationSetti
 
           <div className='pl-6'>
             <div className='flex items-center justify-between'>
-              <span className={!importantEnabled ? 'text-gray-500' : "text-black"}> Connection Request Received </span>
+              <span className={!importantEnabled ? "text-gray-500" : "text-black"}>
+                {" "}
+                Connection Request Received{" "}
+              </span>
               <Toggle
                 enabled={connectRequestEnabled}
                 onToggle={() => setConnectRequestEnabled(!connectRequestEnabled)}
@@ -72,7 +79,10 @@ export default function NotificationSettingsModal({ onClose }: NotificationSetti
           </div>
           <div className='pl-6'>
             <div className='flex items-center justify-between'>
-              <span className={!importantEnabled ? 'text-gray-500' : "text-black"}> Connection Request Accepted </span>
+              <span className={!importantEnabled ? "text-gray-500" : "text-black"}>
+                {" "}
+                Connection Request Accepted{" "}
+              </span>
               <Toggle
                 enabled={connectionAcceptedEnabled}
                 onToggle={() => setConnectionAcceptedEnabled(!connectionAcceptedEnabled)}
@@ -82,7 +92,10 @@ export default function NotificationSettingsModal({ onClose }: NotificationSetti
           </div>
           <div className='pl-6'>
             <div className='flex items-center justify-between'>
-              <span className={!importantEnabled ? 'text-gray-500' : "text-black"}> Connection Request Denied </span>
+              <span className={!importantEnabled ? "text-gray-500" : "text-black"}>
+                {" "}
+                Connection Request Denied{" "}
+              </span>
               <Toggle
                 enabled={connectionDeniedEnabled}
                 onToggle={() => setConnectionDeniedEnabled(!connectionDeniedEnabled)}
@@ -92,7 +105,10 @@ export default function NotificationSettingsModal({ onClose }: NotificationSetti
           </div>
           <div className='pl-6'>
             <div className='flex items-center justify-between'>
-              <span className={!importantEnabled ? 'text-gray-500' : "text-black"}> Private Event Invitation </span>
+              <span className={!importantEnabled ? "text-gray-500" : "text-black"}>
+                {" "}
+                Private Event Invitation{" "}
+              </span>
               <Toggle
                 enabled={privateEventInvitationEnabled}
                 onToggle={() => setPrivateEventInvitationEnabled(!privateEventInvitationEnabled)}
@@ -101,9 +117,72 @@ export default function NotificationSettingsModal({ onClose }: NotificationSetti
             </div>
           </div>
         </div>
+
+        {/*Another section but this one is for general notifications same concept as important notifications */}
+        <div className='flex flex-col gap-6 border-b py-5'>
+          <div className='flex items-center justify-between'>
+            <span className='font-medium'> ✉️ General Notifications</span>
+            <Toggle
+              enabled={generalEnabled}
+              onToggle={() => {
+                const newValue = !generalEnabled;
+                setGeneralEnabled(newValue);
+                if (!newValue) {
+                  {
+                    /*if turning off important notifs turn off all children as well */
+                  }
+                  setEventRsvpUpdatesEnabled(false);
+                  setPublicEventAnnouncementsEnabled(false);
+                  setNetworkEventAnnouncementsEnabled(false);
+                }
+              }}
+            />
+          </div>
+
+          <div className='pl-6'>
+            <div className='flex items-center justify-between'>
+              <span className={!generalEnabled ? "text-gray-500" : "text-black"}>
+                Event RSVP Updates
+              </span>
+              <Toggle
+                enabled={eventRsvpUpdatesEnabled}
+                onToggle={() => setEventRsvpUpdatesEnabled(!eventRsvpUpdatesEnabled)}
+                disabled={!generalEnabled}
+              />
+            </div>
+          </div>
+          <div className='pl-6'>
+            <div className='flex items-center justify-between'>
+              <span className={!generalEnabled ? "text-gray-500" : "text-black"}>
+                Public Event Announcements
+              </span>
+              <Toggle
+                enabled={publicEventAnnouncementsEnabled}
+                onToggle={() =>
+                  setPublicEventAnnouncementsEnabled(!publicEventAnnouncementsEnabled)
+                }
+                disabled={!generalEnabled}
+              />
+            </div>
+          </div>
+          <div className='pl-6'>
+            <div className='flex items-center justify-between'>
+              <span className={!generalEnabled ? "text-gray-500" : "text-black"}>
+                Network Event Announcements
+              </span>
+              <Toggle
+                enabled={networkEventAnnouncementsEnabled}
+                onToggle={() =>
+                  setNetworkEventAnnouncementsEnabled(!networkEventAnnouncementsEnabled)
+                }
+                disabled={!generalEnabled}
+              />
+            </div>
+          </div>
+        </div>
       </main>
 
-      <footer className='flex justify-center border-t border-white bg-gray-100 px-6 py-4'>
+      <footer className='flex flex-shrink-0 justify-center border-t border-white bg-gray-100 px-6 py-4'>
         <button className='bg-twitch-purple w-3/4 cursor-pointer rounded-lg px-4 py-2 font-medium text-white'>
           Save Settings
         </button>
