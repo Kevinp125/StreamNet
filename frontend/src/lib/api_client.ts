@@ -331,3 +331,25 @@ export async function getNotificationSettings(accessToken: string) {
     throw err;
   }
 }
+
+export async function updateNotificationSettings(accessToken: string, newSettings: any) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/notifications/settings`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newSettings),
+    });
+
+    if (!res.ok) {
+      throw new Error("Could not update notification settings");
+    }
+
+    return { success: true };
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
