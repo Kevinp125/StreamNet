@@ -74,20 +74,54 @@ router.route("/settings").get(authenticateMiddleware, async (req, res) => {
   }
 });
 
-router.route("/settings").put(authenticateMiddleware, async(req, res) => {
+router.route("/settings").patch(authenticateMiddleware, async (req, res) => {
   const supabaseClient = req.supabase;
   const userId = req.user.id;
 
-  try{
+  try {
+    const {
+      push_enabled,
+      important_enabled,
+      general_enabled,
+      connection_request_enabled,
+      connection_accepted_enabled,
+      connection_denied_enabled,
+      private_event_invitation_enabled,
+      event_rsvp_updates_enabled,
+      public_event_announcements_enabled,
+      network_event_announcements_enabled,
+    } = req.body;
 
+    const { data: settings, error } = await supabaseClient
+      .from("user_notification_settings")
+      .update({
+        push_enabled,
+        important_enabled,
+        general_enabled,
+        connection_request_enabled,
+        connection_accepted_enabled,
+        connection_denied_enabled,
+        private_event_invitation_enabled,
+        event_rsvp_updates_enabled,
+        public_event_announcements_enabled,
+        network_event_announcements_enabled,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("user_id", userId);
 
-  }catch(err){
+    if (error) {
+      throw new Error("Error updating the notification settings", error);
+    }
 
-    
+    return res.status(200).json({
+      message: "Notification settings have been updated for user",
+    });
+  } catch (err) {
+    console.error("Error updating notification settings", err);
+    return res.status(500).json({
+      error: "Could not update notification settings",
+    });
   }
-
-
-  
-})
+});
 
 module.exports = router;
