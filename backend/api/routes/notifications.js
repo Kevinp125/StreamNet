@@ -74,4 +74,20 @@ router.route("/settings").get(authenticateMiddleware, async (req, res) => {
   }
 });
 
+router.route("/settings").put(authenticateMiddleware, async(req, res) => {
+  const supabaseClient = req.supabase;
+  const userId = req.user.id;
+
+  try{
+
+
+  }catch(err){
+
+    
+  }
+
+
+  
+})
+
 module.exports = router;
