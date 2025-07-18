@@ -1,11 +1,15 @@
 import { X } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useAuthContext } from "@/Context/AuthProvider";
+import { updateNotificationSettings } from "@/lib/api_client";
+import { getNotificationSettings } from "@/lib/api_client";
 
 type NotificationSettingsModalProps = {
   onClose: () => void;
 };
 
 export default function NotificationSettingsModal({ onClose }: NotificationSettingsModalProps) {
+  const { session } = useAuthContext();
   const [pushEnabled, setPushEnabled] = useState(true);
   const [importantEnabled, setImportantEnabled] = useState(true);
   const [generalEnabled, setGeneralEnabled] = useState(true);
@@ -17,6 +21,14 @@ export default function NotificationSettingsModal({ onClose }: NotificationSetti
   const [publicEventAnnouncementsEnabled, setPublicEventAnnouncementsEnabled] = useState(true);
   const [networkEventAnnouncementsEnabled, setNetworkEventAnnouncementsEnabled] = useState(true);
 
+  useEffect(() => {
+    async function loadSettings() {
+      if (!session?.access_token) return;
+      const settings = await getNotificationSettings(session?.access_token);
+    }
+
+    loadSettings();
+  }, [session?.access_token]);
   return (
     <section className='flex max-h-[70vh] w-full max-w-xl flex-col rounded-lg bg-white'>
       {/*Header just has title and close  */}
