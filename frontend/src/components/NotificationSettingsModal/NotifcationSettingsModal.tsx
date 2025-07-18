@@ -8,8 +8,15 @@ type NotificationSettingsModalProps = {
 
 export default function NotificationSettingsModal({ onClose }: NotificationSettingsModalProps) {
   const [pushEnabled, setPushEnabled] = useState(true);
-  const [immediateEnabled, setImmediateEnabled] = useState(true);
+  const [importantEnabled, setImportantEnabled] = useState(true);
   const [generalEnabled, setGeneralEnabled] = useState(true);
+  const [connectRequestEnabled, setConnectRequestEnabled] = useState(true);
+  const [connectionAcceptedEnabled, setConnectionAcceptedEnabled] = useState(true);
+  const [connectionDeniedEnabled, setConnectionDeniedEnabled] = useState(true);
+  const [privateEventInvitationEnabled, setPrivateEventInvitationEnabled] = useState(true);
+  const [eventRsvpUpdatesEnabled, setEventRsvpUpdatesEnabled] = useState(true);
+  const [publicEventAnnouncementsEnabled, setPublicEventAnnouncementsEnabled] = useState(true);
+  const [networkEventAnnouncementsEnabled, setNetworkEventAnnouncementsEnabled] = useState(true);
 
   return (
     <section className='max-h-[80vh] w-full max-w-xl overflow-hidden rounded-lg bg-white shadow-xl'>
@@ -21,10 +28,78 @@ export default function NotificationSettingsModal({ onClose }: NotificationSetti
         />
       </header>
 
-      <main className='p-6'>
-        <div className='flex items-center justify-between'>
-          <span className='font-medium'> Push Notifications</span>
-          <Toggle enabled={pushEnabled} onToggle={() => setPushEnabled(!pushEnabled)} />
+      <main className='px-8'>
+        <div className='flex flex-col gap-2 border-b py-5'>
+          <div className='flex items-center justify-between'>
+            <span className='font-medium'> Push Notifications</span>
+            <Toggle enabled={pushEnabled} onToggle={() => setPushEnabled(!pushEnabled)} />
+          </div>
+          <p className='text-sm font-medium text-gray-500'>
+            Receive in-app banner notifications for important priority alerts only
+          </p>
+        </div>
+
+        <div className='flex flex-col gap-6 border-b py-5'>
+          <div className='flex items-center justify-between'>
+            <span className='font-medium'> 🚨 Important Notifications</span>
+            <Toggle
+              enabled={importantEnabled}
+              onToggle={() => {
+                const newValue = !importantEnabled;
+                setImportantEnabled(newValue);
+                if (!newValue) {
+                  {
+                    /*if turning off important notifs turn off all children as well */
+                  }
+                  setConnectRequestEnabled(false);
+                  setConnectionAcceptedEnabled(false);
+                  setConnectionDeniedEnabled(false);
+                  setPrivateEventInvitationEnabled(false);
+                }
+              }}
+            />
+          </div>
+
+          <div className='pl-6'>
+            <div className='flex items-center justify-between'>
+              <span className='text-md'> Connection Request Received </span>
+              <Toggle
+                enabled={connectRequestEnabled}
+                onToggle={() => setConnectRequestEnabled(!connectRequestEnabled)}
+                disabled={!importantEnabled}
+              />
+            </div>
+          </div>
+          <div className='pl-6'>
+            <div className='flex items-center justify-between'>
+              <span className='text-md'> Connection Request Accepted </span>
+              <Toggle
+                enabled={connectionAcceptedEnabled}
+                onToggle={() => setConnectionAcceptedEnabled(!connectionAcceptedEnabled)}
+                disabled={!importantEnabled}
+              />
+            </div>
+          </div>
+          <div className='pl-6'>
+            <div className='flex items-center justify-between'>
+              <span className='text-md'> Connection Request Denied </span>
+              <Toggle
+                enabled={connectionDeniedEnabled}
+                onToggle={() => setConnectionDeniedEnabled(!connectionDeniedEnabled)}
+                disabled={!importantEnabled}
+              />
+            </div>
+          </div>
+          <div className='pl-6'>
+            <div className='flex items-center justify-between'>
+              <span className='text-md'> Private Event Invitation </span>
+              <Toggle
+                enabled={privateEventInvitationEnabled}
+                onToggle={() => setPrivateEventInvitationEnabled(!privateEventInvitationEnabled)}
+                disabled={!importantEnabled}
+              />
+            </div>
+          </div>
         </div>
       </main>
 
