@@ -15,6 +15,7 @@ export default function DashboardPage() {
   const { session, signOut } = useAuthContext();
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showSettings, setShowSettings] = useState(false);
 
   //TODO: Remove later, leaving this here for now so that it is easier to test my apis. Whenever I test them since they have middleware I need to provide a token this is how I see and get that token.
   console.log(session?.access_token);
@@ -84,7 +85,10 @@ export default function DashboardPage() {
         <Card className='h-full w-2/3'>
           <CardTitle className='relative flex items-center justify-center'>
             Recent Notifications
-            <Settings className='text-electric-indigo absolute right-8 h-7 w-7 cursor-pointer transition-transform duration-300 hover:rotate-180' />
+            <Settings
+              onClick={() => setShowSettings(true)}
+              className='text-electric-indigo absolute right-8 h-7 w-7 cursor-pointer transition-transform duration-300 hover:rotate-180'
+            />
           </CardTitle>
 
           <CardContent className='flex flex-col gap-6 text-sm'>
@@ -92,6 +96,12 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
       </div>
+
+      {showSettings && (
+        <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'>
+          {/*HERE GOES SETTINGS COMPONENT */}
+        </div>
+      )}
     </div>
   );
 }
