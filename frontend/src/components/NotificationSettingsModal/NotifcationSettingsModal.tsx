@@ -37,6 +37,28 @@ export default function NotificationSettingsModal({ onClose }: NotificationSetti
 
   const [loading, setLoading] = useState(true);
 
+  async function handleSave() {
+    if (!session?.access_token) return;
+
+    try {
+      await updateNotificationSettings(session.access_token, {
+        push_enabled: pushEnabled,
+        important_enabled: importantEnabled,
+        general_enabled: generalEnabled,
+        connection_request_enabled: connectRequestEnabled,
+        connection_accepted_enabled: connectionAcceptedEnabled,
+        connection_denied_enabled: connectionDeniedEnabled,
+        private_event_invitation_enabled: privateEventInvitationEnabled,
+        event_rsvp_updates_enabled: eventRsvpUpdatesEnabled,
+        public_event_announcements_enabled: publicEventAnnouncementsEnabled,
+        network_event_announcements_enabled: networkEventAnnouncementsEnabled,
+      });
+      onClose();
+    } catch (error) {
+      console.error("Failed to save settings:", error);
+    }
+  }
+
   useEffect(() => {
     async function loadSettings() {
       if (!session?.access_token) return;
@@ -229,7 +251,10 @@ export default function NotificationSettingsModal({ onClose }: NotificationSetti
       </main>
 
       <footer className='flex flex-shrink-0 justify-center rounded-b-lg border-t border-white bg-gray-100 px-6 py-4'>
-        <button className='bg-twitch-purple w-3/4 cursor-pointer rounded-lg px-4 py-2 font-medium text-white'>
+        <button
+          onClick={handleSave}
+          className='bg-twitch-purple w-3/4 cursor-pointer rounded-lg px-4 py-2 font-medium text-white'
+        >
           {loading ? "Loading..." : "Save Settings"}
         </button>
       </footer>
