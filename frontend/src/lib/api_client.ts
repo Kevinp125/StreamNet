@@ -285,8 +285,11 @@ export async function fetchNotifications(accessToken: string) {
   }
 }
 
-
-export async function updateNotificationStatus(accessToken: string, notificationId:string, status:string) {
+export async function updateNotificationStatus(
+  accessToken: string,
+  notificationId: string,
+  status: string,
+) {
   try {
     const res = await fetch(`${API_BASE_URL}/api/notifications/${notificationId}`, {
       method: "PUT",
@@ -294,13 +297,35 @@ export async function updateNotificationStatus(accessToken: string, notification
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({status})
+      body: JSON.stringify({ status }),
     });
 
     if (!res.ok) {
       throw new Error("Could not update notification status");
     }
     return await res.json();
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
+
+export async function getNotificationSettings(accessToken: string) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/notifications/settings`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) {
+      throw new Error("Could not fetch notification settings");
+    }
+
+    const data = await res.json();
+    return data.settings;
   } catch (err) {
     console.error(err);
     throw err;
