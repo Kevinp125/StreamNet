@@ -29,7 +29,6 @@ export default function NotificationList() {
         );
 
         if (res.success) {
-          await updateNotificationStatus(session.access_token, notification.id, "read");
           setNotifications(prev => prev.filter(n => n.id !== notification.id));
         }
       } catch (err) {
