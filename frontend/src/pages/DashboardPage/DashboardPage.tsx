@@ -9,6 +9,7 @@ import { LogOut } from "lucide-react";
 import { Card, CardTitle, CardContent } from "@/components/ui/card";
 import NotificationList from "@/components/NotificationList/NotificationList";
 import { Settings } from "lucide-react";
+import NotificationSettingsModal from "@/components/NotificationSettingsModal/NotifcationSettingsModal";
 
 export default function DashboardPage() {
   const navigate = useNavigate();
@@ -20,6 +21,11 @@ export default function DashboardPage() {
   //TODO: Remove later, leaving this here for now so that it is easier to test my apis. Whenever I test them since they have middleware I need to provide a token this is how I see and get that token.
   console.log(session?.access_token);
   console.log(session?.user);
+
+
+  function handleSettingsClose(){
+    setShowSettings(false);
+  }
 
   useEffect(() => {
     async function populateStreamerCard() {
@@ -99,7 +105,7 @@ export default function DashboardPage() {
 
       {showSettings && (
         <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'>
-          {/*HERE GOES SETTINGS COMPONENT */}
+          <NotificationSettingsModal onClose = {handleSettingsClose}/>
         </div>
       )}
     </div>
