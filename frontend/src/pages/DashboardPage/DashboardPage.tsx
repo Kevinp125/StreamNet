@@ -8,6 +8,7 @@ import { useAuthContext } from "@/Context/AuthProvider";
 import { LogOut } from "lucide-react";
 import { Card, CardTitle, CardContent } from "@/components/ui/card";
 import NotificationList from "@/components/NotificationList/NotificationList";
+import { Settings } from "lucide-react";
 
 export default function DashboardPage() {
   const navigate = useNavigate();
@@ -17,7 +18,7 @@ export default function DashboardPage() {
 
   //TODO: Remove later, leaving this here for now so that it is easier to test my apis. Whenever I test them since they have middleware I need to provide a token this is how I see and get that token.
   console.log(session?.access_token);
-  console.log(session?.user)
+  console.log(session?.user);
 
   useEffect(() => {
     async function populateStreamerCard() {
@@ -81,7 +82,10 @@ export default function DashboardPage() {
         </Button>
 
         <Card className='h-full w-2/3'>
-          <CardTitle className='flex justify-center'>Recent Notifications</CardTitle>
+          <CardTitle className='relative flex items-center justify-center'>
+            Recent Notifications
+            <Settings className='text-electric-indigo absolute right-8 h-7 w-7 cursor-pointer transition-transform duration-300 hover:rotate-180' />
+          </CardTitle>
 
           <CardContent className='flex flex-col gap-6 text-sm'>
             <NotificationList />
