@@ -80,6 +80,19 @@ router
         console.warn("Failed to create user weights:", weightsError);
       }
 
+      const { error: notifSettingsError } = await req.supabase
+        .from("user_notification_settings")
+        .insert({
+          user_id: req.user.id,
+        });
+
+      if (notifSettingsError) {
+        console.warn(
+          "Failed to set a notification settings table for the user",
+          notifSettingsError
+        );
+      }
+
       return res.status(201).json({
         message: "Profile created successfully",
         profile,
