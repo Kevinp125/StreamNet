@@ -50,4 +50,22 @@ router.route("/:id").put(authenticateMiddleware, async (req, res) => {
   }
 });
 
+router.route("/settings").get(authenticateMiddleware, async (req, res) =>{
+  try{
+
+
+
+
+  } catch(err){
+
+
+    
+  }
+
+
+
+
+
+})
+
 module.exports = router;
