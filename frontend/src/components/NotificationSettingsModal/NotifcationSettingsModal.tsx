@@ -66,8 +66,7 @@ export default function NotificationSettingsModal({ onClose }: NotificationSetti
           <div className='pl-6'>
             <div className='flex items-center justify-between'>
               <span className={!importantEnabled ? "text-gray-500" : "text-black"}>
-                {" "}
-                Connection Request Received{" "}
+                Connection Request Received
               </span>
               <Toggle
                 enabled={connectRequestEnabled}
@@ -79,8 +78,7 @@ export default function NotificationSettingsModal({ onClose }: NotificationSetti
           <div className='pl-6'>
             <div className='flex items-center justify-between'>
               <span className={!importantEnabled ? "text-gray-500" : "text-black"}>
-                {" "}
-                Connection Request Accepted{" "}
+                Connection Request Accepted
               </span>
               <Toggle
                 enabled={connectionAcceptedEnabled}
@@ -92,8 +90,7 @@ export default function NotificationSettingsModal({ onClose }: NotificationSetti
           <div className='pl-6'>
             <div className='flex items-center justify-between'>
               <span className={!importantEnabled ? "text-gray-500" : "text-black"}>
-                {" "}
-                Connection Request Denied{" "}
+                Connection Request Denied
               </span>
               <Toggle
                 enabled={connectionDeniedEnabled}
@@ -105,8 +102,7 @@ export default function NotificationSettingsModal({ onClose }: NotificationSetti
           <div className='pl-6'>
             <div className='flex items-center justify-between'>
               <span className={!importantEnabled ? "text-gray-500" : "text-black"}>
-                {" "}
-                Private Event Invitation{" "}
+                Private Event Invitation
               </span>
               <Toggle
                 enabled={privateEventInvitationEnabled}
