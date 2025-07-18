@@ -1,16 +1,39 @@
 const WebSocket = require("ws");
 
-//need to make a websocket server that listens on port 8080 (standard)
-
-const wss = new WebSocket.Server({ port: 8080 });
-console.log("WebSocket server running on port 8080");
 //this map is going allow us to store each user when they come online along with their ws object (connection)
 // clients = userId: WebSocket connection
 const clients = new Map();
 
-//everything for websockets is event driven...
+//this function will get called by createNotification helper whenever notification gets created
+//it attempts to send real time notification if user is online (they are on clients map)
+function sendNotificationToUser(userId, notification) {
+  const userConnection = clients.get(userId);
 
+  //we check map above if the userId is there websocket object is returned so check if
+  //it is exists (isnt null) and the readyState of the ws object is OPEN
+  if (userConnection && userConnection.readyState === WebSocket.OPEN) {
+    userConnection.send(
+      JSON.stringify({
+        type: "notification",
+        data: notification,
+      })
+    );
+
+    console.log(`Sent notif to user ${userId}`);
+    return true;
+  }
+
+  console.log(`user is not connected did not send notif real time`);
+  return false;
+}
+
+//everything for websockets is event driven...
 //on a client connection to the server we want to get their ws object
+//only run server if it was originally by node js not imports or stuff on load
+//need to make a websocket server that listens on port 8080 (standard)
+
+const wss = new WebSocket.Server({ port: 8080 });
+console.log("WebSocket server running on port 8080");
 wss.on("connection", (ws) => {
   console.log("New WebSocket connection has been established");
 
@@ -50,3 +73,5 @@ wss.on("connection", (ws) => {
     console.error("WebSocket error:", error);
   });
 });
+
+module.exports = { sendNotificationToUser };

@@ -5,20 +5,12 @@ import { useAuthContext } from "@/Context/AuthProvider";
 import { fetchNotifications } from "@/lib/api_client";
 import { setConnectionRequestStatusAndPostIfAccept } from "@/lib/api_client";
 import { updateNotificationStatus } from "@/lib/api_client";
-
-type Notification = {
-  id: string;
-  type: string;
-  title: string;
-  message: string;
-  contextData: any;
-  status: string;
-  priority: string;
-  created_at: string;
-};
+import { useWebSocketContext } from "@/Context/WebSocketProvider";
+import type { Notification } from "@/types/AppTypes";
 
 export default function NotificationList() {
   const { session } = useAuthContext();
+  const { newNotification } = useWebSocketContext(); //this grabs the newNotification if there is one after server sent user message
   const [notifications, setNotifications] = useState<Notification[]>([]);
 
   //function gets called whenever an action on notification is clicked.
@@ -68,6 +60,12 @@ export default function NotificationList() {
 
     getNotifications();
   }, [session?.access_token]);
+
+  useEffect(() => {
+    if (newNotification) {
+      setNotifications(prev => [newNotification, ...prev]);
+    }
+  }, [newNotification]);
 
   //for now we want to separate the notifications whose priortiy is immediate vs the ones who have a general priortiy
   const immediateNotifications = notifications.filter(n => n.priority === "immediate");

@@ -9,6 +9,7 @@ import CheckIfNewProfilePage from "./pages/CheckIfNewProfilePage/CheckIfNewProfi
 import Layout from "./components/Layout/Layout";
 import { AuthProvider } from "./Context/AuthProvider";
 import { WebSocketProvider } from "./Context/WebSocketProvider";
+import { Toaster } from "sonner";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import { DASHBOARD_PATH, LANDING_PATH, EXTRA_SETUP_PATH, DISCOVER_PATH, CONNECTIONS_PATH, EVENTS_PATH} from "@/lib/paths";
 
@@ -29,8 +30,10 @@ function App() {
               <Route path={CONNECTIONS_PATH} element={<ProtectedRoute> <SavedConnectionsPage /> </ProtectedRoute>} />
               <Route path={EVENTS_PATH} element={<ProtectedRoute> <EventsPage /> </ProtectedRoute>} />
             </Route>
-            
+
           </Routes>  
+
+          <Toaster position="bottom-right" richColors closeButton/>
         </WebSocketProvider>
       </AuthProvider>
     </>
