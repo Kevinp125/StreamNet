@@ -62,7 +62,7 @@ export default function NotificationSettingsModal({ onClose }: NotificationSetti
 
           <div className='pl-6'>
             <div className='flex items-center justify-between'>
-              <span className='text-md'> Connection Request Received </span>
+              <span className={!importantEnabled ? 'text-gray-500' : "text-black"}> Connection Request Received </span>
               <Toggle
                 enabled={connectRequestEnabled}
                 onToggle={() => setConnectRequestEnabled(!connectRequestEnabled)}
@@ -72,7 +72,7 @@ export default function NotificationSettingsModal({ onClose }: NotificationSetti
           </div>
           <div className='pl-6'>
             <div className='flex items-center justify-between'>
-              <span className='text-md'> Connection Request Accepted </span>
+              <span className={!importantEnabled ? 'text-gray-500' : "text-black"}> Connection Request Accepted </span>
               <Toggle
                 enabled={connectionAcceptedEnabled}
                 onToggle={() => setConnectionAcceptedEnabled(!connectionAcceptedEnabled)}
@@ -82,7 +82,7 @@ export default function NotificationSettingsModal({ onClose }: NotificationSetti
           </div>
           <div className='pl-6'>
             <div className='flex items-center justify-between'>
-              <span className='text-md'> Connection Request Denied </span>
+              <span className={!importantEnabled ? 'text-gray-500' : "text-black"}> Connection Request Denied </span>
               <Toggle
                 enabled={connectionDeniedEnabled}
                 onToggle={() => setConnectionDeniedEnabled(!connectionDeniedEnabled)}
@@ -92,7 +92,7 @@ export default function NotificationSettingsModal({ onClose }: NotificationSetti
           </div>
           <div className='pl-6'>
             <div className='flex items-center justify-between'>
-              <span className='text-md'> Private Event Invitation </span>
+              <span className={!importantEnabled ? 'text-gray-500' : "text-black"}> Private Event Invitation </span>
               <Toggle
                 enabled={privateEventInvitationEnabled}
                 onToggle={() => setPrivateEventInvitationEnabled(!privateEventInvitationEnabled)}
