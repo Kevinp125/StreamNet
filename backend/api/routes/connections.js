@@ -68,6 +68,24 @@ router.route("/").post(authenticateMiddleware, async (req, res) => {
       success: true,
       message: decision === "accept" ? "accepted" : "denied",
     });
+
+    if (decision === "accept") {
+      createNotification(supabaseClient, {
+        userId: request.sender_id,
+        type: "connection_accepted",
+        title: "Connection Request Accepted!",
+        message: `@${req.user.user_metadata.name} accepted your request to connect`,
+        priority: "immediate",
+      });
+    } else if (decision === "deny") {
+      createNotification(supabaseClient, {
+        userId: request.sender_id,
+        type: "connection_denied",
+        title: "Connection Request Denied :(",
+        message: `@${req.user.user_metadata.name} denied your request to connect`,
+        priority: "immediate",
+      });
+    }
   } catch (err) {
     console.error("Error processing the connection request", err);
     res.status(500).json({ error: "Failed to process request" });
