@@ -52,6 +52,17 @@ router.route("/").post(authenticateMiddleware, async (req, res) => {
       if (connectError) throw connectError;
     }
 
+    const { error: notificationError } = await supabaseClient
+      .from("notifications")
+      .update({ status: "read", read_at: new Date().toISOString() })
+      .eq("user_id", user_id)
+      .eq("contextData->>request_id", requestId);
+
+    if (notificationError) {
+      console.error("Failed to update notification status:", notificationError);
+      // Don't throw here - connection was successful, notification update is secondary
+    }
+
     //201 status code signifies successful processing of a request
     res.status(201).json({
       success: true,
@@ -142,99 +153,20 @@ router.route("/send-request").post(authenticateMiddleware, async (req, res) => {
       .select()
       .single();
 
-    //need this so that notification that we put in table has this information. So when user
-    //accepts a request we know which one to accept.
-
-    const requestId = insertedRequest.id;
-    if (error) throw error;
-
-    //get data of user that is logged in as well as streamer that was clicked on which will be passed through the body
-    const { data: user } = await req.supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", sender_id)
-      .single();
-
-    const { data: streamer } = await req.supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", receiver_id)
-      .single();
-
-    //get what the users weights are right now
-    const { data: userWeights } = await req.supabase
-      .from("user_weights")
-      .select("*")
-      .eq("user_id", sender_id)
-      .single();
-
-    //remember calcAgeScore returns 2 or 4 if ages are closer so if its greater than 1 we consider it that user cares about age
-    const ageClose = calcAgeScore(user, streamer) > WEIGHT_UPDATE_TRESHOLD;
-    //same thing language matches if calc language checks them and they return greater than 1 cause they are same
-    const languageMatch =
-      calcLanguageScore(user, streamer) > WEIGHT_UPDATE_TRESHOLD;
-    const gameMatch = calcGameScore(user, streamer) > WEIGHT_UPDATE_TRESHOLD;
-
-    //now after we checked why user connected with this streamer. Did he give importance to languages matching, games matching, age?
-    //we update all the weights based on the matching
-    if (ageClose) userWeights.age_weight += WEIGHT_INCREASE;
-    if (gameMatch) userWeights.game_weight += WEIGHT_INCREASE;
-    if (languageMatch) userWeights.language_weight += WEIGHT_INCREASE;
-
-    //Below two weight updates since they arent something as binary as same language or range of age we update based on user preference
-    //dont need to parse audience_preferences I forgot supabase returns it as an object already not a string
-    const audiencePreferences = userWeights.audience_preferences;
-    const streamerAudience = streamer.targetAudience; //get what audience the streamer streams too
-
-    //since when users sign up they have a dropdown list of audiences streamers audience will always exist in our JSON of audience preference weights
-    //increase the weight of that streamer's audience in our preferences because if we connected with a mature streamer it is because we want to see more of those.
-    audiencePreferences[streamerAudience] += WEIGHT_INCREASE;
-
-    const noDupTags = mergeAndDeduplicateTags(
-      streamer.tags,
-      streamer.twitch_tags
-    );
-
-    //for each tag the streamer we connected with has
-    noDupTags.forEach((tag) => {
-      if (userWeights.preferred_tags[tag]) {
-        //check the json of preffered tags if that tag exists in there already update the weight on that tag
-        userWeights.preferred_tags[tag] += WEIGHT_INCREASE;
-      } else {
-        //if the tag doesnt exist then add it as a new tag and add the intial boost of 1.1 that is what all new tags will start with
-        userWeights.preferred_tags[tag] = 1.1;
-      }
-    });
-
-    //now that everything is updated accordingly actually save these weights in our database
-    await req.supabase
-      .from("user_weights")
-      .update({
-        age_weight: userWeights.age_weight,
-        audience_preferences: audiencePreferences,
-        game_weight: userWeights.game_weight,
-        language_weight: userWeights.language_weight,
-        preferred_tags: userWeights.preferred_tags,
-      })
-      .eq("user_id", sender_id);
-
-    //finally we post a notification to the database...
-    await createNotification(supabaseClient, {
-      userId: receiver_id,
-      type: "connection_request",
-      title: "New Connection Request",
-      message: `@${user.twitchUser} wants to connect with you`,
-      contextData: { sender_id: sender_id, request_id: requestId },
-      priority: "immediate",
-    });
-
     res.status(201).json({
       success: true,
-      message: "Connection request sent and weigths updated",
+      message: "Connection request sent background work happening",
     });
+
+    processConnectRequestBackgroundWork(
+      supabaseClient,
+      sender_id,
+      receiver_id,
+      insertedRequest.id
+    );
   } catch (err) {
-    console.error("Error sending the connect request or updating weights", err);
-    res.status(500).json({ error: "Failed to send request / update weigths" });
+    console.error("Error sending the connect request", err);
+    res.status(500).json({ error: "Failed to send request" });
   }
 });
 
@@ -281,4 +213,97 @@ router
     }
   });
 
+//this function gets called after connetion req returns a res. It is async that way it doesnt slow processing
+async function processConnectRequestBackgroundWork(
+  supabaseClient,
+  sender_id,
+  receiver_id,
+  requestId
+) {
+  try {
+    //get data of user that is logged in as well as streamer that was clicked on which will be passed through the body
+    const { data: user } = await supabaseClient
+      .from("profiles")
+      .select("*")
+      .eq("id", sender_id)
+      .single();
+
+    const { data: streamer } = await supabaseClient
+      .from("profiles")
+      .select("*")
+      .eq("id", receiver_id)
+      .single();
+
+    //get what the users weights are right now
+    const { data: userWeights } = await supabaseClient
+      .from("user_weights")
+      .select("*")
+      .eq("user_id", sender_id)
+      .single();
+
+    //remember calcAgeScore returns 2 or 4 if ages are closer so if its greater than 1 we consider it that user cares about age
+    const ageClose = calcAgeScore(user, streamer) > WEIGHT_UPDATE_TRESHOLD;
+    //same thing language matches if calc language checks them and they return greater than 1 cause they are same
+    const languageMatch =
+      calcLanguageScore(user, streamer) > WEIGHT_UPDATE_TRESHOLD;
+    const gameMatch = calcGameScore(user, streamer) > WEIGHT_UPDATE_TRESHOLD;
+
+    //now after we checked why user connected with this streamer. Did he give importance to languages matching, games matching, age?
+    //we update all the weights based on the matching
+    if (ageClose) userWeights.age_weight += WEIGHT_INCREASE;
+    if (gameMatch) userWeights.game_weight += WEIGHT_INCREASE;
+    if (languageMatch) userWeights.language_weight += WEIGHT_INCREASE;
+
+    //Below two weight updates since they arent something as binary as same language or range of age we update based on user preference
+    //dont need to parse audience_preferences I forgot supabase returns it as an object already not a string
+    const audiencePreferences = userWeights.audience_preferences;
+    const streamerAudience = streamer.targetAudience; //get what audience the streamer streams too
+
+    //since when users sign up they have a dropdown list of audiences streamers audience will always exist in our JSON of audience preference weights
+    //increase the weight of that streamer's audience in our preferences because if we connected with a mature streamer it is because we want to see more of those.
+    audiencePreferences[streamerAudience] += WEIGHT_INCREASE;
+
+    const noDupTags = mergeAndDeduplicateTags(
+      streamer.tags,
+      streamer.twitch_tags
+    );
+
+    //for each tag the streamer we connected with has
+    noDupTags.forEach((tag) => {
+      if (userWeights.preferred_tags[tag]) {
+        //check the json of preffered tags if that tag exists in there already update the weight on that tag
+        userWeights.preferred_tags[tag] += WEIGHT_INCREASE;
+      } else {
+        //if the tag doesnt exist then add it as a new tag and add the intial boost of 1.1 that is what all new tags will start with
+        userWeights.preferred_tags[tag] = 1.1;
+      }
+    });
+
+    //now that everything is updated accordingly actually save these weights in our database
+    await supabaseClient
+      .from("user_weights")
+      .update({
+        age_weight: userWeights.age_weight,
+        audience_preferences: audiencePreferences,
+        game_weight: userWeights.game_weight,
+        language_weight: userWeights.language_weight,
+        preferred_tags: userWeights.preferred_tags,
+      })
+      .eq("user_id", sender_id);
+
+    //finally we post a notification to the database...
+    await createNotification(supabaseClient, {
+      userId: receiver_id,
+      type: "connection_request",
+      title: "New Connection Request",
+      message: `@${user.twitchUser} wants to connect with you`,
+      contextData: { sender_id: sender_id, request_id: requestId },
+      priority: "immediate",
+    });
+  } catch (err) {
+    console.error(
+      "Error processing background operations (weights, notifications, etc) after sending request"
+    );
+  }
+}
 module.exports = router;
