@@ -78,10 +78,23 @@ async function updateUserActiveWindow(userId) {
 
 async function getUsersActiveWindow(userId) {
   try {
+
     const { data: user, error } = await supabase
       .from("profiles")
       .select("active_window_start, active_window_end, last_window_calculated")
       .eq("id", userId)
       .single();
+
+      if(error) throw error;
+
+      const sevenDaysAgo = new Date();
+      sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+      const needsUpdate = !user.last_window_calculated || new Date(user.last_window_calculated) < sevenDaysAgo;
+
+      if(needsUpdate)
+        return await updateUserActiveWindow(userId);
+
+      
   } catch (err) {}
 }
