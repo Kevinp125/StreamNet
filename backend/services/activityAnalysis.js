@@ -20,5 +20,20 @@ async function calculateActiveWindow(userId) {
     if (!activities || activities.length < 5) {
       return { start: 19, end: 22, count: 0 };
     }
+
+    //we are working in military time
+    //making 8 windows (3 hour chunks)
+    //updating count whenever activity takes place
+    //within those windows
+    const windows = [
+      { start: 0, end: 3, count: 0 }, 
+      { start: 3, end: 6, count: 0 }, 
+      { start: 6, end: 9, count: 0 }, 
+      { start: 9, end: 12, count: 0 }, 
+      { start: 12, end: 15, count: 0 }, 
+      { start: 15, end: 18, count: 0 }, 
+      { start: 18, end: 21, count: 0 }, 
+      { start: 21, end: 24, count: 0 }, 
+    ];
   } catch (err) {}
 }
