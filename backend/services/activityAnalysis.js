@@ -42,6 +42,11 @@ async function calculateActiveWindow(userId) {
       if(window) window.count++;
     })
 
+    const activeWindow = windows.sort((a,b) => b.count - a.count)[0];
+    return activeWindow;
 
-  } catch (err) {}
+  } catch (err) {
+    console.error('Calculate active window error:', err);
+    return { start: 19, end: 22, count: 0 }; 
+  }
 }
