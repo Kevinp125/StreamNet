@@ -35,5 +35,13 @@ async function calculateActiveWindow(userId) {
       { start: 18, end: 21, count: 0 }, 
       { start: 21, end: 24, count: 0 }, 
     ];
+
+    activities.forEach(activity => {
+      const hour = new Date(activity.created_at).getHours();
+      const window = windows.find(w => hour >= w.start && hour < w.end);
+      if(window) window.count++;
+    })
+
+
   } catch (err) {}
 }
