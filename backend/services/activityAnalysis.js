@@ -76,6 +76,8 @@ async function updateUserActiveWindow(userId) {
   }
 }
 
+//this function is main entry point that we will check
+//when scheduling notifications
 async function getUsersActiveWindow(userId) {
   try {
     const { data: user, error } = await supabase
@@ -93,7 +95,9 @@ async function getUsersActiveWindow(userId) {
       !user.last_window_calculated ||
       new Date(user.last_window_calculated) < sevenDaysAgo;
 
-    if (needsUpdate) return await updateUserActiveWindow(userId);
+    if (needsUpdate) {
+      return await updateUserActiveWindow(userId);
+    }
 
     return {
       start: user.active_window_start,
@@ -104,3 +108,9 @@ async function getUsersActiveWindow(userId) {
     return { start: 19, end: 22 };
   }
 }
+
+module.exports = {
+  calculateActiveWindow,
+  updateUserActiveWindow,
+  getUsersActiveWindow,
+};
