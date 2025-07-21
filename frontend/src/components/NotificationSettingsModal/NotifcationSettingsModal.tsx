@@ -42,7 +42,7 @@ export default function NotificationSettingsModal({ onClose }: NotificationSetti
     if (!session?.access_token) return;
 
     try {
-      await updateNotificationSettings(session.access_token, {
+      setNotificationSettings({
         push_enabled: pushEnabled,
         important_enabled: importantEnabled,
         general_enabled: generalEnabled,
@@ -54,8 +54,8 @@ export default function NotificationSettingsModal({ onClose }: NotificationSetti
         public_event_announcements_enabled: publicEventAnnouncementsEnabled,
         network_event_announcements_enabled: networkEventAnnouncementsEnabled,
       });
-
-      setNotificationSettings({
+      
+      await updateNotificationSettings(session.access_token, {
         push_enabled: pushEnabled,
         important_enabled: importantEnabled,
         general_enabled: generalEnabled,

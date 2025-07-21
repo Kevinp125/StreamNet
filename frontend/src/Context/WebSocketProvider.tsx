@@ -1,4 +1,4 @@
-import { useContext, useState, useEffect, createContext, type ReactNode } from "react";
+import { useContext, useState, useEffect, useRef, createContext, type ReactNode } from "react";
 import { useAuthContext } from "./AuthProvider";
 import type { Notification } from "@/types/AppTypes";
 import { toast } from "sonner"; //function that calls the notif pop up
@@ -19,10 +19,44 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [isConnected, setIsConnected] = useState(false);
   const [newNotification, setNewNotification] = useState<Notification | null>(null); //adding this state so we can broadcast the new notification being added to any component
-  const { session } = useAuthContext(); //we dont want to establish socket connection if user isnt authenticated / logged in
+  const { session, notificationSettings } = useAuthContext(); //we dont want to establish socket connection if user isnt authenticated / logged in
+
+  const settingsRef = useRef(notificationSettings);
+
+  useEffect(() => {
+    settingsRef.current = notificationSettings;
+  }, [notificationSettings]);
 
   function handleNewNotification(notification: Notification) {
-    if (notification.priority === "immediate") {
+    function shouldShowPopup() {
+      if (settingsRef.current === null) {
+        return false; // Changed from true to false
+      }
+
+      //if user has push disabled auto return
+      if (!settingsRef.current.push_enabled) {
+        return false;
+      }
+
+      if (notification.priority !== "immediate") {
+        return false;
+      }
+
+      switch (notification.type) {
+        case "connection_request":
+          return settingsRef.current.connection_request_enabled;
+        case "connection_accepted":
+          return settingsRef.current.connection_accepted_enabled;
+        case "connection_denied":
+          return settingsRef.current.connection_denied_enabled;
+        case "private_event_invitation":
+          return settingsRef.current.private_event_invitation_enabled;
+        default:
+          return true;
+      }
+    }
+
+    if (shouldShowPopup()) {
       //if the notification is immediate priortiy we call toast function
       //below to display pop up to user. Otherwise user can just check when they go to dashboard
       //reduce the spammy feeling

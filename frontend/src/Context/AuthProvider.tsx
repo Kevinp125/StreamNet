@@ -39,7 +39,6 @@ export function AuthProvider({ children }: any) {
       if (error) throw error;
       setSession(session);
       setUser(session?.user || null);
-      setLoading(false); //dont forget to set loading to false afterwards
 
       if (session?.access_token) {
         try {
@@ -49,6 +48,8 @@ export function AuthProvider({ children }: any) {
           setNotificationSettings(null);
         }
       }
+
+      setLoading(false); //dont forget to set loading to false afterwards
     }
 
     //this onAuthStateChange is a supabase provided function that listens to whenever user signs in, signs out, token refreshes, etc. As soon as any of this happens event is fired and all context state is updated accordingly
