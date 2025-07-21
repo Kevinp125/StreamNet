@@ -70,7 +70,7 @@ export default function NotificationList() {
           return notificationSettings.private_event_invitation_enabled;
         case "event_rsvp_updates":
           return notificationSettings.event_rsvp_updates_enabled;
-        case "public_event_announcements":
+        case "public_event_announcement":
           return notificationSettings.public_event_announcements_enabled;
         case "network_event_announcements":
           return notificationSettings.network_event_announcements_enabled;

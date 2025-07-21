@@ -10,6 +10,7 @@ type NotificationSettingsModalProps = {
 
 export default function NotificationSettingsModal({ onClose }: NotificationSettingsModalProps) {
   const { session } = useAuthContext();
+  const { setNotificationSettings } = useAuthContext();
   const [pushEnabled, setPushEnabled] = useState<boolean | undefined>(undefined);
   const [importantEnabled, setImportantEnabled] = useState<boolean | undefined>(undefined);
   const [generalEnabled, setGeneralEnabled] = useState<boolean | undefined>(undefined);
@@ -42,6 +43,19 @@ export default function NotificationSettingsModal({ onClose }: NotificationSetti
 
     try {
       await updateNotificationSettings(session.access_token, {
+        push_enabled: pushEnabled,
+        important_enabled: importantEnabled,
+        general_enabled: generalEnabled,
+        connection_request_enabled: connectRequestEnabled,
+        connection_accepted_enabled: connectionAcceptedEnabled,
+        connection_denied_enabled: connectionDeniedEnabled,
+        private_event_invitation_enabled: privateEventInvitationEnabled,
+        event_rsvp_updates_enabled: eventRsvpUpdatesEnabled,
+        public_event_announcements_enabled: publicEventAnnouncementsEnabled,
+        network_event_announcements_enabled: networkEventAnnouncementsEnabled,
+      });
+
+      setNotificationSettings({
         push_enabled: pushEnabled,
         important_enabled: importantEnabled,
         general_enabled: generalEnabled,
