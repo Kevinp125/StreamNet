@@ -75,3 +75,13 @@ async function updateUserActiveWindow(userId) {
     throw err;
   }
 }
+
+async function getUsersActiveWindow(userId) {
+  try {
+    const { data: user, error } = await supabase
+      .from("profiles")
+      .select("active_window_start, active_window_end, last_window_calculated")
+      .eq("id", userId)
+      .single();
+  } catch (err) {}
+}
