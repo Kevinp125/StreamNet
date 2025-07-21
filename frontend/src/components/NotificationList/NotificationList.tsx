@@ -101,8 +101,9 @@ export default function NotificationList() {
   }, [newNotification]);
 
   //for now we want to separate the notifications whose priortiy is immediate vs the ones who have a general priortiy
-  const immediateNotifications = notifications.filter(n => n.priority === "immediate");
-  const generalNotifications = notifications.filter(n => n.priority === "general");
+  const notificationsPostSettings = filterNotifications(notifications);
+  const immediateNotifications = notificationsPostSettings.filter(n => n.priority === "immediate");
+  const generalNotifications = notificationsPostSettings.filter(n => n.priority === "general");
 
   return (
     <div className='flex flex-col gap-6'>

@@ -46,7 +46,7 @@ export function AuthProvider({ children }: any) {
           const settings = await getNotificationSettings(session.access_token);
           setNotificationSettings(settings);
         } catch (error) {
-          console.error("Failed to load notification settings:", error);
+          setNotificationSettings(null);
         }
       }
     }
@@ -56,8 +56,12 @@ export function AuthProvider({ children }: any) {
       setSession(session);
       setUser(session?.user || null);
       if (session?.access_token) {
-        const settings = await getNotificationSettings(session.access_token);
-        setNotificationSettings(settings);
+        try {
+          const settings = await getNotificationSettings(session.access_token);
+          setNotificationSettings(settings);
+        } catch (error) {
+          setNotificationSettings(null);
+        }
       }
       setLoading(false);
     });
