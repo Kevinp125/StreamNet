@@ -6,6 +6,7 @@ import { fetchNotifications } from "@/lib/api_client";
 import { setConnectionRequestStatusAndPostIfAccept } from "@/lib/api_client";
 import { updateNotificationStatus } from "@/lib/api_client";
 import { useWebSocketContext } from "@/Context/WebSocketProvider";
+import { postActivity } from "@/lib/api_client";
 import type { Notification } from "@/types/AppTypes";
 
 export default function NotificationList() {
@@ -31,6 +32,7 @@ export default function NotificationList() {
 
         if (res.success) {
           setNotifications(prev => prev.filter(n => n.id !== notification.id));
+          postActivity(session.access_token, "notification_action");
         }
       } catch (err) {
         console.error("Could not process connection request", err);
@@ -41,6 +43,7 @@ export default function NotificationList() {
 
         await updateNotificationStatus(session.access_token, notification.id, "read");
         setNotifications(prev => prev.filter(n => n.id !== notification.id));
+        postActivity(session.access_token, "notification_action");
       } catch (err) {
         console.error("Could not mark notification as read", err);
       }
@@ -86,6 +89,8 @@ export default function NotificationList() {
       try {
         const notifications = await fetchNotifications(session.access_token);
         setNotifications(notifications);
+
+        postActivity(session.access_token, "notification_view");
       } catch (err) {
         console.error("Failed to get notifs", err);
       }
