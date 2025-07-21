@@ -5,6 +5,7 @@ const connectionsRouter = require("./connections");
 const notinterestedRouter = require("./notinterested");
 const eventsRouter = require("./events");
 const notifRouter = require("./notifications");
+const activityRouter = require("./activity");
 const router = express.Router(); 
 
 router.use("/auth", authRouter); //mount the requests in authRoute file to correspond to /auth
@@ -13,5 +14,6 @@ router.use("/connections", connectionsRouter);
 router.use("/not-interested", notinterestedRouter);
 router.use("/events", eventsRouter);
 router.use("/notifications", notifRouter);
+router.use("/activity", activityRouter);
 
 module.exports = router;

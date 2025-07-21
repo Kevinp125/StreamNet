@@ -30,3 +30,5 @@ router.route("/").post(authenticateMiddleware, async (req, res) => {
     });
   }
 });
+
+module.exports = router;
