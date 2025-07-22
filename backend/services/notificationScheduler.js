@@ -99,3 +99,15 @@ async function deliverUserPendingNotifications(userId) {
     console.error(`Error delivering notifications to user`, err);
   }
 }
+
+function startGeneralNotificationScheduler() {
+  console.log(`Starting general notification scheduler...`);
+
+  //run function as soon as app starts
+  deliverPendingNotifications();
+
+  //then run it once every hour
+  setInterval(deliverPendingNotifications, 60 * 60 * 1000);
+}
+
+module.exports = { startGeneralNotificationScheduler };
