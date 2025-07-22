@@ -1,5 +1,6 @@
 const { supabase } = require("./supabaseclient");
 const { sendNotificationToUser } = require("../websocket/websocketServer");
+const { getUsersActiveWindow } = require("./activityAnalysis");
 
 //function will check what users fall within
 //active window during a set interval and call a helper function
@@ -25,21 +26,27 @@ async function deliverPendingNotifications() {
       return;
     }
 
-    if(!usersWithPending || usersWithPending.length === 0){
+    if (!usersWithPending || usersWithPending.length === 0) {
       return;
     }
 
     //remember what I said above user might have multiple notifications pending so put the results
     //from query in a Set to avoid duplicates and just have userId of users who need notifications updated
-    const uniqueUserIds = [...new Set(usersWithPending.map(n => n.user_id))];
+    const uniqueUserIds = [...new Set(usersWithPending.map((n) => n.user_id))];
 
-    for()
+    //using for instead of for each so each user
+    //is processed one by one. If we use async await for each
+    //database gets hit all at once
+    for (const userId of uniqueUserIds) {
+      const window = await getUsersActiveWindow(userId);
 
-
-
-
-
-  } catch (err) {}
+      if (currentHour >= window.start && currentHour < window.end) {
+        await deliverUserPendingNotifications(userId); //function will take care of changing this users notifs from pending to delivered
+      }
+    }
+  } catch (err) {
+    console.error("Error with the background job that gets all users with pending notifications", err)
+  }
 }
 
 //function will change noitfication status from pending to delievered
