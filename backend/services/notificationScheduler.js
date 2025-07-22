@@ -71,7 +71,23 @@ async function deliverUserPendingNotifications(userId) {
     }
 
     if (!pendingNotifications || pendingNotifications.length === 0) {
-      return; 
+      return;
     }
+
+    const { error: updateError } = await supabase
+      .from("notifications")
+      .update({ status: "delivered" })
+      .eq("user_id", userId)
+      .eq("status", "pending");
+
+    if (updateError) {
+      console.error(
+        `Error updating notifications for user`,
+        updateError
+      );
+      return;
+    }
+
+    
   } catch (err) {}
 }
