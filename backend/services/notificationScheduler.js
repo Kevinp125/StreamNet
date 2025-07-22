@@ -81,13 +81,21 @@ async function deliverUserPendingNotifications(userId) {
       .eq("status", "pending");
 
     if (updateError) {
-      console.error(
-        `Error updating notifications for user`,
-        updateError
-      );
+      console.error(`Error updating notifications for user`, updateError);
       return;
     }
 
-    
-  } catch (err) {}
+    //after we update try and send notifications through websocket
+    //function we have will handle that
+    pendingNotifications.forEach((notification) => {
+      const sent = sendNotificationToUser(userId, notification);
+      if (sent) {
+        console.log(
+          `Sent pending notification that is now a delievered one via WebSocket to user`
+        );
+      }
+    });
+  } catch (err) {
+    console.error(`Error delivering notifications to user`, err);
+  }
 }
