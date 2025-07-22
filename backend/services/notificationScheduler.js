@@ -15,8 +15,7 @@ async function deliverPendingNotifications() {
     const { data: usersWithPending, error: usersError } = await supabase
       .from("notifications")
       .select("user_id")
-      .eq("status", "pending")
-      .neq("user_id", null);
+      .eq("status", "pending");
 
     if (usersError) {
       console.error(
