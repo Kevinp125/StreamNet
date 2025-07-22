@@ -45,10 +45,33 @@ async function deliverPendingNotifications() {
       }
     }
   } catch (err) {
-    console.error("Error with the background job that gets all users with pending notifications", err)
+    console.error(
+      "Error with the background job that gets all users with pending notifications",
+      err
+    );
   }
 }
 
 //function will change noitfication status from pending to delievered
 //to individual users
-async function deliverUserPendingNotifications(userId) {}
+async function deliverUserPendingNotifications(userId) {
+  try {
+    const { data: pendingNotifications, error: notifError } = await supabase
+      .from("notifications")
+      .select("*")
+      .eq("user_id", userId)
+      .eq("status", "pending");
+
+    if (notifError) {
+      console.error(
+        `Error fetching pending notifications for user`,
+        notifError
+      );
+      return;
+    }
+
+    if (!pendingNotifications || pendingNotifications.length === 0) {
+      return; 
+    }
+  } catch (err) {}
+}
