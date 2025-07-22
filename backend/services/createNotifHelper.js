@@ -32,19 +32,25 @@ async function createNotification(
         message,
         contextData,
         priority,
+        status,
       })
       .select()
       .single();
 
     if (error) throw error;
 
-    const sent = sendNotificationToUser(userId, notification);
-
-    if (sent) {
-      console.log(`Sent notification via WebSocket to user ${userId}`);
+    if (status === "delivered") {
+      const sent = sendNotificationToUser(userId, notification);
+      if (sent) {
+        console.log(`Sent notification via WebSocket to user ${userId}`);
+      } else {
+        console.log(
+          `User ${userId} offline, notification stored in database only`
+        );
+      }
     } else {
       console.log(
-        `User ${userId} offline, notification stored in database only`
+        `General notification queued for user ${userId} (outside active window)`
       );
     }
   } catch (err) {
