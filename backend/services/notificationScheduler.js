@@ -24,6 +24,21 @@ async function deliverPendingNotifications() {
       );
       return;
     }
+
+    if(!usersWithPending || usersWithPending.length === 0){
+      return;
+    }
+
+    //remember what I said above user might have multiple notifications pending so put the results
+    //from query in a Set to avoid duplicates and just have userId of users who need notifications updated
+    const uniqueUserIds = [...new Set(usersWithPending.map(n => n.user_id))];
+
+    for()
+
+
+
+
+
   } catch (err) {}
 }
 
