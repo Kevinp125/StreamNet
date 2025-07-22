@@ -114,7 +114,7 @@ export default function NotificationList() {
     <div className='flex flex-col gap-6'>
       <div>
         <h3 className='mb-3 text-lg font-semibold text-red-600'>🚨 Important</h3>
-        <div className='flex flex-col gap-3'>
+        <div className='flex flex-col gap-3 max-h-50 overflow-y-auto'>
           {immediateNotifications.length > 0 ? (
             immediateNotifications.map(notification => (
               <NotificationItem
@@ -131,7 +131,7 @@ export default function NotificationList() {
 
       <div>
         <h3 className='mb-3 text-lg font-semibold text-gray-700'>📬 General</h3>
-        <div className='flex flex-col gap-3'>
+        <div className='flex flex-col gap-3 max-h-50 overflow-y-auto'>
           {generalNotifications.length > 0 ? (
             generalNotifications.map(notification => (
               <NotificationItem
