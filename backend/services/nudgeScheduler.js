@@ -29,10 +29,28 @@ async function deliverNudges() {
     const currentHour = new Date().getHours();
     const notificationsToNudge = await findNotificationsNeedingNudge();
 
+    //dont need to nudge if this is the case
+    if (notificationsToNudge.length === 0) {
+      return;
+    }
 
+    //just want to grab all users who need to get nudges
+    //remember one user can have multiple notifications
+    const uniqueUserIds = [
+      ...new Set(notificationsToNudge.map((n) => n.user_id)),
+    ];
 
+    for (const userId of uniqueUserIds) {
+      const window = await getUsersActiveWindow(userId);
 
-    
+      if (currentHour >= window.start && currentHour < window.end) {
+        const userNotifications = notificationsToNudge.filter(
+          (n) => n.user_id === userId
+        );
+      } else {
+        console.log(`User ${userId} not in active window, skipping nudges`);
+      }
+    }
   } catch (err) {
     console.error("Error delivering nudges:", err);
   }
