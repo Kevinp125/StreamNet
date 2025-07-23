@@ -54,7 +54,7 @@ router.route("/").post(authenticateMiddleware, async (req, res) => {
 
     const { error: notificationError } = await supabaseClient
       .from("notifications")
-      .update({ status: "read", read_at: new Date().toISOString() })
+      .update({ status: "read" })
       .eq("user_id", user_id)
       .eq("contextData->>request_id", requestId);
 

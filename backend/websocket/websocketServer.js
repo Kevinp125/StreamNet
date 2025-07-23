@@ -44,7 +44,7 @@ async function sendNotificationToUser(userId, notification) {
 
   //we check map above if the userId is there websocket object is returned so check if
   //it is exists (isnt null) and the readyState of the ws object is OPEN
-  if (userIsOnline(userId)) {
+  if (isUserOnline(userId)) {
     const shouldSend = await shouldSendNotificationToUser(userId, notification);
     if (shouldSend) {
       userConnection.send(
