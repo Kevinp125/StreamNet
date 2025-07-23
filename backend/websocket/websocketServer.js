@@ -30,6 +30,45 @@ function sendNotificationToUser(userId, notification) {
   return false;
 }
 
+async function shouldSendNotificationToUser(userId, notification) {
+  try {
+    const { data: settings, error } = await supabase
+      .from("user_notification_settings")
+      .select("*")
+      .eq("user_id", userId)
+      .single();
+
+    if (error) return false;
+
+    if (notification.priority === "immediate" && !settings.important_enabled)
+      return false;
+    if (notification.priority === "general" && !settings.general_enabled)
+      return false;
+
+    switch (notification.type) {
+      case "connection_request":
+        return settings.connection_request_enabled;
+      case "connection_accepted":
+        return settings.connection_accepted_enabled;
+      case "connection_denied":
+        return settings.connection_denied_enabled;
+      case "private_event_invitation":
+        return settings.private_event_invitation_enabled;
+      case "event_rsvp_update":
+        return settings.event_rsvp_updates_enabled;
+      case "public_event_announcement":
+        return settings.public_event_announcements_enabled;
+      case "network_event_announcements":
+        return settings.network_event_announcements_enabled;
+      default:
+        return false;
+    }
+  } catch (err) {
+    console.error("Error checking notification settings:", err);
+    return false;
+  }
+}
+
 //everything for websockets is event driven...
 //on a client connection to the server we want to get their ws object
 //only run server if it was originally by node js not imports or stuff on load
