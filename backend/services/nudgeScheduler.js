@@ -24,6 +24,20 @@ async function findNotificationsNeedingNudge() {
   }
 }
 
+async function deliverNudges() {
+  try {
+    const currentHour = new Date().getHours();
+    const notificationsToNudge = await findNotificationsNeedingNudge();
+
+
+
+
+    
+  } catch (err) {
+    console.error("Error delivering nudges:", err);
+  }
+}
+
 function startNudgeScheduler() {
   console.log("Starting nudge scheduler");
 
