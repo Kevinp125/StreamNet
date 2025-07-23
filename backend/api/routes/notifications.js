@@ -50,4 +50,78 @@ router.route("/:id").put(authenticateMiddleware, async (req, res) => {
   }
 });
 
+router.route("/settings").get(authenticateMiddleware, async (req, res) => {
+  try {
+    const { data: settings, error } = await req.supabase
+      .from("user_notification_settings")
+      .select("*")
+      .eq("user_id", req.user.id)
+      .single();
+
+    if (error) {
+      throw new Error(
+        "Could not fetch the notification preferences for the user",
+        error
+      );
+    }
+
+    return res.status(200).json({ settings });
+  } catch (err) {
+    console.error("Could not fetch Notification Settings", err);
+    return res.status(500).json({
+      error: "Failed to fetch settings",
+    });
+  }
+});
+
+router.route("/settings").patch(authenticateMiddleware, async (req, res) => {
+  const supabaseClient = req.supabase;
+  const userId = req.user.id;
+
+  try {
+    const {
+      push_enabled,
+      important_enabled,
+      general_enabled,
+      connection_request_enabled,
+      connection_accepted_enabled,
+      connection_denied_enabled,
+      private_event_invitation_enabled,
+      event_rsvp_updates_enabled,
+      public_event_announcements_enabled,
+      network_event_announcements_enabled,
+    } = req.body;
+
+    const { error } = await supabaseClient
+      .from("user_notification_settings")
+      .update({
+        push_enabled,
+        important_enabled,
+        general_enabled,
+        connection_request_enabled,
+        connection_accepted_enabled,
+        connection_denied_enabled,
+        private_event_invitation_enabled,
+        event_rsvp_updates_enabled,
+        public_event_announcements_enabled,
+        network_event_announcements_enabled,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("user_id", userId);
+
+    if (error) {
+      throw new Error("Error updating the notification settings", error);
+    }
+
+    return res.status(200).json({
+      message: "Notification settings have been updated for user",
+    });
+  } catch (err) {
+    console.error("Error updating notification settings", err);
+    return res.status(500).json({
+      error: "Could not update notification settings",
+    });
+  }
+});
+
 module.exports = router;
