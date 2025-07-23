@@ -6,7 +6,14 @@ router.route("/").get(authenticateMiddleware, async (req, res) => {
   try {
     const user_id = req.user.id;
     const supabaseClient = req.supabase;
+    
+    const { data: settings, error: settingsError } = await supabaseClient
+      .from("user_notification_settings")
+      .select("*")
+      .eq("user_id", user_id)
+      .single();
 
+    
     const { data: notifications, error } = await supabaseClient
       .from("notifications")
       .select("*")
