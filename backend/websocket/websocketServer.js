@@ -29,7 +29,7 @@ async function sendNotificationToUser(userId, notification) {
     return true;
   }
 
-  console.log(`user is not connected did not send notif real time`);
+  console.log(`user is not connected or notif was disabled did not send notif real time`);
   return false;
 }
 
