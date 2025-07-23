@@ -24,7 +24,7 @@ function sendNudgeToUser(userId, notification) {
         type: "nudge",
         data: {
           originalNotificationId: notification.id,
-          title: `Reminder: ${notification.title}`,
+          title: notification.title,
           message: notification.message,
           originalType: notification.type,
           contextData: notification.contextData,
