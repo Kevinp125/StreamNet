@@ -47,6 +47,8 @@ async function deliverNudges() {
         const userNotifications = notificationsToNudge.filter(
           (n) => n.user_id === userId
         );
+
+        //TODO send actual notifs
       } else {
         console.log(`User ${userId} not in active window, skipping nudges`);
       }

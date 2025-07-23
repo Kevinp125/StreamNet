@@ -7,6 +7,36 @@ const { supbase, supabase } = require("../services/supabaseclient");
 // clients = userId: WebSocket connection
 const clients = new Map();
 
+function isUserOnline(userId) {
+  const userConnection = clients.get(userId);
+  return userConnection && userConnection.readyState === WebSocket.OPEN;
+}
+
+//we will call this function in our nudge scheduler
+//it will get called whenever user is in active window
+//and they are online.
+async function sendNudgeToUser(userId, notification) {
+  const userConnection = clients.get(userId);
+
+  if (isUserOnline(userId)) {
+    userConnection.send(
+      JSON.stringify({
+        type: "nudge",
+        data: {
+          originalNotificationId: notification.id,
+          title: `Reminder: ${notification.title}`,
+          message: notification.message,
+          originalType: notification.type,
+          contextData: notification.contextData,
+        },
+      })
+    );
+    return true;
+  } else {
+    return false;
+  }
+}
+
 //this function will get called by createNotification helper whenever notification gets created
 //it attempts to send real time notification if user is online (they are on clients map)
 async function sendNotificationToUser(userId, notification) {
@@ -14,7 +44,7 @@ async function sendNotificationToUser(userId, notification) {
 
   //we check map above if the userId is there websocket object is returned so check if
   //it is exists (isnt null) and the readyState of the ws object is OPEN
-  if (userConnection && userConnection.readyState === WebSocket.OPEN) {
+  if (userIsOnline(userId)) {
     const shouldSend = await shouldSendNotificationToUser(userId, notification);
     if (shouldSend) {
       userConnection.send(
@@ -29,7 +59,9 @@ async function sendNotificationToUser(userId, notification) {
     return true;
   }
 
-  console.log(`user is not connected or notif was disabled did not send notif real time`);
+  console.log(
+    `user is not connected or notif was disabled did not send notif real time`
+  );
   return false;
 }
 
@@ -134,4 +166,4 @@ wss.on("connection", (ws) => {
   });
 });
 
-module.exports = { sendNotificationToUser };
+module.exports = { sendNotificationToUser, sendNudgeToUser };
