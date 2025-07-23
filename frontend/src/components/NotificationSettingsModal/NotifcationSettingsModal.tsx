@@ -267,7 +267,7 @@ export default function NotificationSettingsModal({ onClose }: NotificationSetti
       <footer className='flex flex-shrink-0 justify-center rounded-b-lg border-t border-white bg-gray-100 px-6 py-4'>
         <button
           onClick={handleSave}
-          className='bg-twitch-purple w-3/4 cursor-pointer rounded-lg px-4 py-2 font-medium text-white'
+          className='bg-twitch-purple w-3/4 cursor-pointer rounded-lg px-4 py-2 font-medium text-white hover:bg-purple-800 transition-colors duration-200'
         >
           {loading ? "Loading..." : "Save Settings"}
         </button>
