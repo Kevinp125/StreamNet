@@ -37,6 +37,25 @@ export default function NotificationList() {
       } catch (err) {
         console.error("Could not process connection request", err);
       }
+    } else if (action === "going" || action === "not_going") {
+      try {
+        if (!session?.access_token) {
+          throw Error("no valid session");
+        }
+
+        const rsvpStatus = action === "going" ? "attending" : "not_going";
+
+        await postEventRsvp(session.access_token, {
+          event_id: notification.contextData.event_id,
+          status: rsvpStatus,
+          notification_id: notification.id,
+        });
+
+        setNotifications(prev => prev.filter(n => n.id !== notification.id));
+        postActivity(session.access_token, "notification_action");
+      } catch (err) {
+        console.error("Could not process private event invitation", err);
+      }
     } else if (action === "read") {
       try {
         if (!session?.access_token) return;
@@ -187,13 +206,17 @@ function NotificationItem({
           >
             Going
           </Button>
-          <Button className = "cursor-pointer" onClick={() => onAction("not_going", notification)} variant='destructive'>
+          <Button
+            className='cursor-pointer'
+            onClick={() => onAction("not_going", notification)}
+            variant='destructive'
+          >
             Not Going
           </Button>
         </div>
       ) : (
         <Button
-          className='flex items-center gap-1 cursor-pointer'
+          className='flex cursor-pointer items-center gap-1'
           variant='ghost'
           onClick={() => onAction("read", notification)}
         >

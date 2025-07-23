@@ -65,7 +65,7 @@ router.route("/").post(authenticateMiddleware, async (req, res) => {
           type: "private_event_invite",
           title: "You are invited to a Private Event!",
           message: `@${req.user.user_metadata.name} invited you to "${title}"`,
-          contextData: { event_id: event.id }, 
+          contextData: { event_id: event.id },
           priority: "immediate",
         });
       });
@@ -194,7 +194,7 @@ router.route("/").get(authenticateMiddleware, async (req, res) => {
 router.route("/rsvp").post(authenticateMiddleware, async (req, res) => {
   try {
     //in order to log rsvp we need to know what event it is and whether user is attending or they clicked button again and they changed to not going
-    const { event_id, status } = req.body;
+    const { event_id, status, notification_id } = req.body;
     const user_id = req.user.id;
     const supabaseClient = req.supabase;
 
@@ -212,6 +212,14 @@ router.route("/rsvp").post(authenticateMiddleware, async (req, res) => {
     if (error) throw error;
 
     res.status(200).json({ success: true, message: "RSVP updated" });
+
+    if (notification_id) {
+      await supabaseClient
+        .from("notifications")
+        .update({ status: "read" })
+        .eq("id", notification_id)
+        .eq("user_id", user_id);
+    }
 
     const { data: event } = await supabaseClient
       .from("events")
