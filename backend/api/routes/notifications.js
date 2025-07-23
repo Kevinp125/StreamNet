@@ -85,8 +85,8 @@ router.route("/:id").put(authenticateMiddleware, async (req, res) => {
       .from("notifications")
       .update({
         status: status,
-        //if status for notif is that it was read then update read_at field will need this later for tracking when user is most active viewing notifs
-        read_at: status === "read" ? new Date().toISOString() : null,
+        //if status for notif is that it was seen then update seen_at field
+        seen_at: status === "seen" ? new Date().toISOString() : null,
       })
       .eq("id", id)
       .eq("user_id", user_id);
