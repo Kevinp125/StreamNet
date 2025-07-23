@@ -48,7 +48,15 @@ async function deliverNudges() {
           (n) => n.user_id === userId
         );
 
-        //TODO send actual notifs
+        for (const notification of userNotifications) {
+          const sent = sendNudgeToUser(userId, notification);
+          if (sent) {
+            console.log(`Nudge sent for notification ${notification.id}`);
+          } else {
+            console.log(`User ${userId} offline, nudge not sent`);
+          }
+        }
+
       } else {
         console.log(`User ${userId} not in active window, skipping nudges`);
       }

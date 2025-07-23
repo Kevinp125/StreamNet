@@ -15,7 +15,7 @@ function isUserOnline(userId) {
 //we will call this function in our nudge scheduler
 //it will get called whenever user is in active window
 //and they are online.
-async function sendNudgeToUser(userId, notification) {
+function sendNudgeToUser(userId, notification) {
   const userConnection = clients.get(userId);
 
   if (isUserOnline(userId)) {
