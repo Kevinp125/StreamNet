@@ -44,6 +44,17 @@ router.route("/").get(authenticateMiddleware, async (req, res) => {
       return res.status(200).json([]);
     }
 
+    await supabaseClient
+      .from("notifications")
+      .update({
+        status: "seen",
+        seen_at: new Date().toISOString(),
+      })
+      .eq("user_id", user_id)
+      .eq("status", "delivered")
+      .in("type", enabledTypes)
+      .in("priority", priorityConditions);
+
     const { data: notifications, error } = await supabaseClient
       .from("notifications")
       .select("*")
