@@ -1,5 +1,6 @@
 const { supabase } = require("./supabaseclient");
 const { getUsersActiveWindow } = require("./activityAnalysis");
+const { sendNudgeToUser } = require("../websocket/websocketServer");
 
 async function findNotificationsNeedingNudge() {
   try {
@@ -56,7 +57,6 @@ async function deliverNudges() {
             console.log(`User ${userId} offline, nudge not sent`);
           }
         }
-
       } else {
         console.log(`User ${userId} not in active window, skipping nudges`);
       }
