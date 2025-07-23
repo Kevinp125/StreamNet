@@ -6,30 +6,43 @@ router.route("/").get(authenticateMiddleware, async (req, res) => {
   try {
     const user_id = req.user.id;
     const supabaseClient = req.supabase;
-    
+
     const { data: settings, error: settingsError } = await supabaseClient
       .from("user_notification_settings")
       .select("*")
       .eq("user_id", user_id)
       .single();
 
-    if(settingsError){
+    if (settingsError) {
       console.error("Error fetching notification settings:", settingsError);
       return res.status(500).json({ error: "Failed to fetch settings" });
     }
-    
+
     let enabledTypes = [];
 
     //add types to array we will use this array in query
-    if (settings.connection_request_enabled) enabledTypes.push("connection_request");
-    if (settings.connection_accepted_enabled) enabledTypes.push("connection_accepted");
-    if (settings.connection_denied_enabled) enabledTypes.push("connection_denied");
-    if (settings.private_event_invitation_enabled) enabledTypes.push("private_event_invitation");
-    if (settings.event_rsvp_updates_enabled) enabledTypes.push("event_rsvp_updates");
-    if (settings.public_event_announcements_enabled) enabledTypes.push("public_event_announcement");
-    if (settings.network_event_announcements_enabled) enabledTypes.push("network_event_announcements");
+    if (settings.connection_request_enabled)
+      enabledTypes.push("connection_request");
+    if (settings.connection_accepted_enabled)
+      enabledTypes.push("connection_accepted");
+    if (settings.connection_denied_enabled)
+      enabledTypes.push("connection_denied");
+    if (settings.private_event_invitation_enabled)
+      enabledTypes.push("private_event_invitation");
+    if (settings.event_rsvp_updates_enabled)
+      enabledTypes.push("event_rsvp_updates");
+    if (settings.public_event_announcements_enabled)
+      enabledTypes.push("public_event_announcement");
+    if (settings.network_event_announcements_enabled)
+      enabledTypes.push("network_event_announcements");
 
-    
+    let priorityConditions = [];
+    if (settings.important_enabled) priorityConditions.push("immediate");
+    if (settings.general_enabled) priorityConditions.push("general");
+
+    if (enabledTypes.length === 0 || priorityConditions.length === 0) {
+      return res.status(200).json([]);
+    }
 
     const { data: notifications, error } = await supabaseClient
       .from("notifications")
