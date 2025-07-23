@@ -13,7 +13,6 @@ export default function NotificationList() {
   const { session } = useAuthContext();
   const { newNotification } = useWebSocketContext(); //this grabs the newNotification if there is one after server sent user message
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const { notificationSettings } = useAuthContext();
 
   //function gets called whenever an action on notification is clicked.
   //Whether it be an accept or deny or read and handles it
