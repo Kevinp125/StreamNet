@@ -7,6 +7,7 @@ import { setConnectionRequestStatusAndPostIfAccept } from "@/lib/api_client";
 import { updateNotificationStatus } from "@/lib/api_client";
 import { useWebSocketContext } from "@/Context/WebSocketProvider";
 import { postActivity } from "@/lib/api_client";
+import { postEventRsvp } from "@/lib/api_client";
 import type { Notification } from "@/types/AppTypes";
 
 export default function NotificationList() {
@@ -73,11 +74,11 @@ export default function NotificationList() {
       setNotifications(prev => [newNotification, ...prev]);
     }
 
-    //when new notification comes in if its the actionable ones we want to send nudges for 
+    //when new notification comes in if its the actionable ones we want to send nudges for
     //mark them as seen since they came in live through websocket user is online and saw them.
     if (
       newNotification?.type === "connection_request" ||
-      newNotification?.type === "private_event_invitation"
+      newNotification?.type === "private_event_invite"
     ) {
       updateNotificationStatus(session.access_token, newNotification.id, "seen");
     }
@@ -178,9 +179,21 @@ function NotificationItem({
             <X />
           </Button>
         </div>
+      ) : notification.type === "private_event_invite" ? (
+        <div className='flex gap-2'>
+          <Button
+            onClick={() => onAction("going", notification)}
+            className='cursor-pointer bg-green-600'
+          >
+            Going
+          </Button>
+          <Button className = "cursor-pointer" onClick={() => onAction("not_going", notification)} variant='destructive'>
+            Not Going
+          </Button>
+        </div>
       ) : (
         <Button
-          className='flex items-center gap-1'
+          className='flex items-center gap-1 cursor-pointer'
           variant='ghost'
           onClick={() => onAction("read", notification)}
         >

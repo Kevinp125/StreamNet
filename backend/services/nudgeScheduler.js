@@ -13,7 +13,7 @@ async function findNotificationsNeedingNudge() {
       .from("notifications")
       .select("*")
       .eq("status", "seen")
-      .in("type", ["connection_request", "private_event_invitation"])
+      .in("type", ["connection_request", "private_event_invite"])
       .lt("seen_at", threeHoursAgo);
 
     if (error) throw error;

@@ -65,6 +65,7 @@ router.route("/").post(authenticateMiddleware, async (req, res) => {
           type: "private_event_invite",
           title: "You are invited to a Private Event!",
           message: `@${req.user.user_metadata.name} invited you to "${title}"`,
+          contextData: { event_id: event.id }, 
           priority: "immediate",
         });
       });
@@ -223,7 +224,11 @@ router.route("/rsvp").post(authenticateMiddleware, async (req, res) => {
       createNotification(supabaseClient, {
         userId: event.creator_id,
         type: "event_rsvp_update",
-        title: `${status === "attending" ? "Someone RSVPed to Your Event" : "Someone Opted Out of Your Event"}`,
+        title: `${
+          status === "attending"
+            ? "Someone RSVPed to Your Event"
+            : "Someone Opted Out of Your Event"
+        }`,
         message: `@${req.user.user_metadata.name} ${
           status === "attending" ? "will attend " : "won't attend "
         } "${event.title}"`,
