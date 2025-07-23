@@ -69,11 +69,9 @@ async function deliverNudges() {
 function startNudgeScheduler() {
   console.log("Starting nudge scheduler");
 
-  setInterval(async () => {
-    await findNotificationsNeedingNudge();
-  }, 60 * 60 * 1000);
+  setInterval(deliverNudges, 60 * 60 * 1000);
 
-  findNotificationsNeedingNudge();
+  deliverNudges();
 }
 
 module.exports = { startNudgeScheduler };
