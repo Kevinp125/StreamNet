@@ -13,7 +13,24 @@ router.route("/").get(authenticateMiddleware, async (req, res) => {
       .eq("user_id", user_id)
       .single();
 
+    if(settingsError){
+      console.error("Error fetching notification settings:", settingsError);
+      return res.status(500).json({ error: "Failed to fetch settings" });
+    }
     
+    let enabledTypes = [];
+
+    //add types to array we will use this array in query
+    if (settings.connection_request_enabled) enabledTypes.push("connection_request");
+    if (settings.connection_accepted_enabled) enabledTypes.push("connection_accepted");
+    if (settings.connection_denied_enabled) enabledTypes.push("connection_denied");
+    if (settings.private_event_invitation_enabled) enabledTypes.push("private_event_invitation");
+    if (settings.event_rsvp_updates_enabled) enabledTypes.push("event_rsvp_updates");
+    if (settings.public_event_announcements_enabled) enabledTypes.push("public_event_announcement");
+    if (settings.network_event_announcements_enabled) enabledTypes.push("network_event_announcements");
+
+    
+
     const { data: notifications, error } = await supabaseClient
       .from("notifications")
       .select("*")
