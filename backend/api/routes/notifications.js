@@ -30,7 +30,7 @@ router.route("/").get(authenticateMiddleware, async (req, res) => {
     if (settings.private_event_invitation_enabled)
       enabledTypes.push("private_event_invitation");
     if (settings.event_rsvp_updates_enabled)
-      enabledTypes.push("event_rsvp_updates");
+      enabledTypes.push("event_rsvp_update");
     if (settings.public_event_announcements_enabled)
       enabledTypes.push("public_event_announcement");
     if (settings.network_event_announcements_enabled)
@@ -59,7 +59,9 @@ router.route("/").get(authenticateMiddleware, async (req, res) => {
       .from("notifications")
       .select("*")
       .eq("user_id", user_id)
-      .in("status", ["delivered", "seen"]) //dont show read or pending ones (queued for smart delivery)
+      .in("status", ["seen"])
+      .in("type", enabledTypes)
+      .in("priority", priorityConditions)
       .order("created_at", { ascending: false }); // Most recent first
 
     if (error) throw error;
