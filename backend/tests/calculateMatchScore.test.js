@@ -49,4 +49,11 @@ describe("calcGameScore", () => {
 
     expect(calcGameScore(user1, user2)).toBe(0.5);
   });
+
+  it("should return 0.5 when user has no game data", () => {
+    const user1 = { twitch_game_name: null };
+    const user2 = { twitch_game_name: "Fortnite" };
+
+    expect(calcGameScore(user1, user2)).toBe(0.5);
+  });
 });
