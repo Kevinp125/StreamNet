@@ -7,6 +7,8 @@ const {
   startGeneralNotificationScheduler,
 } = require("./services/notificationScheduler");
 
+const { startNudgeScheduler } = require("./services/nudgeScheduler");
+
 const app = express(); //creating an instance of the express application
 app.use(
   cors({
@@ -27,6 +29,7 @@ app.get("/", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   startGeneralNotificationScheduler();
+  startNudgeScheduler();
 });
 
 module.exports = app;
