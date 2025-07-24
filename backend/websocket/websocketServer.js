@@ -1,6 +1,8 @@
 const WebSocket = require("ws");
 const { supbase, supabase } = require("../services/supabaseclient");
 
+//*** TODO: REMEMBER TO REMOVE CONSOLE LOGS FOR PROD ***/
+
 //this map is going allow us to store each user when they come online along with their ws object (connection)
 // clients = userId: WebSocket connection
 const clients = new Map();

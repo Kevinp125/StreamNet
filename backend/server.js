@@ -1,8 +1,11 @@
 const dotenv = require("dotenv");
-dotenv.config(); 
-const express = require("express"); 
-const cors = require("cors"); 
+dotenv.config();
+const express = require("express");
+const cors = require("cors");
 const routes = require("./api/routes/index");
+const {
+  startGeneralNotificationScheduler,
+} = require("./services/notificationScheduler");
 
 const app = express(); //creating an instance of the express application
 app.use(
@@ -23,6 +26,7 @@ app.get("/", (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
+  startGeneralNotificationScheduler();
 });
 
 module.exports = app;

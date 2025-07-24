@@ -11,7 +11,7 @@ router.route("/").get(authenticateMiddleware, async (req, res) => {
       .from("notifications")
       .select("*")
       .eq("user_id", user_id)
-      .neq("status", "read")
+      .in("status", ["delivered", "seen"]) //dont show read or pending ones (queued for smart delivery)
       .order("created_at", { ascending: false }); // Most recent first
 
     if (error) throw error;
