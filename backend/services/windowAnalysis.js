@@ -1,4 +1,4 @@
-function analyzeActivityWindows(activites) {
+function analyzeActivityWindows(activities) {
   const windows = [
     { start: 0, end: 3, count: 0 },
     { start: 3, end: 6, count: 0 },
