@@ -121,4 +121,5 @@ module.exports = {
   calcAudienceScore,
   calcGameScore,
   calcLanguageScore,
+  calcTagScore,
 };
