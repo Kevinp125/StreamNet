@@ -57,3 +57,16 @@ describe("calcGameScore", () => {
     expect(calcGameScore(user1, user2)).toBe(0.5);
   });
 });
+
+describe("calcLanguageScore", () => {
+  it('should return 2.5 when users speak the same language', () => {
+    const user1 = { twitch_broadcaster_language: 'en' }
+    const user2 = { twitch_broadcaster_language: 'en' }
+    
+    expect(calcLanguageScore(user1, user2)).toBe(2.5)
+  })
+
+
+
+
+})
