@@ -353,3 +353,23 @@ export async function updateNotificationSettings(accessToken: string, newSetting
     throw err;
   }
 }
+
+export async function postActivity(accessToken: string, activityType: any) {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/activity`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ activityType }),
+    });
+
+    if (!res.ok) {
+      throw new Error("Could not post an activity");
+    }
+  } catch (err) {
+    console.error("Could not log activity", err);
+    throw err;
+  }
+}
