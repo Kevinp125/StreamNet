@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "@/Context/AuthProvider";
 import ExtraInfoForm from "@/components/ExtraInfoForm/ExtraInfoForm";
 import { DASHBOARD_PATH } from "@/lib/paths";
+import { getNotificationSettings } from "@/lib/api_client";
 
 type ProfileFormData = {
   name: string;
@@ -16,7 +17,7 @@ export default function InitialRegisterSetupPage() {
   const navigate = useNavigate();
   const { session } = useAuthContext(); //this will grab the session and user from AuthContext since this is a protected page they will exist guaranteed
   const [checkingIfNewUser, setCheckingIfNewUser] = useState(true); //this by default is going to be true because we need to check if the user who just logged in is a new user or returning user
-
+  const { setNotificationSettings } = useAuthContext();
   //when form is Submitted this function gets called within form component and gets passed in all the form details. This functions job is to make fetch request to add user
   async function handleFormSubmit(data: ProfileFormData) {
     try {
@@ -33,6 +34,13 @@ export default function InitialRegisterSetupPage() {
       if (!res.ok) {
         const error = await res.json();
         throw new Error(error.message || "Failed to create profile after form submission");
+      }
+
+      try {
+        const settings = await getNotificationSettings(session!.access_token);
+        setNotificationSettings(settings);
+      } catch (error) {
+        console.error("Failed to load notification settings after profile creation:", error);
       }
 
       //otherwise it was succesful and user was added so just navigate them to the dashboard!!!!

@@ -12,6 +12,7 @@ export default function NotificationList() {
   const { session } = useAuthContext();
   const { newNotification } = useWebSocketContext(); //this grabs the newNotification if there is one after server sent user message
   const [notifications, setNotifications] = useState<Notification[]>([]);
+  const { notificationSettings } = useAuthContext();
 
   //function gets called whenever an action on notification is clicked.
   //Whether it be an accept or deny or read and handles it
@@ -46,6 +47,39 @@ export default function NotificationList() {
     }
   }
 
+  //function to apply settings to notifications we get from context. Only show notifications user has toggled on
+  function filterNotifications(notifications: Notification[]) {
+    if (!notificationSettings) return notifications;
+
+    return notifications.filter(notification => {
+      if (notification.priority === "immediate" && !notificationSettings.important_enabled) {
+        return false;
+      }
+
+      if (notification.priority === "general" && !notificationSettings.general_enabled) {
+        return false;
+      }
+      switch (notification.type) {
+        case "connection_request":
+          return notificationSettings.connection_request_enabled;
+        case "connection_accepted":
+          return notificationSettings.connection_accepted_enabled;
+        case "connection_denied":
+          return notificationSettings.connection_denied_enabled;
+        case "private_event_invitation":
+          return notificationSettings.private_event_invitation_enabled;
+        case "event_rsvp_updates":
+          return notificationSettings.event_rsvp_updates_enabled;
+        case "public_event_announcement":
+          return notificationSettings.public_event_announcements_enabled;
+        case "network_event_announcements":
+          return notificationSettings.network_event_announcements_enabled;
+        default:
+          return true;
+      }
+    });
+  }
+
   useEffect(() => {
     async function getNotifications() {
       if (!session?.access_token) return;
@@ -67,8 +101,9 @@ export default function NotificationList() {
   }, [newNotification]);
 
   //for now we want to separate the notifications whose priortiy is immediate vs the ones who have a general priortiy
-  const immediateNotifications = notifications.filter(n => n.priority === "immediate");
-  const generalNotifications = notifications.filter(n => n.priority === "general");
+  const notificationsPostSettings = filterNotifications(notifications);
+  const immediateNotifications = notificationsPostSettings.filter(n => n.priority === "immediate");
+  const generalNotifications = notificationsPostSettings.filter(n => n.priority === "general");
 
   return (
     <div className='flex flex-col gap-6'>

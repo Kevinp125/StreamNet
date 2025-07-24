@@ -19,8 +19,6 @@ export default function DashboardPage() {
   const [showSettings, setShowSettings] = useState(false);
 
   //TODO: Remove later, leaving this here for now so that it is easier to test my apis. Whenever I test them since they have middleware I need to provide a token this is how I see and get that token.
-  console.log(session?.access_token);
-  console.log(session?.user);
 
 
   function handleSettingsClose(){

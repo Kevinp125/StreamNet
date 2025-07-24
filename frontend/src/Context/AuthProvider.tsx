@@ -1,19 +1,24 @@
 import type { Session, User } from "@supabase/supabase-js";
 import { useContext, useState, useEffect, createContext } from "react";
 import { supabase } from "@/lib/supabaseclient";
+import { getNotificationSettings } from "@/lib/api_client";
 
 //context type
 type AuthContextType = {
   session: Session | null;
   user: User | null;
   loading: boolean;
+  notificationSettings: any | null;
+  setNotificationSettings: (settings: any) => void;
   signOut: () => void;
 };
-//creating the context with default values for the session, user, and signOut method
+//creating the context with default values for the session, user, notif sttings, and udater and signOut method
 const AuthContext = createContext<AuthContextType>({
   session: null,
   user: null,
   loading: true,
+  notificationSettings: null,
+  setNotificationSettings: () => {},
   signOut: () => {},
 });
 
@@ -21,6 +26,7 @@ export function AuthProvider({ children }: any) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true); //true by default cause its loading until info is loaded
+  const [notificationSettings, setNotificationSettings] = useState<any | null>(null);
 
   //on page mount we want to check the users auth status
   useEffect(() => {
@@ -33,13 +39,31 @@ export function AuthProvider({ children }: any) {
       if (error) throw error;
       setSession(session);
       setUser(session?.user || null);
+
+      if (session?.access_token) {
+        try {
+          const settings = await getNotificationSettings(session.access_token);
+          setNotificationSettings(settings);
+        } catch (error) {
+          setNotificationSettings(null);
+        }
+      }
+
       setLoading(false); //dont forget to set loading to false afterwards
     }
 
     //this onAuthStateChange is a supabase provided function that listens to whenever user signs in, signs out, token refreshes, etc. As soon as any of this happens event is fired and all context state is updated accordingly
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: listener } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setSession(session);
       setUser(session?.user || null);
+      if (session?.access_token) {
+        try {
+          const settings = await getNotificationSettings(session.access_token);
+          setNotificationSettings(settings);
+        } catch (error) {
+          setNotificationSettings(null);
+        }
+      }
       setLoading(false);
     });
 
@@ -56,6 +80,8 @@ export function AuthProvider({ children }: any) {
     session,
     user,
     loading,
+    notificationSettings,
+    setNotificationSettings,
     signOut: async () => {
       await supabase.auth.signOut();
     }, //supabase signout function just store in our signOut for better readability. Other components can acess everywhere
