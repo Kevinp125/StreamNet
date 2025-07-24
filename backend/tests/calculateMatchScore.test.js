@@ -3,6 +3,8 @@ const {
   calcAgeScore,
   calcGameScore,
   calcLanguageScore,
+  calcAudienceScore,
+  calcTagScore, 
 } = require("../services/calculateMatchScore.js");
 
 describe("calcAgeScore", () => {
@@ -80,3 +82,10 @@ describe("calcLanguageScore", () => {
     expect(calcLanguageScore(user1, user2)).toBe(1);
   });
 });
+
+describe("calcTagScore", () => {
+
+
+
+  
+})
