@@ -9,25 +9,67 @@ const clients = new Map();
 
 //this function will get called by createNotification helper whenever notification gets created
 //it attempts to send real time notification if user is online (they are on clients map)
-function sendNotificationToUser(userId, notification) {
+async function sendNotificationToUser(userId, notification) {
   const userConnection = clients.get(userId);
 
   //we check map above if the userId is there websocket object is returned so check if
   //it is exists (isnt null) and the readyState of the ws object is OPEN
   if (userConnection && userConnection.readyState === WebSocket.OPEN) {
-    userConnection.send(
-      JSON.stringify({
-        type: "notification",
-        data: notification,
-      })
-    );
+    const shouldSend = await shouldSendNotificationToUser(userId, notification);
+    if (shouldSend) {
+      userConnection.send(
+        JSON.stringify({
+          type: "notification",
+          data: notification,
+        })
+      );
+    }
 
     console.log(`Sent notif to user ${userId}`);
     return true;
   }
 
-  console.log(`user is not connected did not send notif real time`);
+  console.log(`user is not connected or notif was disabled did not send notif real time`);
   return false;
+}
+
+async function shouldSendNotificationToUser(userId, notification) {
+  try {
+    const { data: settings, error } = await supabase
+      .from("user_notification_settings")
+      .select("*")
+      .eq("user_id", userId)
+      .single();
+
+    if (error) return false;
+
+    if (notification.priority === "immediate" && !settings.important_enabled)
+      return false;
+    if (notification.priority === "general" && !settings.general_enabled)
+      return false;
+
+    switch (notification.type) {
+      case "connection_request":
+        return settings.connection_request_enabled;
+      case "connection_accepted":
+        return settings.connection_accepted_enabled;
+      case "connection_denied":
+        return settings.connection_denied_enabled;
+      case "private_event_invitation":
+        return settings.private_event_invitation_enabled;
+      case "event_rsvp_update":
+        return settings.event_rsvp_updates_enabled;
+      case "public_event_announcement":
+        return settings.public_event_announcements_enabled;
+      case "network_event_announcements":
+        return settings.network_event_announcements_enabled;
+      default:
+        return false;
+    }
+  } catch (err) {
+    console.error("Error checking notification settings:", err);
+    return false;
+  }
 }
 
 //everything for websockets is event driven...

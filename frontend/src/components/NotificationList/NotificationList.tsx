@@ -13,7 +13,6 @@ export default function NotificationList() {
   const { session } = useAuthContext();
   const { newNotification } = useWebSocketContext(); //this grabs the newNotification if there is one after server sent user message
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const { notificationSettings } = useAuthContext();
 
   //function gets called whenever an action on notification is clicked.
   //Whether it be an accept or deny or read and handles it
@@ -41,46 +40,13 @@ export default function NotificationList() {
       try {
         if (!session?.access_token) return;
 
-        await updateNotificationStatus(session.access_token, notification.id, "read");
+        updateNotificationStatus(session.access_token, notification.id, "read");
         setNotifications(prev => prev.filter(n => n.id !== notification.id));
         postActivity(session.access_token, "notification_action");
       } catch (err) {
         console.error("Could not mark notification as read", err);
       }
     }
-  }
-
-  //function to apply settings to notifications we get from context. Only show notifications user has toggled on
-  function filterNotifications(notifications: Notification[]) {
-    if (!notificationSettings) return notifications;
-
-    return notifications.filter(notification => {
-      if (notification.priority === "immediate" && !notificationSettings.important_enabled) {
-        return false;
-      }
-
-      if (notification.priority === "general" && !notificationSettings.general_enabled) {
-        return false;
-      }
-      switch (notification.type) {
-        case "connection_request":
-          return notificationSettings.connection_request_enabled;
-        case "connection_accepted":
-          return notificationSettings.connection_accepted_enabled;
-        case "connection_denied":
-          return notificationSettings.connection_denied_enabled;
-        case "private_event_invitation":
-          return notificationSettings.private_event_invitation_enabled;
-        case "event_rsvp_updates":
-          return notificationSettings.event_rsvp_updates_enabled;
-        case "public_event_announcement":
-          return notificationSettings.public_event_announcements_enabled;
-        case "network_event_announcements":
-          return notificationSettings.network_event_announcements_enabled;
-        default:
-          return true;
-      }
-    });
   }
 
   useEffect(() => {
@@ -100,21 +66,31 @@ export default function NotificationList() {
   }, [session?.access_token]);
 
   useEffect(() => {
+    if (!session?.access_token) {
+      throw Error("no valid session");
+    }
     if (newNotification) {
       setNotifications(prev => [newNotification, ...prev]);
     }
+
+    //when new notification comes in if its the actionable ones we want to send nudges for 
+    //mark them as seen since they came in live through websocket user is online and saw them.
+    if (
+      newNotification?.type === "connection_request" ||
+      newNotification?.type === "private_event_invitation"
+    ) {
+      updateNotificationStatus(session.access_token, newNotification.id, "seen");
+    }
   }, [newNotification]);
 
-  //for now we want to separate the notifications whose priortiy is immediate vs the ones who have a general priortiy
-  const notificationsPostSettings = filterNotifications(notifications);
-  const immediateNotifications = notificationsPostSettings.filter(n => n.priority === "immediate");
-  const generalNotifications = notificationsPostSettings.filter(n => n.priority === "general");
+  const immediateNotifications = notifications.filter(n => n.priority === "immediate");
+  const generalNotifications = notifications.filter(n => n.priority === "general");
 
   return (
     <div className='flex flex-col gap-6'>
       <div>
         <h3 className='mb-3 text-lg font-semibold text-red-600'>🚨 Important</h3>
-        <div className='flex flex-col gap-3 max-h-50 overflow-y-auto'>
+        <div className='flex max-h-50 flex-col gap-3 overflow-y-auto'>
           {immediateNotifications.length > 0 ? (
             immediateNotifications.map(notification => (
               <NotificationItem
@@ -131,7 +107,7 @@ export default function NotificationList() {
 
       <div>
         <h3 className='mb-3 text-lg font-semibold text-gray-700'>📬 General</h3>
-        <div className='flex flex-col gap-3 max-h-50 overflow-y-auto'>
+        <div className='flex max-h-50 flex-col gap-3 overflow-y-auto'>
           {generalNotifications.length > 0 ? (
             generalNotifications.map(notification => (
               <NotificationItem
