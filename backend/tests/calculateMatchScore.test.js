@@ -1,5 +1,9 @@
 import { describe, it, expect } from "vitest";
-const { calcAgeScore } = require("../services/calculateMatchScore.js");
+const {
+  calcAgeScore,
+  calcGameScore,
+  calcLanguageScore,
+} = require("../services/calculateMatchScore.js");
 
 describe("calcAgeScore", () => {
   it("should return 2 when ages are within 2 years (very close)", () => {
@@ -28,5 +32,14 @@ describe("calcAgeScore", () => {
     const user2 = { date_of_birth: "2015-01-01" }; // 15 year difference
 
     expect(calcAgeScore(user1, user2)).toBe(0.25);
+  });
+});
+
+describe("calcGameScore", () => {
+  it("should return 2 when users play the same game", () => {
+    const user1 = { twitch_game_name: "Fortnite" };
+    const user2 = { twitch_game_name: "Fortnite" };
+
+    expect(calcGameScore(user1, user2)).toBe(2);
   });
 });
