@@ -72,4 +72,11 @@ describe("calcLanguageScore", () => {
 
     expect(calcLanguageScore(user1, user2)).toBe(0.5);
   });
+
+  it('should return 1 when one user language is "other"', () => {
+    const user1 = { twitch_broadcaster_language: "en" };
+    const user2 = { twitch_broadcaster_language: "other" };
+
+    expect(calcLanguageScore(user1, user2)).toBe(1);
+  });
 });
