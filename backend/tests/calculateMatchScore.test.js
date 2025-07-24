@@ -42,4 +42,11 @@ describe("calcGameScore", () => {
 
     expect(calcGameScore(user1, user2)).toBe(2);
   });
+
+  it("should return 0.5 when users play different games", () => {
+    const user1 = { twitch_game_name: "Fortnite" };
+    const user2 = { twitch_game_name: "Minecraft" };
+
+    expect(calcGameScore(user1, user2)).toBe(0.5);
+  });
 });
