@@ -59,14 +59,17 @@ describe("calcGameScore", () => {
 });
 
 describe("calcLanguageScore", () => {
-  it('should return 2.5 when users speak the same language', () => {
-    const user1 = { twitch_broadcaster_language: 'en' }
-    const user2 = { twitch_broadcaster_language: 'en' }
-    
-    expect(calcLanguageScore(user1, user2)).toBe(2.5)
-  })
+  it("should return 2.5 when users speak the same language", () => {
+    const user1 = { twitch_broadcaster_language: "en" };
+    const user2 = { twitch_broadcaster_language: "en" };
 
+    expect(calcLanguageScore(user1, user2)).toBe(2.5);
+  });
 
+  it("should return 0.5 when users speak different languages", () => {
+    const user1 = { twitch_broadcaster_language: "en" };
+    const user2 = { twitch_broadcaster_language: "es" };
 
-
-})
+    expect(calcLanguageScore(user1, user2)).toBe(0.5);
+  });
+});
