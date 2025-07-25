@@ -232,7 +232,7 @@ export default function CreateEventForm({ onClose, loadEvents }: EventFormProps)
               </p>
             </div>
 
-            <Button type='submit' className='bg-electric-indigo cursor-pointer'>
+            <Button type='submit' className='bg-electric-indigo cursor-pointer hover:bg-purple-700'>
               Submit!
             </Button>
           </form>

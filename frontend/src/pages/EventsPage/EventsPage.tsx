@@ -50,7 +50,7 @@ export default function EventsPage() {
   return (
     <div className='flex flex-col items-center p-16'>
       <Button
-        className='bg-electric-indigo h-16 w-72 cursor-pointer'
+        className='bg-electric-indigo h-16 w-72 cursor-pointer hover:bg-purple-700'
         onClick={() => setShowEventForm(true)}
       >
         Post Event!

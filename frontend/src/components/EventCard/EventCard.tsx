@@ -91,7 +91,7 @@ export default function EventCard({ event, onRSVPClick }: EventCardProps) {
       </CardContent>
 
       <CardFooter className='mt-auto'>
-        <Button onClick={handleRSVPClick} className='bg-electric-indigo w-full'>
+        <Button onClick={handleRSVPClick} className='bg-electric-indigo w-full cursor-pointer hover:bg-purple-700'>
           {userIsAttending ? "Opt Out" : "I'm there!"}
         </Button>
       </CardFooter>
