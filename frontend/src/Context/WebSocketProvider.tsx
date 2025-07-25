@@ -53,14 +53,12 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (session?.user?.id) {
       //if we have a session currently we want to establish a connection...
-      console.log("Making WebSocket connection..");
 
       //starting connection with server
       const ws = new WebSocket(import.meta.env.VITE_WEBSOCKET_URL);
 
       //we do onopen with a callback because it checks if websocket connection was processed by server first
       ws.onopen = () => {
-        console.log("WebSocket Connected");
         setIsConnected(true); //update that we are connected
 
         //send the server that we want to officially connect. Server processes this message and stores us in map of connections
@@ -73,16 +71,13 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
       };
 
       ws.onmessage = event => {
-        console.log("Server is sending us message", event.data);
 
         try {
           const data = JSON.parse(event.data);
 
           if (data.type === "notification") {
-            console.log("Got new notification", data.data);
             handleNewNotification(data.data);
           } else if (data.type === "nudge") {
-            console.log("Got a nudge", data.data);
             handleNudge(data.data);
           }
         } catch (error) {
@@ -91,7 +86,6 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
       };
 
       ws.onclose = () => {
-        console.log("Websocket has been disconnected");
         setIsConnected(false);
       };
 
@@ -103,7 +97,6 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
       setSocket(ws);
 
       return () => {
-        console.log("Cleaning ws connection");
         ws.close();
       };
     }
