@@ -1,5 +1,6 @@
 const express = require("express");
 const { authenticateMiddleware } = require("../../middleware/authRequest");
+const { logUserActivity } = require("../../services/activityLogger");
 const router = express.Router(); //making a router
 
 router.route("/").get(authenticateMiddleware, async (req, res) => {
@@ -94,6 +95,8 @@ router.route("/:id").put(authenticateMiddleware, async (req, res) => {
     if (error) throw error;
 
     res.status(200).json({ success: true });
+
+    logUserActivity(user_id, "notification_action");
   } catch (err) {
     console.error("Error updating notification:", err);
     res.status(500).json({ error: "Failed to update notification" });
