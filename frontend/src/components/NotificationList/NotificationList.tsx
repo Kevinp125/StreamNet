@@ -6,7 +6,6 @@ import { fetchNotifications } from "@/lib/api_client";
 import { setConnectionRequestStatusAndPostIfAccept } from "@/lib/api_client";
 import { updateNotificationStatus } from "@/lib/api_client";
 import { useWebSocketContext } from "@/Context/WebSocketProvider";
-import { postActivity } from "@/lib/api_client";
 import { postEventRsvp } from "@/lib/api_client";
 import type { Notification } from "@/types/AppTypes";
 
