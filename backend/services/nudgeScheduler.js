@@ -13,7 +13,7 @@ async function findNotificationsNeedingNudge() {
       .from("notifications")
       .select("*")
       .eq("status", "seen")
-      .in("type", ["connection_request", "private_event_invitation"])
+      .in("type", ["connection_request", "private_event_invite"])
       .lt("seen_at", threeHoursAgo);
 
     if (error) throw error;
@@ -50,12 +50,14 @@ async function deliverNudges() {
         );
 
         for (const notification of userNotifications) {
+          console.log(`Attempting to send nudge for notification ${notification.id}`);
           const sent = sendNudgeToUser(userId, notification);
           if (sent) {
             console.log(`Nudge sent for notification ${notification.id}`);
           } else {
             console.log(`User ${userId} offline, nudge not sent`);
           }
+          await new Promise(resolve => setTimeout(resolve, 1000));
         }
       } else {
         console.log(`User ${userId} not in active window, skipping nudges`);

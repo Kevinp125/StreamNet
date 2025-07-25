@@ -24,7 +24,7 @@ function sendNudgeToUser(userId, notification) {
         type: "nudge",
         data: {
           originalNotificationId: notification.id,
-          title: `Reminder: ${notification.title}`,
+          title: notification.title,
           message: notification.message,
           originalType: notification.type,
           contextData: notification.contextData,
@@ -44,7 +44,7 @@ async function sendNotificationToUser(userId, notification) {
 
   //we check map above if the userId is there websocket object is returned so check if
   //it is exists (isnt null) and the readyState of the ws object is OPEN
-  if (userIsOnline(userId)) {
+  if (isUserOnline(userId)) {
     const shouldSend = await shouldSendNotificationToUser(userId, notification);
     if (shouldSend) {
       userConnection.send(
@@ -87,7 +87,7 @@ async function shouldSendNotificationToUser(userId, notification) {
         return settings.connection_accepted_enabled;
       case "connection_denied":
         return settings.connection_denied_enabled;
-      case "private_event_invitation":
+      case "private_event_invite":
         return settings.private_event_invitation_enabled;
       case "event_rsvp_update":
         return settings.event_rsvp_updates_enabled;

@@ -28,7 +28,7 @@ router.route("/").get(authenticateMiddleware, async (req, res) => {
     if (settings.connection_denied_enabled)
       enabledTypes.push("connection_denied");
     if (settings.private_event_invitation_enabled)
-      enabledTypes.push("private_event_invitation");
+      enabledTypes.push("private_event_invite");
     if (settings.event_rsvp_updates_enabled)
       enabledTypes.push("event_rsvp_update");
     if (settings.public_event_announcements_enabled)

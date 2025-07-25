@@ -54,7 +54,7 @@ export default function NotificationSettingsModal({ onClose }: NotificationSetti
         public_event_announcements_enabled: publicEventAnnouncementsEnabled,
         network_event_announcements_enabled: networkEventAnnouncementsEnabled,
       });
-      
+
       await updateNotificationSettings(session.access_token, {
         push_enabled: pushEnabled,
         important_enabled: importantEnabled,
@@ -118,16 +118,6 @@ export default function NotificationSettingsModal({ onClose }: NotificationSetti
           </div>
         ) : (
           <>
-            <div className='flex flex-col gap-2 border-b py-5'>
-              <div className='flex items-center justify-between'>
-                <span className='font-medium'> Push Notifications</span>
-                <Toggle enabled={pushEnabled} onToggle={() => setPushEnabled(!pushEnabled)} />
-              </div>
-              <p className='text-sm font-medium text-gray-500'>
-                Receive in-app banner notifications for important priority alerts only
-              </p>
-            </div>
-
             <div className='flex flex-col gap-6 border-b py-5'>
               <div className='flex items-center justify-between'>
                 <span className='font-medium'> 🚨 Important Notifications</span>
@@ -267,7 +257,7 @@ export default function NotificationSettingsModal({ onClose }: NotificationSetti
       <footer className='flex flex-shrink-0 justify-center rounded-b-lg border-t border-white bg-gray-100 px-6 py-4'>
         <button
           onClick={handleSave}
-          className='bg-twitch-purple w-3/4 cursor-pointer rounded-lg px-4 py-2 font-medium text-white hover:bg-purple-800 transition-colors duration-200'
+          className='bg-twitch-purple w-3/4 cursor-pointer rounded-lg px-4 py-2 font-medium text-white transition-colors duration-200 hover:bg-purple-800'
         >
           {loading ? "Loading..." : "Save Settings"}
         </button>

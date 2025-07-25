@@ -7,6 +7,7 @@ import { setConnectionRequestStatusAndPostIfAccept } from "@/lib/api_client";
 import { updateNotificationStatus } from "@/lib/api_client";
 import { useWebSocketContext } from "@/Context/WebSocketProvider";
 import { postActivity } from "@/lib/api_client";
+import { postEventRsvp } from "@/lib/api_client";
 import type { Notification } from "@/types/AppTypes";
 
 export default function NotificationList() {
@@ -35,6 +36,25 @@ export default function NotificationList() {
         }
       } catch (err) {
         console.error("Could not process connection request", err);
+      }
+    } else if (action === "going" || action === "not_going") {
+      try {
+        if (!session?.access_token) {
+          throw Error("no valid session");
+        }
+
+        const rsvpStatus = action === "going" ? "attending" : "not_going";
+
+        await postEventRsvp(session.access_token, {
+          event_id: notification.contextData.event_id,
+          status: rsvpStatus,
+          notification_id: notification.id,
+        });
+
+        setNotifications(prev => prev.filter(n => n.id !== notification.id));
+        postActivity(session.access_token, "notification_action");
+      } catch (err) {
+        console.error("Could not process private event invitation", err);
       }
     } else if (action === "read") {
       try {
@@ -73,11 +93,11 @@ export default function NotificationList() {
       setNotifications(prev => [newNotification, ...prev]);
     }
 
-    //when new notification comes in if its the actionable ones we want to send nudges for 
+    //when new notification comes in if its the actionable ones we want to send nudges for
     //mark them as seen since they came in live through websocket user is online and saw them.
     if (
       newNotification?.type === "connection_request" ||
-      newNotification?.type === "private_event_invitation"
+      newNotification?.type === "private_event_invite"
     ) {
       updateNotificationStatus(session.access_token, newNotification.id, "seen");
     }
@@ -178,9 +198,25 @@ function NotificationItem({
             <X />
           </Button>
         </div>
+      ) : notification.type === "private_event_invite" ? (
+        <div className='flex gap-2'>
+          <Button
+            onClick={() => onAction("going", notification)}
+            className='cursor-pointer bg-green-600'
+          >
+            Going
+          </Button>
+          <Button
+            className='cursor-pointer'
+            onClick={() => onAction("not_going", notification)}
+            variant='destructive'
+          >
+            Not Going
+          </Button>
+        </div>
       ) : (
         <Button
-          className='flex items-center gap-1'
+          className='flex cursor-pointer items-center gap-1'
           variant='ghost'
           onClick={() => onAction("read", notification)}
         >

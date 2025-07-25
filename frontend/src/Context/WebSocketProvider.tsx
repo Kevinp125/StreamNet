@@ -28,59 +28,26 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
   }, [notificationSettings]);
 
   function handleNewNotification(notification: Notification) {
-    function shouldShowPopup() {
-      if (settingsRef.current === null) {
-        return false; // Changed from true to false
-      }
-
-      //if user has push disabled auto return
-      if (!settingsRef.current.push_enabled) {
-        return false;
-      }
-
-      if (notification.priority !== "immediate") {
-        return false;
-      }
-
-      switch (notification.type) {
-        case "connection_request":
-          return settingsRef.current.connection_request_enabled;
-        case "connection_accepted":
-          return settingsRef.current.connection_accepted_enabled;
-        case "connection_denied":
-          return settingsRef.current.connection_denied_enabled;
-        case "private_event_invitation":
-          return settingsRef.current.private_event_invitation_enabled;
-        default:
-          return true;
-      }
-    }
-
-    if (shouldShowPopup()) {
-      //if the notification is immediate priortiy we call toast function
-      //below to display pop up to user. Otherwise user can just check when they go to dashboard
-      //reduce the spammy feeling
-
-      //We want to display the notification message and specify how long pop up lasts
-      const toastSettings: any = {
-        description: notification.message,
-        duration: 4500,
-      };
-
-      //quality of life change if the user is not on the dash already add an action button with label Go that takes them to dash to take action on request
-      if (window.location.pathname !== "/dashboard") {
-        toastSettings.action = {
-          label: "Go",
-          onClick: () => {
-            window.location.href = "/dashboard";
-          },
-        };
-      }
-
-      toast(notification.title, toastSettings);
-    }
-
     setNewNotification(notification); //set state so component can access it
+  }
+
+  function handleNudge(nudgeData: any) {
+    const toastSettings: any = {
+      description: `${nudgeData.message}\n\nReply to stop receiving nudges about this notification.`,
+      duration: 5000,
+    };
+
+    //quality of life change if the user is not on the dash already add an action button with label Go that takes them to dash to take action on request
+    if (window.location.pathname !== "/dashboard") {
+      toastSettings.action = {
+        label: "Go",
+        onClick: () => {
+          window.location.href = "/dashboard";
+        },
+      };
+    }
+
+    toast(`🔔 Nudge: ${nudgeData.title}`, toastSettings);
   }
 
   useEffect(() => {
@@ -114,6 +81,9 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
           if (data.type === "notification") {
             console.log("Got new notification", data.data);
             handleNewNotification(data.data);
+          } else if (data.type === "nudge") {
+            console.log("Got a nudge", data.data);
+            handleNudge(data.data);
           }
         } catch (error) {
           console.error("Could not parse message", error);
