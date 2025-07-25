@@ -127,6 +127,12 @@ async function processTwitchUserData(twitchUserId) {
       allGames.add(channelInfo.twitch_game_name);
     }
 
+    //spread the channels tags as well as the tags applied to different streams into one thing
+    const allTags = new Set([
+      ...(channelInfo?.twitch_tags || []),
+      ...streamHistory.historyOfTags,
+    ]);
+
     //remember channelInfo coudl have null values if some fields werrent filled in that is ok not every user will have every field filled in
     return channelInfo;
   } catch (err) {
