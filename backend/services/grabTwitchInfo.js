@@ -60,6 +60,23 @@ async function getTwitchChannelData(twitchUserId, accessToken) {
   }
 }
 
+async function getTwitchStreamHistory(twitchUserId, accessToken) {
+  try {
+    const res = await fetch(
+      `https://api.twitch.tv/helix/streams?user_id=${twitchUserId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Client-Id": process.env.TWITCH_CLIENT_ID,
+        },
+      }
+    );
+  } catch (err) {
+
+  }
+  
+}
+
 //this function calls the two functions above. getTwitchAccestoken so then use that result and call the get twitch data
 async function processTwitchUserData(twitchUserId) {
   try {
