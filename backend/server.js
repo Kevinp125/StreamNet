@@ -16,7 +16,7 @@ const server = http.createServer(app); //express normally handles this automatic
 app.use(
   cors({
     origin: [
-      "https://streamnet-frontend.vercel.app/", // Production
+      "https://streamnet-frontend.vercel.app", // Production
       "http://localhost:5173",
     ], // Vite dev server
     credentials: true,
