@@ -167,5 +167,6 @@ function intializeWebSocketServer(server) {
     });
   });
 
-  module.exports = { sendNotificationToUser, sendNudgeToUser, intializeWebSocketServer };
 }
+
+module.exports = { sendNotificationToUser, sendNudgeToUser, intializeWebSocketServer };
