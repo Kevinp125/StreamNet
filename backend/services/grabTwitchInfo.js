@@ -114,12 +114,18 @@ async function processTwitchUserData(twitchUserId) {
     }
 
     const accessToken = await getTwitchAppAccessToken();
-    
+
     //lets get both channel info and stream history same tiem wiht promsie.all runs them in parallel
     const [channelInfo, streamHistory] = await Promise.all([
       getTwitchChannelData(twitchUserId, accessToken),
-      getTwitchStreamHistory(twitchUserId, accessToken)
+      getTwitchStreamHistory(twitchUserId, accessToken),
     ]);
+
+    //lets combine users most recent current game with history of games
+    const allGames = new Set(streamHistory.historyOfGames);
+    if (channelInfo?.twitch_game_name) {
+      allGames.add(channelInfo.twitch_game_name);
+    }
 
     //remember channelInfo coudl have null values if some fields werrent filled in that is ok not every user will have every field filled in
     return channelInfo;
