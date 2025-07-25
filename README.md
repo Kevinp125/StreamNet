@@ -4,8 +4,6 @@ Below is the link to the document that includes all the details of the project p
 
 https://docs.google.com/document/d/1Xy73LwTCHxo_zZ4615L183u0VqFjcgqPAyrlx8kAtTM/edit?usp=sharing
 
-Below links are the deployed versions of my app. (Server, and Client)
+Below is the link to the deployed version of my app.
 
-Server: https://streamnet-backend.vercel.app/
-
-Client: https://streamnet-frontend.vercel.app/
+https://streamnet-frontend.vercel.app/
