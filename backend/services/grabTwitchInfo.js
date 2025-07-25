@@ -52,7 +52,7 @@ async function getTwitchChannelData(twitchUserId, accessToken) {
     return {
       twitch_game_name: channel.game_name ?? null,
       twitch_broadcaster_language: channel.broadcaster_language ?? null,
-      twitch_tags: channel.tags ?? [],
+      twitch_tags: (channel.tags ?? []).map(tag => tag.toLowerCase()),
     };
   } catch (err) {
     console.error(`Did not succeed in egetting twitch Channel data:`, err);
@@ -62,6 +62,9 @@ async function getTwitchChannelData(twitchUserId, accessToken) {
 
 async function getTwitchStreamHistory(twitchUserId, accessToken) {
   try {
+
+    console.log("🚀 Fetching stream history for user:", twitchUserId);
+
     const res = await fetch(
       `https://api.twitch.tv/helix/streams?user_id=${twitchUserId}`,
       {
@@ -79,6 +82,9 @@ async function getTwitchStreamHistory(twitchUserId, accessToken) {
     const streamData = await res.json();
     const streams = streamData.data || [];
 
+    console.log("📡 API Response - streams found:", streams.length);
+    console.log("🔍 Raw streams data:", streams);
+
     //making sets for games and tags because across 20 streams if user played fornite we dont need to store 20 fortnites
     const games = new Set();
     const tags = new Set();
@@ -92,6 +98,9 @@ async function getTwitchStreamHistory(twitchUserId, accessToken) {
         stream.tags.forEach((tag) => tags.add(tag.toLowerCase()));
       }
     });
+
+    console.log("✅ Final games collected:", Array.from(games));
+    console.log("✅ Final tags collected:", Array.from(tags));
 
     return {
       historyOfGames: Array.from(games),
@@ -133,13 +142,18 @@ async function processTwitchUserData(twitchUserId) {
       ...streamHistory.historyOfTags,
     ]);
 
-    //remember channelInfo coudl have null values if some fields werrent filled in that is ok not every user will have every field filled in
-    return channelInfo;
+    return {
+      twitch_game_name: channelInfo?.twitch_game_name,
+      twitch_games: Array.from(allGames), // Enhanced games array
+      twitch_broadcaster_language: channelInfo?.twitch_broadcaster_language,
+      twitch_tags: Array.from(allTags), //Ehanced current tags on channel + tags applied to past streams
+    };
   } catch (err) {
     console.error(`Failed to process twitch data`, err);
     //return default values in case error happens above so profike creation can still operate smoothly. Might be a network error or something in getTwitchChannelData so we gotta just return null for all values
     return {
       twitch_game_name: null,
+      twitch_games: [],
       twitch_broadcaster_language: null,
       twitch_tags: [],
     };
