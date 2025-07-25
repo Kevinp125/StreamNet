@@ -1,5 +1,5 @@
 const WebSocket = require("ws");
-const { supbase, supabase } = require("../services/supabaseclient");
+const { supabase } = require("../services/supabaseclient");
 
 //*** TODO: REMEMBER TO REMOVE CONSOLE LOGS FOR PROD ***/
 
@@ -111,7 +111,7 @@ async function shouldSendNotificationToUser(userId, notification) {
 
 function initializeWebSocketServer(server) {
   const wss = new WebSocket.Server({ server });
-  console.log("WebSocket server running on port 8080");
+  console.log("WebSocket server initialized with HTTP server");
   wss.on("connection", (ws) => {
     console.log("New WebSocket connection has been established");
 
