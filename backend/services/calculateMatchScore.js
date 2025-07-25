@@ -64,9 +64,10 @@ function calcAudienceScore(streamerToCompare, userWeights) {
 
 //refactored this function fully so that we can do smart tag checking based on user preference
 function calcTagScore(streamerToCompare, userWeights) {
+  //ehanced twitchtags now includes the current channels tags as well as tags labeled from past streams for better matchin
   const noDupTags = mergeAndDeduplicateTags(
     streamerToCompare.tags,
-    streamerToCompare.twitch_tags
+    streamerToCompare.twitch_tags //more enhanced data!
   );
 
   let totalPreference = 0; //going with an average approach so that users with more tags dont beat user with less amount of tags but better perfefnce to them
@@ -84,15 +85,24 @@ function calcTagScore(streamerToCompare, userWeights) {
 }
 
 function calcGameScore(currentUser, streamerToCompare) {
-  // Handle missing game data not all twitch users might have it most do though
-  if (!currentUser.twitch_game_name || !streamerToCompare.twitch_game_name) {
+  //now using enhanced userGames array
+  const userGames =
+    currentUser.twitch_games || [currentUser.twitch_game_name].filter(Boolean);
+  const streamerGames =
+    streamerToCompare.twitch_games ||
+    [streamerToCompare.twitch_game_name].filter(Boolean);
+
+  if (userGames.length === 0 || streamerGames.length === 0) {
     return 0.5; // Can't compare, return base score
   }
 
-  if (currentUser.twitch_game_name === streamerToCompare.twitch_game_name) {
-    return 2; // Same game
+  // Enhanced: Check for any game overlap between arrays
+  const gameOverlap = userGames.some((game) => streamerGames.includes(game));
+
+  if (gameOverlap) {
+    return 2; // Found matching game in their history
   } else {
-    return 0.5; // Different game
+    return 0.5; // No games in common
   }
 }
 
