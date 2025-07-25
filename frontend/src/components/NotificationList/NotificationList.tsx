@@ -32,7 +32,6 @@ export default function NotificationList() {
 
         if (res.success) {
           setNotifications(prev => prev.filter(n => n.id !== notification.id));
-          postActivity(session.access_token, "notification_action");
         }
       } catch (err) {
         console.error("Could not process connection request", err);
@@ -52,7 +51,6 @@ export default function NotificationList() {
         });
 
         setNotifications(prev => prev.filter(n => n.id !== notification.id));
-        postActivity(session.access_token, "notification_action");
       } catch (err) {
         console.error("Could not process private event invitation", err);
       }
@@ -62,7 +60,6 @@ export default function NotificationList() {
 
         updateNotificationStatus(session.access_token, notification.id, "read");
         setNotifications(prev => prev.filter(n => n.id !== notification.id));
-        postActivity(session.access_token, "notification_action");
       } catch (err) {
         console.error("Could not mark notification as read", err);
       }
@@ -76,7 +73,6 @@ export default function NotificationList() {
         const notifications = await fetchNotifications(session.access_token);
         setNotifications(notifications);
 
-        postActivity(session.access_token, "notification_view");
       } catch (err) {
         console.error("Failed to get notifs", err);
       }
