@@ -106,7 +106,7 @@ async function getTwitchStreamHistory(twitchUserId, accessToken) {
   }
 }
 
-//this function calls the two functions above. getTwitchAccestoken so then use that result and call the get twitch data
+//this function calls the functions above. getTwitchAccestoken so then use that result and call the get twitch data as well as streamhistory
 async function processTwitchUserData(twitchUserId) {
   try {
     if (!twitchUserId) {
@@ -114,7 +114,12 @@ async function processTwitchUserData(twitchUserId) {
     }
 
     const accessToken = await getTwitchAppAccessToken();
-    const channelInfo = await getTwitchChannelData(twitchUserId, accessToken);
+    
+    //lets get both channel info and stream history same tiem wiht promsie.all runs them in parallel
+    const [channelInfo, streamHistory] = await Promise.all([
+      getTwitchChannelData(twitchUserId, accessToken),
+      getTwitchStreamHistory(twitchUserId, accessToken)
+    ]);
 
     //remember channelInfo coudl have null values if some fields werrent filled in that is ok not every user will have every field filled in
     return channelInfo;
