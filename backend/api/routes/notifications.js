@@ -35,7 +35,7 @@ router.route("/").get(authenticateMiddleware, async (req, res) => {
     if (settings.public_event_announcements_enabled)
       enabledTypes.push("public_event_announcement");
     if (settings.network_event_announcements_enabled)
-      enabledTypes.push("network_event_announcements");
+      enabledTypes.push("network_event_announcement");
 
     let priorityConditions = [];
     if (settings.important_enabled) priorityConditions.push("immediate");
@@ -68,6 +68,9 @@ router.route("/").get(authenticateMiddleware, async (req, res) => {
     if (error) throw error;
 
     res.status(200).json(notifications);
+
+    logUserActivity(user_id, "notification_view");
+    
   } catch (err) {
     console.error("Error fetching notifications:", err);
     res.status(500).json({ error: "Failed to fetch notifications" });

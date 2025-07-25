@@ -1,6 +1,7 @@
 const express = require("express");
 const { authenticateMiddleware } = require("../../middleware/authRequest");
 const { createNotification } = require("../../services/createNotifHelper");
+const { logUserActivity } = require("../../services/activityLogger");
 const router = express.Router(); //making a router
 
 router.route("/").post(authenticateMiddleware, async (req, res) => {
@@ -212,6 +213,8 @@ router.route("/rsvp").post(authenticateMiddleware, async (req, res) => {
     if (error) throw error;
 
     res.status(200).json({ success: true, message: "RSVP updated" });
+
+    logUserActivity(user_id, "notification_action");
 
     if (notification_id) {
       await supabaseClient
