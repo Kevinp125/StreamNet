@@ -15,7 +15,10 @@ const app = express(); //creating an instance of the express application
 const server = http.createServer(app); //express normally handles this automatically but we need to do it manually so that we cn attach server obejct to websocket
 app.use(
   cors({
-    origin: "*",
+    origin: [
+      "https://streamnet-frontend.vercel.app/", // Production
+      "http://localhost:5173",
+    ], // Vite dev server
     credentials: true,
   })
 );
