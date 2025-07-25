@@ -71,10 +71,30 @@ async function getTwitchStreamHistory(twitchUserId, accessToken) {
         },
       }
     );
-  } catch (err) {
 
-  }
-  
+    if (!res.ok) {
+      throw new Error(`Failed to get stream history: ${res.status}`);
+    }
+
+    const streamData = await res.json();
+    const streams = streamData.data || [];
+
+    //making sets for games and tags because across 20 streams if user played fornite we dont need to store 20 fortnites
+    const games = new Set();
+    const tags = new Set();
+
+    streams.forEach((stream) => {
+      if (stream.game_name) {
+        games.add(stream.game_name);
+      }
+
+      if (stream.tags && Array.isArray(stream.tags)) {
+        stream.tags.forEach((tag) => tags.add(tag.toLowerCase()));
+      }
+    });
+
+    
+  } catch (err) {}
 }
 
 //this function calls the two functions above. getTwitchAccestoken so then use that result and call the get twitch data
