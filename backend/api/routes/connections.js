@@ -2,6 +2,7 @@ const express = require("express");
 const { authenticateMiddleware } = require("../../middleware/authRequest");
 const { mergeAndDeduplicateTags } = require("../../services/mergeArrays.js");
 const { createNotification } = require("../../services/createNotifHelper.js");
+const { logUserActivity } = require("../../services/activityLogger.js");
 const router = express.Router(); //making a router
 const {
   calcAgeScore,
@@ -68,6 +69,8 @@ router.route("/").post(authenticateMiddleware, async (req, res) => {
       success: true,
       message: decision === "accept" ? "accepted" : "denied",
     });
+    
+    logUserActivity(user_id, "notification_action");
 
     if (decision === "accept") {
       createNotification(supabaseClient, {
