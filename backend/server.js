@@ -2,12 +2,14 @@ const dotenv = require("dotenv");
 dotenv.config();
 const express = require("express");
 const cors = require("cors");
+const http = require("http");
 const routes = require("./api/routes/index");
 const {
   startGeneralNotificationScheduler,
 } = require("./services/notificationScheduler");
 
 const { startNudgeScheduler } = require("./services/nudgeScheduler");
+const { initializeWebSocketServer } = require("./websocket/websocketServer");
 
 const app = express(); //creating an instance of the express application
 app.use(

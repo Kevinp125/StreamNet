@@ -109,7 +109,7 @@ async function shouldSendNotificationToUser(userId, notification) {
 //only run server if it was originally by node js not imports or stuff on load
 //need to make a websocket server that listens on port 8080 (standard)
 
-function intializeWebSocketServer(server) {
+function initializeWebSocketServer(server) {
   const wss = new WebSocket.Server({ server });
   console.log("WebSocket server running on port 8080");
   wss.on("connection", (ws) => {
@@ -169,4 +169,4 @@ function intializeWebSocketServer(server) {
 
 }
 
-module.exports = { sendNotificationToUser, sendNudgeToUser, intializeWebSocketServer };
+module.exports = { sendNotificationToUser, sendNudgeToUser, initializeWebSocketServer };
