@@ -93,8 +93,17 @@ async function getTwitchStreamHistory(twitchUserId, accessToken) {
       }
     });
 
-    
-  } catch (err) {}
+    return {
+      historyOfGames: Array.from(games),
+      historyOfTags: Array.from(tags),
+    };
+  } catch (err) {
+    console.error(`Failed to get stream history:`, err);
+    return {
+      historyOfGames: [],
+      historyOfTags: [],
+    };
+  }
 }
 
 //this function calls the two functions above. getTwitchAccestoken so then use that result and call the get twitch data
