@@ -56,7 +56,7 @@ export function WebSocketProvider({ children }: { children: ReactNode }) {
       console.log("Making WebSocket connection..");
 
       //starting connection with server
-      const ws = new WebSocket("ws://localhost:8080");
+      const ws = new WebSocket(import.meta.env.VITE_WEBSOCKET_URL);
 
       //we do onopen with a callback because it checks if websocket connection was processed by server first
       ws.onopen = () => {
