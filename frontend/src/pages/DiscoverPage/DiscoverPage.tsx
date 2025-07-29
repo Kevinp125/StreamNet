@@ -13,6 +13,7 @@ export default function DiscoverPage() {
   const [recommendedStreamers, setRecommendedStreamers] = useState<StreamerProfile[]>([]);
   //below is state and functions that will take care of the modal popping up / interactions
   const [selectedStreamer, setSelectedStreamer] = useState<StreamerProfile | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   function handleStreamerClick(profile: StreamerProfile) {
     setSelectedStreamer(profile);
