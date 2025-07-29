@@ -157,9 +157,10 @@ async function processTwitchUserData(twitchUserId) {
     const accessToken = await getTwitchAppAccessToken();
 
     //lets get both channel info and stream history same tiem wiht promsie.all runs them in parallel
-    const [channelInfo, streamHistory] = await Promise.all([
+    const [channelInfo, streamHistory, clipData] = await Promise.all([
       getTwitchChannelData(twitchUserId, accessToken),
       getTwitchStreamHistory(twitchUserId, accessToken),
+      getTwitchClips(twitchUserId, accessToken),
     ]);
 
     //lets combine users most recent current game with history of games
@@ -179,6 +180,7 @@ async function processTwitchUserData(twitchUserId) {
       twitch_games: Array.from(allGames), // Enhanced games array
       twitch_broadcaster_language: channelInfo?.twitch_broadcaster_language,
       twitch_tags: Array.from(allTags), //Ehanced current tags on channel + tags applied to past streams
+      topClipUrl: clipData?.topClipUrl,
     };
   } catch (err) {
     console.error(`Failed to process twitch data`, err);
@@ -188,6 +190,7 @@ async function processTwitchUserData(twitchUserId) {
       twitch_games: [],
       twitch_broadcaster_language: null,
       twitch_tags: [],
+      topClipUrl: null,
     };
   }
 }
