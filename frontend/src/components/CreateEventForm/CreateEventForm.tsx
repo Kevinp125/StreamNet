@@ -17,7 +17,6 @@ import { postEvent } from "@/lib/api_client";
 import { useAuthContext } from "@/Context/AuthProvider";
 import type { StreamerProfile } from "@/types/AppTypes";
 
-
 type EventFormProps = {
   onClose: () => void;
   loadEvents: () => void;
@@ -39,6 +38,12 @@ export default function CreateEventForm({ onClose, loadEvents }: EventFormProps)
     { id: "online", label: "Online" },
     { id: "in_person", label: "In Person" },
   ];
+
+  const getCurrentDateTime = () => {
+    const now = new Date();
+    const localDateTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
+    return localDateTime.toISOString().slice(0, 16);
+  };
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -133,7 +138,13 @@ export default function CreateEventForm({ onClose, loadEvents }: EventFormProps)
 
             <div className='flex flex-col gap-2'>
               <Label htmlFor='event_datetime'>Date & Time</Label>
-              <Input id='event_datetime' name='event_datetime' type='datetime-local' required />
+              <Input
+                id='event_datetime'
+                name='event_datetime'
+                type='datetime-local'
+                min={getCurrentDateTime()}
+                required
+              />
             </div>
 
             {/*Dropdown to select the audience that streamer streams to */}
