@@ -13,6 +13,7 @@ export type StreamerProfile = {
   date_of_birth: string;
   created_at: string;
   requestStatus: string;
+  topClipUrl: string;
 };
 
 export type Notification = {

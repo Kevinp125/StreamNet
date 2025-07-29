@@ -1,7 +1,7 @@
 async function getTwitchClips(twitchUserId, accessToken) {
   try {
     const res = await fetch(
-      `https://api.twitch.tv/helix/clips?broadcaster_id=${twitchUserId}&first=1`,
+      `https://api.twitch.tv/helix/clips?broadcaster_id=${twitchUserId}&first=3`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -17,13 +17,13 @@ async function getTwitchClips(twitchUserId, accessToken) {
     const clipsData = await res.json();
     const clips = clipsData.data || [];
 
-    if (clips.length === 0) {
-      console.warn(`No clips found for user ID: ${twitchUserId}`);
+    if (clips.length < 3) {
+      console.warn(`No 3 clips for user: ${twitchUserId}`);
       return { topClipUrl: null };
     }
 
     return {
-      topClipUrl: clips[0].url,
+      topClipUrl: clips[2].url,
     };
   } catch (err) {
     console.error(`Failed to get clips:`, err);

@@ -65,13 +65,25 @@ export default function StreamerCard({ profile, onClose, isModal }: StreamerCard
       </CardHeader>
 
       <CardContent className='flex flex-col gap-3.5'>
-        {/* TODO: Placeholder for fav clip will do that soo need to update database to include a clip url and figure out embed stuff */}
-        <div className='bg-muted flex h-36 items-center justify-center rounded-lg'>
-          <div className='text-muted-foreground text-center'>
-            <div className='text-4xl'>🎬</div>
-            <p className='text-sm'>Favorite Clip</p>
-            <p className='text-xs'>Coming Soon</p>
-          </div>
+        <h3 className='text-md flex items-center gap-2 font-semibold'>
+          <span>🎥</span>
+          Top Clip
+        </h3>
+        <div className='bg-muted flex h-48 items-center justify-center rounded-lg'>
+          {profile.topClipUrl ? (
+            <iframe
+              src={`https://clips.twitch.tv/embed?clip=${profile.topClipUrl.split("/").pop()}&parent=${window.location.hostname}`}
+              height='192'
+              width='100%'
+              allowFullScreen
+              className='rounded-lg'
+            />
+          ) : (
+            <div className='text-muted-foreground text-center'>
+              <div className='text-4xl'>🎬</div>
+              <p className='text-sm'>No Clips Available</p>
+            </div>
+          )}
         </div>
 
         <div>
