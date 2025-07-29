@@ -53,7 +53,7 @@ export default function DashboardPage() {
     return (
       <div className='flex min-h-screen items-center justify-center gap-2'>
         <Loader2 className="h-8 w-8 animate-spin text-white" />
-        <div className='text-white'>Loading your profile...</div>
+        <div className='text-white font-bold'>Loading your profile...</div>
       </div>
     );
   }
