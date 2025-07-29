@@ -1,3 +1,36 @@
+async function getTwitchClips(twitchUserId, accessToken) {
+  try {
+    const res = await fetch(
+      `https://api.twitch.tv/helix/clips?broadcaster_id=${twitchUserId}&first=1`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Client-Id": process.env.TWITCH_CLIENT_ID,
+        },
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error(`Could not get clips`);
+    }
+
+    const clipsData = await res.json();
+    const clips = clipsData.data || [];
+
+    if (clips.length === 0) {
+      console.warn(`No clips found for user ID: ${twitchUserId}`);
+      return { topClipUrl: null };
+    }
+
+    return {
+      topClipUrl: clips[0].url,
+    };
+  } catch (err) {
+    console.error(`Failed to get clips:`, err);
+    return { topClipUrl: null };
+  }
+}
+
 //below function fetches an access token given by twitch through our client secret and id. This token will allow us to successfully make fetch request to get user channel data
 async function getTwitchAppAccessToken() {
   try {
@@ -52,7 +85,7 @@ async function getTwitchChannelData(twitchUserId, accessToken) {
     return {
       twitch_game_name: channel.game_name ?? null,
       twitch_broadcaster_language: channel.broadcaster_language ?? null,
-      twitch_tags: (channel.tags ?? []).map(tag => tag.toLowerCase()),
+      twitch_tags: (channel.tags ?? []).map((tag) => tag.toLowerCase()),
     };
   } catch (err) {
     console.error(`Did not succeed in egetting twitch Channel data:`, err);
@@ -62,7 +95,6 @@ async function getTwitchChannelData(twitchUserId, accessToken) {
 
 async function getTwitchStreamHistory(twitchUserId, accessToken) {
   try {
-
     console.log("🚀 Fetching stream history for user:", twitchUserId);
 
     const res = await fetch(

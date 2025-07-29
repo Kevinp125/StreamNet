@@ -34,7 +34,7 @@ router
       //this is info that we get from profiles that are new that are sent in body after form submission
       const { name, date_of_birth, targetAudience, tags } = req.body;
 
-      //check if the required fields are populated in case somoeone tries to hit api from route
+      //check if thex required fields are populated in case somoeone tries to hit api from route
       if (!name || !date_of_birth || !targetAudience || !tags) {
         return res.status(400).json({ error: "Missing required fields" });
       }
