@@ -61,6 +61,17 @@ export default function SavedConnectionsPage() {
     );
   }
 
+  if (connections.length === 0) {
+    return (
+      <div className='flex min-h-screen items-center justify-center'>
+        <div className='text-center text-white'>
+          <div className='mb-2 text-xl font-bold'>No connections yet</div>
+          <div>Start discovering streamers to build your network!</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
       <StreamerGrid
