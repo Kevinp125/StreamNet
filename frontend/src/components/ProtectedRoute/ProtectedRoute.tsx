@@ -6,13 +6,19 @@
 import { useAuthContext } from "@/Context/AuthProvider";
 import { Navigate } from "react-router-dom";
 import { LANDING_PATH } from "@/lib/paths";
+import { Loader2 } from "lucide-react";
 
 export default function ProtectedRoute({ children }: any) {
   const { user, loading } = useAuthContext();
 
   //in order to give time to AuthProvider to get user and session information make sure we display loading state first. Once this is switched to false we can return the page
   if (loading) {
-    return <div className="text-white">Loading...</div>;
+    return (
+      <div className='flex min-h-screen items-center justify-center gap-2'>
+        <Loader2 className='h-8 w-8 animate-spin text-white' />
+        <div className='text-white'>Checking auth...</div>
+      </div>
+    );
   }
 
   if (!user) {
