@@ -6,6 +6,7 @@ import { sendConnectionRequest } from "@/lib/api_client";
 import { addToNotInterestedAndUpdateWeights } from "@/lib/api_client";
 import { useAuthContext } from "@/Context/AuthProvider";
 import type { StreamerProfile } from "@/types/AppTypes";
+import { Loader2 } from "lucide-react";
 
 export default function DiscoverPage() {
   const { session } = useAuthContext();
@@ -13,6 +14,7 @@ export default function DiscoverPage() {
   const [recommendedStreamers, setRecommendedStreamers] = useState<StreamerProfile[]>([]);
   //below is state and functions that will take care of the modal popping up / interactions
   const [selectedStreamer, setSelectedStreamer] = useState<StreamerProfile | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   function handleStreamerClick(profile: StreamerProfile) {
     setSelectedStreamer(profile);
@@ -60,12 +62,21 @@ export default function DiscoverPage() {
       if (session?.access_token) {
         const recommendedStreamers = await fetchRecommendedStreamers(session.access_token);
         setRecommendedStreamers(recommendedStreamers);
+        setLoading(false); //once streamers are fetched and save we are no longer in loading state
       }
     }
 
     storeRecommendedStreamers();
   }, [session?.access_token]); //re-run if token changes like refreshes or when they log in
 
+  if (loading) {
+    return (
+      <div className='flex min-h-screen items-center justify-center gap-2'>
+        <Loader2 className='h-8 w-8 animate-spin text-white' />
+        <div className='font-bold text-white'>Finding streamers...</div>
+      </div>
+    );
+  }
   return (
     <>
       <StreamerGrid

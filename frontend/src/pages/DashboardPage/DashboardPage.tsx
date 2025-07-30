@@ -10,6 +10,7 @@ import { Card, CardTitle, CardContent } from "@/components/ui/card";
 import NotificationList from "@/components/NotificationList/NotificationList";
 import { Settings } from "lucide-react";
 import NotificationSettingsModal from "@/components/NotificationSettingsModal/NotifcationSettingsModal";
+import { Loader2 } from "lucide-react";
 
 export default function DashboardPage() {
   const navigate = useNavigate();
@@ -50,8 +51,9 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className='flex min-h-screen items-center justify-center'>
-        <div className='text-white'>Loading your profile...</div>
+      <div className='flex min-h-screen items-center justify-center gap-2'>
+        <Loader2 className="h-8 w-8 animate-spin text-white" />
+        <div className='text-white font-bold'>Loading your profile...</div>
       </div>
     );
   }

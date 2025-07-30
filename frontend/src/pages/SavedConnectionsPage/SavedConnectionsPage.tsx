@@ -5,11 +5,13 @@ import { fetchUserConnections } from "@/lib/api_client";
 import { removeConnection } from "@/lib/api_client";
 import { useAuthContext } from "@/Context/AuthProvider";
 import type { StreamerProfile } from "@/types/AppTypes";
+import { Loader2 } from "lucide-react";
 
 export default function SavedConnectionsPage() {
   const { session } = useAuthContext();
   const [connections, setConnections] = useState<StreamerProfile[]>([]);
   const [selectedStreamer, setSelectedStreamer] = useState<StreamerProfile | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   function handleStreamerClick(profile: StreamerProfile) {
     setSelectedStreamer(profile);
@@ -40,6 +42,7 @@ export default function SavedConnectionsPage() {
         try {
           const userConnections = await fetchUserConnections(session.access_token);
           setConnections(userConnections);
+          setLoading(false);
         } catch (err) {
           console.error("Fetch function failed to load connections", err);
         }
@@ -48,6 +51,26 @@ export default function SavedConnectionsPage() {
 
     loadConnections();
   }, [session?.access_token]);
+
+  if (loading) {
+    return (
+      <div className='flex min-h-screen items-center justify-center gap-2'>
+        <Loader2 className='h-8 w-8 animate-spin text-white' />
+        <div className='font-bold text-white'>Finding connections...</div>
+      </div>
+    );
+  }
+
+  if (connections.length === 0) {
+    return (
+      <div className='flex min-h-screen items-center justify-center'>
+        <div className='text-center text-white'>
+          <div className='mb-2 text-xl font-bold'>No connections yet</div>
+          <div>Start discovering streamers to build your network!</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>

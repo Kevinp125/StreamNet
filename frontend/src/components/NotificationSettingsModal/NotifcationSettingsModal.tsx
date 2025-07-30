@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useAuthContext } from "@/Context/AuthProvider";
 import { updateNotificationSettings } from "@/lib/api_client";
 import { getNotificationSettings } from "@/lib/api_client";
+import { Loader2 } from "lucide-react";
 
 type NotificationSettingsModalProps = {
   onClose: () => void;
@@ -113,7 +114,8 @@ export default function NotificationSettingsModal({ onClose }: NotificationSetti
         {/*This is the Push Notifications toggle has its own little section */}
 
         {loading ? (
-          <div className='flex items-center justify-center py-16'>
+          <div className='flex items-center justify-center py-16 gap-4'>
+            <Loader2 className='text-electric-indigo h-8 w-8 animate-spin' />
             <div className='text-gray-500'>Loading settings...</div>
           </div>
         ) : (
