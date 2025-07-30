@@ -1,3 +1,36 @@
+async function getTwitchClips(twitchUserId, accessToken) {
+  try {
+    const res = await fetch(
+      `https://api.twitch.tv/helix/clips?broadcaster_id=${twitchUserId}&first=3`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Client-Id": process.env.TWITCH_CLIENT_ID,
+        },
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error(`Could not get clips`);
+    }
+
+    const clipsData = await res.json();
+    const clips = clipsData.data || [];
+
+    if (clips.length < 3) {
+      console.warn(`No 3 clips for user: ${twitchUserId}`);
+      return { topClipUrl: null };
+    }
+
+    return {
+      topClipUrl: clips[2].url,
+    };
+  } catch (err) {
+    console.error(`Failed to get clips:`, err);
+    return { topClipUrl: null };
+  }
+}
+
 //below function fetches an access token given by twitch through our client secret and id. This token will allow us to successfully make fetch request to get user channel data
 async function getTwitchAppAccessToken() {
   try {
@@ -52,7 +85,7 @@ async function getTwitchChannelData(twitchUserId, accessToken) {
     return {
       twitch_game_name: channel.game_name ?? null,
       twitch_broadcaster_language: channel.broadcaster_language ?? null,
-      twitch_tags: (channel.tags ?? []).map(tag => tag.toLowerCase()),
+      twitch_tags: (channel.tags ?? []).map((tag) => tag.toLowerCase()),
     };
   } catch (err) {
     console.error(`Did not succeed in egetting twitch Channel data:`, err);
@@ -62,7 +95,6 @@ async function getTwitchChannelData(twitchUserId, accessToken) {
 
 async function getTwitchStreamHistory(twitchUserId, accessToken) {
   try {
-
     console.log("🚀 Fetching stream history for user:", twitchUserId);
 
     const res = await fetch(
@@ -125,9 +157,10 @@ async function processTwitchUserData(twitchUserId) {
     const accessToken = await getTwitchAppAccessToken();
 
     //lets get both channel info and stream history same tiem wiht promsie.all runs them in parallel
-    const [channelInfo, streamHistory] = await Promise.all([
+    const [channelInfo, streamHistory, clipData] = await Promise.all([
       getTwitchChannelData(twitchUserId, accessToken),
       getTwitchStreamHistory(twitchUserId, accessToken),
+      getTwitchClips(twitchUserId, accessToken),
     ]);
 
     //lets combine users most recent current game with history of games
@@ -147,6 +180,7 @@ async function processTwitchUserData(twitchUserId) {
       twitch_games: Array.from(allGames), // Enhanced games array
       twitch_broadcaster_language: channelInfo?.twitch_broadcaster_language,
       twitch_tags: Array.from(allTags), //Ehanced current tags on channel + tags applied to past streams
+      topClipUrl: clipData?.topClipUrl,
     };
   } catch (err) {
     console.error(`Failed to process twitch data`, err);
@@ -156,6 +190,7 @@ async function processTwitchUserData(twitchUserId) {
       twitch_games: [],
       twitch_broadcaster_language: null,
       twitch_tags: [],
+      topClipUrl: null,
     };
   }
 }
